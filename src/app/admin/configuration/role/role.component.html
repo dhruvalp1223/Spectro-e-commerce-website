@@ -1,0 +1,344 @@
+<div *ngIf="!isAddRole">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Role Master</strong>
+                                    <div *ngIf="this.canCreate == true">
+                                        <a class="btn btn-primary btn-sm" [routerLink]="['/admin/RoleMaster/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.role.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Role Name</th>
+                                                    <th scope="col">Description</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngIf="loading">
+                                                    <td colspan="4">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let role of rolelist; let roleIndex = index">
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true"
+                                                                class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/RoleMaster/Edit',role._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                    *ngIf="role.isDeleted === false"
+                                                                    [cModalToggle]="deActiveModal.id"
+                                                                    (click)="setRole(role)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                                <a class="btn btn-sm btn-success text-white"
+                                                                    *ngIf="role.isDeleted === true"
+                                                                    [cModalToggle]="activeModal.id"
+                                                                    (click)="setRole(role)">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">{{ role.roleName }}</td>
+                                                    <td>{{ role.description }}</td>
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !role.isDeleted , 'btn-danger': role.isDeleted}">
+                                                            {{ role.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="!rolelist || rolelist.length === 0">
+                                                    <td colspan="4" class="text-center "><b> No data found</b>
+                                                    </td>
+                                                </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <!-- Previous Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <!-- Page Numbers -->
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <!-- Next Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="rolelist && rolelist.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+                                        <div  *ngIf="!rolelist || rolelist.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.rolemaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.rolemaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.rolemaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteRole(role)">{{getLabelValue('admin.rolemaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.rolemaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.rolemaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.rolemaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveRole(role)">{{getLabelValue('admin.rolemaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+
+
+
+<div *ngIf="isAddRole">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditRole ? 'Edit Role -':'Add Role' }} {{ isEditRole ?
+                                        roleName : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToRoleList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.role.header.backToRoleButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditRole"
+                                            [title]="getLabelValue('admin.role.header.saveButton.hint')"
+                                            (click)="createNewRole(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.role.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditRole"
+                                            [title]="getLabelValue('admin.role.header.saveAndEditButton.hint')"
+                                            (click)="createNewRole(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.role.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditRole"
+                                            [title]="getLabelValue('admin.role.header.updateButton.hint')"
+                                            (click)="updateRole(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.role.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditRole"
+                                            [title]="getLabelValue('admin.role.header.saveAndEditButton.hint')"
+                                            (click)="updateRole(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.role.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditRole && !roleData?.isDeleted"
+                                            [cModalToggle]="deactiveRoleMasterEditModal.id"
+                                            [title]="getLabelValue('admin.role.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.role.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditRole && roleData?.isDeleted"
+                                            [cModalToggle]="activeRoleMasterEditModal.id"
+                                            [title]="getLabelValue('admin.role.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.role.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                    <form [formGroup]="roleForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="Name">{{getLabelValue('admin.role.addrole.rolename.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.role.addrole.rolename.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="roleName" formControlName="roleName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="roleForm.get('roleName')?.invalid && roleForm.get('roleName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.role.addrole.rolename.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="Name">{{getLabelValue('admin.role.addrole.description.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.role.addrole.description.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="description" formControlName="description"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="roleForm.get('description')?.invalid && roleForm.get('description')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.role.addrole.description.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveRoleMasterEditModal alignment="center" id="deactiveRoleMasterEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.rolemaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveRoleMasterEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.rolemaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveRoleMasterEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.rolemaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveRoleMasterEditModal.id"
+                (click)="deactiveRole()">{{getLabelValue('admin.rolemaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeRoleMasterEditModal alignment="center" id="activeRoleMasterEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.rolemaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeRoleMasterEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.rolemaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeRoleMasterEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.rolemaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeRoleMasterEditModal.id"
+                (click)="activeRole()">{{getLabelValue('admin.rolemaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

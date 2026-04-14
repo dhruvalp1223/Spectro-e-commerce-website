@@ -1,0 +1,797 @@
+<div *ngIf="!isAddLanguage">
+  <section class="content">
+    <div class="container-fluid">
+      <div class="form-horizontal">
+        <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+          <c-row ngPreserveWhitespaces>
+            <c-col>
+              <c-card class="mb-4">
+                <c-card-header class="d-flex justify-content-between align-items-center">
+                  <strong>Languages</strong>
+                  <div *ngIf="this.canCreate == true">
+                    <a class="btn btn-primary btn-sm" [routerLink]="['/admin/Language/Create']">
+                      <i class="fas fa-plus me-1"></i>
+                      Add new
+                    </a>
+                  </div>
+                </c-card-header>
+                <c-card-body>
+                  <div style="overflow-x: auto;">
+
+                    <table class="table table-bordered">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col" style="width: 10%;">Actions</th>
+                          <th scope="col">Name</th>
+                          <th scope="col">isDefault</th>
+                          <th scope="col">Flag</th>
+                          <th scope="col">Language Culture</th>
+                          <th scope="col">Display Order</th>
+                          <th scope="col">Published</th>
+                          <th scope="col">Status</th>
+
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngIf="loading">
+                          <td colspan="8">
+                              <div class="d-flex justify-content-center">
+                                  <div class="spinner-border text-primary"></div>
+                              </div>
+                          </td>
+                      </tr>
+                      <ng-container *ngIf="!loading">
+
+                        <tr *ngFor="let language of allLanguagesList; let langIndex = index">
+                          <td class="text-center">
+                            <div class="center-buttons">
+                              <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary" [routerLink]="['/admin/Language/Edit',language._id]">
+                                <i class="fas fa-pencil"></i>
+                              </a>
+                              <div *ngIf="this.canDelete == true">
+
+                              <a class="btn btn-sm btn-danger text-white" *ngIf="language.isDeleted === false"
+                                [cModalToggle]="deActiveModal.id" (click)="setlanguage(language)">
+                                <i class="fas fa-trash"></i>
+                              </a>
+                              <a class="btn btn-sm btn-success text-white" *ngIf="language.isDeleted === true"
+                                [cModalToggle]="activeModal.id" (click)="setlanguage(language)">
+                                <i class="fas fa-check"></i>
+                              </a>
+                              </div>
+                            </div>
+                          </td>
+                          <td>{{language.languageName}} </td>
+                          <td><i
+                              [class]="language.markAsDefault ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                          </td>
+                          <td>{{language.flagImageName}}</td>
+                          <td>{{language.languageCulture}}</td>
+                          <td>{{language.order}}</td>
+                          <td>{{language.published}}</td>
+                          <td class="text-center">
+                            <a class="btn btn-sm text-white"
+                              [ngClass]="{'btn-success': !language.isDeleted, 'btn-danger': language.isDeleted}">
+                              {{ language.isDeleted ? 'Deactive' : 'Active' }}
+                            </a>
+                          </td>
+                        </tr>
+                        <tr *ngIf="!allLanguagesList || allLanguagesList.length === 0">
+                          <td colspan="8" class="text-center "><b> No data found</b>
+                          </td>
+                      </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="row mt-4 align-items-center">
+                    <div class="col-lg-4 col-md-6 mb-2">
+                      <div class="dataTables_paginate paging_simple_numbers">
+                        <ul class="pagination">
+                          <!-- Previous Button -->
+                          <li class="page-item" [class.disabled]="languageCurrentPage === 1">
+                            <a class="page-link" (click)="changeLanguagePage(languageCurrentPage - 1)"
+                              tabindex="-1">Previous</a>
+                          </li>
+
+                          <!-- Page Numbers -->
+                          <li class="page-item" *ngFor="let page of getLanguagePagination()"
+                            [class.active]="page === languageCurrentPage" [class.disabled]="page === '...'">
+                            <a class="page-link" *ngIf="page !== '...'; else languageTemplate"
+                              (click)="changeLanguagePage(page)">
+                              {{ page }}
+                            </a>
+                            <ng-template #languageTemplate>
+                              <span class="page-link">...</span>
+                            </ng-template>
+                          </li>
+
+                          <!-- Next Button -->
+                          <li class="page-item"
+                            [class.disabled]="languageCurrentPage >= totalLanguagePages || totalLanguagePages === 0">
+                            <a class="page-link" (click)="changeLanguagePage(languageCurrentPage + 1)">Next</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-2 text-center">
+                      <div class="dataTables_length">
+                        <label>
+                          Show
+                          <select class="form-control form-control-sm d-inline-block w-auto"
+                            [(ngModel)]="languagePageSize" (change)="updateLanguagePageSize()">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                          </select>
+                          items
+                        </label>
+                      </div>
+                    </div>
+
+                    <div *ngIf="allLanguagesList && allLanguagesList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                      <div class="dataTables_info">
+                        {{ (languageCurrentPage - 1) * languagePageSize + 1 }}-
+                        {{ Math.min(languageCurrentPage * languagePageSize, totalLanguageRecords) }} of {{
+                        totalLanguageRecords }} items
+                      </div>
+                    </div>
+                    <div  *ngIf="!allLanguagesList || allLanguagesList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                      No record found
+                  </div>
+                  </div>
+                </c-card-body>
+              </c-card>
+            </c-col>
+          </c-row>
+        </div>
+      </div>
+    </div>
+  </section>
+  <c-modal #deActiveModal alignment="center" id="deActiveModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.body.deActiveModal.title.value')}}</h5>
+      <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.body.deActiveModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.body.deActiveModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+        (click)="deletelanguage(language)">{{getLabelValue('admin.languages.body.deActiveModal.deactiveButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-modal #activeModal alignment="center" id="activeModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.body.activeModal.title.value')}} </h5>
+      <button [cModalToggle]="activeModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.body.activeModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="activeModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.body.activeModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+        (click)="reActiveLanguage(language)">{{getLabelValue('admin.languages.body.activeModal.activeButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+</div>
+
+<div *ngIf="isAddLanguage">
+  <section class="content">
+    <div class="container-fluid">
+      <div class="form-horizontal">
+        <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+          <c-row ngPreserveWhitespaces>
+            <c-col>
+              <c-card class="mb-4">
+                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                  <strong>{{ isEditLanguage ? 'Edit Language Details -':'Add a new language' }} {{ isEditLanguage ?
+                    languageName : '' }}
+                    <a class="btn btn-sm text-primary" (click)="backToLanguageList()">
+                      <i class="fas fa-arrow-circle-left me-1"></i>
+                      {{getLabelValue('admin.languages.header.backToLanguageButton.value')}}
+                    </a>
+                  </strong>
+                  <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                    <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditLanguage"
+                      [title]="getLabelValue('admin.languages.header.saveButton.hint')"
+                      (click)="createNewLanguage(true)" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                      <i class="fas fa-save me-1"></i> {{getLabelValue('admin.languages.header.saveButton.value')}}
+                    </a>
+                    <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditLanguage"
+                      [title]="getLabelValue('admin.languages.header.saveAndEditButton.hint')"
+                      (click)="createNewLanguage(false)" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                      <i class="fas fa-save me-1"></i>
+                      {{getLabelValue('admin.languages.header.saveAndEditButton.value')}}
+                    </a>
+                    <a class="btn btn-primary btn-sm text-white" *ngIf="isEditLanguage" (click)="updateLanguage(true)"
+                      [title]="getLabelValue('admin.languages.header.updateButton.hint')" data-bs-toggle="tooltip"
+                      data-bs-placement="bottom">
+                      <i class="fas fa-save me-1"></i>
+                      {{getLabelValue('admin.languages.header.updateButton.value')}}
+                    </a>
+                    <a class="btn btn-primary btn-sm text-white" *ngIf="isEditLanguage"
+                      [title]="getLabelValue('admin.languages.header.saveAndEditButton.hint')"
+                      (click)="updateLanguage(false)" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                      <i class="fas fa-save me-1"></i>
+                      {{getLabelValue('admin.languages.header.saveAndEditButton.value')}}
+                    </a>
+                    <a class="btn btn-danger btn-sm text-white" *ngIf="isEditLanguage && !languageData?.isDeleted"
+                      [cModalToggle]="deactiveLanguageEditModal.id"
+                      [title]="getLabelValue('admin.languages.header.deleteButton.hint')" data-bs-toggle="tooltip"
+                      data-bs-placement="bottom">
+                      <i class="fas fa-trash me-1"></i> {{getLabelValue('admin.languages.header.deleteButton.value')}}
+                    </a>
+                    <a class="btn btn-success btn-sm text-white" *ngIf="isEditLanguage && languageData?.isDeleted"
+                      [cModalToggle]="activeLanguageEditModal.id"
+                      [title]="getLabelValue('admin.languages.header.activeButton.hint')" data-bs-toggle="tooltip"
+                      data-bs-placement="bottom">
+                      <i class="fas fa-check me-1"></i> {{getLabelValue('admin.languages.header.activeButton.value')}}
+                    </a>
+                  </div>
+                </c-card-header>
+                <c-card-body>
+                  <c-card class="mb-4">
+                    <c-card-header class="d-flex justify-content-between align-items-center"
+                      (click)="toggleCollapse(0)">
+                      <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Info</strong>
+                      <div>
+                        <a class="btn btn-sm">
+                          <i class="fas me-1" [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                        </a>
+                      </div>
+                    </c-card-header>
+                    <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                      <form [formGroup]="languageForm">
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.name.value')}}<span
+                                  class="text-danger fw-bold position-absolute">*</span></label>
+                              <div [title]="getLabelValue('admin.languages.info.name.hint')" data-toggle="tooltip"
+                                class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <input id="languageName" formControlName="languageName" class="form-control" type="text">
+                            </div>
+                            <div
+                              *ngIf="languageForm.get('languageName')?.invalid && languageForm.get('languageName')?.touched"
+                              class="text-danger">
+                              {{getLabelValue('admin.languages.info.name.error')}}
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.langCulture.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.langCulture.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <ng-select id="languageCulture" formControlName="languageCulture" [items]="languages"
+                                bindLabel="label" bindValue="value" [searchable]="true" class="form-control"
+                                style="padding: 0 !important;" [clearable]="!!languageForm.get('languageCulture')?.value" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{ item.label }}
+                                </ng-template>
+                              </ng-select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.seoCode.value')}}
+                                <span class="text-danger fw-bold position-absolute">*</span></label>
+                              <div [title]="getLabelValue('admin.languages.info.seoCode.hint')" data-toggle="tooltip"
+                                class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <input id="seoCode" formControlName="seoCode" class="form-control" type="text">
+                            </div>
+                            <div *ngIf="languageForm.get('seoCode')?.invalid && languageForm.get('seoCode')?.touched"
+                              class="text-danger">
+                              {{getLabelValue('admin.languages.info.seoCode.error')}}
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.flagImageName.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.flagImageName.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <ng-select id="flagImageName" formControlName="flagImageName" [items]="flagImages"
+                                bindLabel="label" bindValue="value" [searchable]="true" class="form-control"
+                                style="padding: 0 !important;" [clearable]="!!languageForm.get('flagImageName')?.value" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                  <span class="image"
+                                    style="display:inline-block;margin-right:4px;background-image: url('{{item.imagePath}}'); width: 16px; height: 11px;"></span>
+                                  {{ item.label }}
+                                </ng-template>
+
+                              </ng-select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="form-group row mb-1 align-items-center">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.rightToLeft.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.rightToLeft.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <input id="rightToLeft" formControlName="rightToLeft" type="checkbox" />
+                          </div>
+                        </div>
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.defaultCurrency.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.defaultCurrency.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <ng-select id="defaultCurrency" formControlName="defaultCurrency" [items]="currencies"
+                                bindLabel="label" bindValue="value" [searchable]="true" class="form-control"
+                                style="padding: 0 !important;" [clearable]="!!languageForm.get('defaultCurrency')?.value" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                  {{ item.label }}
+                                </ng-template>
+                              </ng-select>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group row mb-1 align-items-center">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.published.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.published.hint')" data-toggle="tooltip"
+                                class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <input id="checkOne" type="checkbox" />
+                          </div>
+                        </div>
+
+                        <div class="form-group row mb-1 align-items-center">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.markDefault.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.markDefault.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <input id="markAsDefault" formControlName="markAsDefault" type="checkbox" />
+                          </div>
+                        </div>
+
+                        <div class="form-group row mb-1">
+                          <div class="col-md-3">
+                            <div class=" d-flex align-items-center justify-content-end">
+                              <label class="col-form-label me-3"
+                                for="Name">{{getLabelValue('admin.languages.info.displayOrder.value')}}</label>
+                              <div [title]="getLabelValue('admin.languages.info.displayOrder.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-9">
+                            <div class="input-group input-group-required">
+                              <input id="order" formControlName="order" class="form-control" type="number">
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </c-card-body>
+                  </c-card>
+
+                  <c-card *ngIf="isEditLanguage">
+                    <c-card-header class="d-flex justify-content-between align-items-center"
+                      (click)="toggleCollapse(1)">
+                      <strong><i class="fas fa-database me-3 fw-bold"></i>String
+                        Resources</strong>
+                      <div>
+                        <a class="btn btn-sm">
+                          <i class="fas me-1" [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                        </a>
+                      </div>
+                    </c-card-header>
+                    <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                      <c-card class="mb-4">
+
+                        <c-card-body>
+                          <div class="form-group row mb-1">
+                            <div class="col-md-3">
+                              <div class=" d-flex align-items-center justify-content-end">
+                                <label class="col-form-label me-2" for="Name">
+                                  {{getLabelValue('admin.languages.stringResources.search.name.value')}}
+                                </label>
+                                <div [title]="getLabelValue('admin.languages.stringResources.search.name.hint')"
+                                  data-toggle="tooltip" class="ico-help">
+                                  <i class="fas fa-question-circle text-primary"></i>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-9">
+                              <div class="input-group input-group-required">
+                                <input class="form-control text-box single-line" data-val="true" data-val-length-min="0"
+                                  [(ngModel)]="resourceName" data-val-required="Please provide a name." id="Name"
+                                  name="Name" type="text" placeholder="Search Resource Name">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row mb-1">
+                            <div class="col-md-3">
+                              <div class=" d-flex align-items-center justify-content-end">
+                                <label class="col-form-label me-2" for="Name">
+                                  {{getLabelValue('admin.languages.stringResources.search.resourceValue.value')}}
+                                </label>
+                                <div
+                                  [title]="getLabelValue('admin.languages.stringResources.search.resourceValue.hint')"
+                                  data-toggle="tooltip" class="ico-help">
+                                  <i class="fas fa-question-circle text-primary"></i>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-9">
+                              <div class="input-group input-group-required">
+                                <input class="form-control text-box single-line" data-val="true" data-val-length-min="0"
+                                  [(ngModel)]="resourceValue" data-val-required="Please provide a name." id="Name"
+                                  name="Name" type="text" placeholder="Search Value">
+                              </div>
+                            </div>
+
+                          </div>
+                          <div class="row mt-3 col-md-12">
+                            <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                            <div class="col-md-9 ps-3">
+                              <a class="btn btn-primary text-white" (click)="getAllResourcesList()">
+                                <i class="fas fa-search me-1"></i>
+                                {{getLabelValue('admin.languages.stringResources.search.searchButton.value')}}
+                              </a>
+                            </div>
+                          </div>
+
+                        </c-card-body>
+                      </c-card>
+                      <c-card class="mb-4">
+
+                        <c-card-body>
+                          <div style="overflow-x: auto;">
+
+                            <table class="table table-bordered">
+                              <thead class="thead-light">
+                                <tr>
+                                  <th scope="col" style="width: 8%;">Actions</th>
+                                  <th scope="col">Resource Name</th>
+                                  <th scope="col">Value</th>
+
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr *ngFor="let resource of allResourcesList; let langIndex = index">
+                                  <td class="text-center">
+                                    <div class="center-buttons">
+                                      <button class="btn btn-sm btn-secondary" (click)="toggleEditMode(langIndex)"
+                                        *ngIf="!editMode[langIndex]">
+                                        <i class="fas fa-pencil"></i>
+                                      </button>
+                                      <div *ngIf="editMode[langIndex]">
+                                        <button class="btn btn-sm btn-secondary"
+                                          (click)="updateLocalStorageResources()">
+                                          <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger text-white"
+                                          (click)="editMode[langIndex] = !editMode[langIndex]">
+                                          <i class="fas fa-times"></i>
+                                        </button>
+                                      </div>
+                                      <!-- <button class="btn btn-sm btn-danger text-white"  [cModalToggle]="deActiveModal.id" *ngIf="!editMode[langIndex]">
+                                      <i class="fas fa-trash"></i>
+                                    </button> -->
+                                      <a class="btn btn-sm btn-danger text-white" (click)="setResources(resource)"
+                                        *ngIf="resource.isDeleted === false && !editMode[langIndex]" [cModalToggle]="deActiveModal.id
+                                      ">
+                                        <i class="fas fa-trash"></i>
+                                      </a>
+                                      <a class="btn btn-sm btn-success text-white" (click)="setResources(resource)"
+                                        *ngIf="resource.isDeleted === true && !editMode[langIndex]"
+                                        [cModalToggle]="activeModal.id">
+                                        <i class="fas fa-check"></i>
+                                      </a>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <input type="text" [readonly]="!editMode[langIndex]"
+                                      [ngClass]="{'readonly-input': !editMode[langIndex]}"
+                                      [disabled]="!editMode[langIndex]" [(ngModel)]="resource.resourceName"
+                                      class="form-control" />
+                                  </td>
+                                  <td>
+                                    <input type="text" [readonly]="!editMode[langIndex]"
+                                      [ngClass]="{'readonly-input': !editMode[langIndex]}"
+                                      [(ngModel)]="resource.resourceValue" class="form-control" />
+                                  </td>
+                                </tr>
+                                <tr *ngIf="!allResourcesList || allResourcesList.length === 0">
+                                  <td colspan="3" class="text-center "><b> No data found</b></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div class="row mt-4 align-items-center">
+                              <div class="col-lg-4 col-md-6 mb-2">
+                                <div class="dataTables_paginate paging_simple_numbers">
+                                  <ul class="pagination">
+                                    <!-- Previous Button -->
+                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                      <a class="page-link" (click)="changePage(currentPage - 1)"
+                                        tabindex="-1">Previous</a>
+                                    </li>
+
+                                    <!-- Page Numbers -->
+                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                      [class.active]="page === currentPage" [class.disabled]="page === '...'">
+                                      <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                        (click)="changePage(page)">
+                                        {{ page }}
+                                      </a>
+                                      <ng-template #dotsTemplate>
+                                        <span class="page-link">...</span>
+                                      </ng-template>
+                                    </li>
+
+                                    <!-- Next Button -->
+                                    <li class="page-item" [class.disabled]="currentPage >=totalPages || totalPages === 0">
+                                      <a class="page-link" (click)="changePage(currentPage + 1)">Next</a>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+
+                              <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                <div class="dataTables_length">
+                                  <label>
+                                    Show
+                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                      [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                      <option value="10">10</option>
+                                      <option value="25">25</option>
+                                      <option value="50">50</option>
+                                      <option value="100">100</option>
+                                    </select>
+                                    items
+                                  </label>
+                                </div>
+                              </div>
+
+                              <div *ngIf="allResourcesList && allResourcesList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                <div class="dataTables_info">
+                                  {{ (currentPage - 1) * pageSize + 1 }}-
+                                  {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords }} items
+                                </div>
+                              </div>
+                              <div  *ngIf="!allResourcesList || allResourcesList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                No record found
+                            </div>
+                            </div>
+                          </div>
+
+
+                        </c-card-body>
+                      </c-card>
+                      <c-card class="mb-4">
+                        <c-card-header class="d-flex justify-content-between align-items-center"
+                          (click)="toggleCollapse(0)">
+                          <strong>Add New Record</strong>
+                        </c-card-header>
+                        <c-card-body>
+                          <form [formGroup]="resourceForm" (ngSubmit)="createNewResource()">
+                            <!-- Resource Name Field -->
+                            <div class="form-group row mb-1">
+                              <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-end">
+                                  <label class="col-form-label me-3"
+                                    for="resourceName">{{getLabelValue('admin.languages.stringResources.addRecord.resourceName.value')}}
+                                    <span class="text-danger fw-bold position-absolute">*</span>
+                                  </label>
+                                  <div
+                                    [title]="getLabelValue('admin.languages.stringResources.addRecord.resourceName.hint')"
+                                    data-toggle="tooltip" class="ico-help">
+                                    <i class="fas fa-question-circle text-primary"></i>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-9">
+                                <div class="input-group input-group-required">
+                                  <input class="form-control" formControlName="resourceName"
+                                    placeholder="Enter Resource Name">
+                                </div>
+                                <div
+                                  *ngIf="resourceForm.get('resourceName')?.invalid && resourceForm.get('resourceName')?.touched"
+                                  class="text-danger">
+                                  {{getLabelValue('admin.languages.edit.addNewRecord.resourceName.error')}}
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Value Field -->
+                            <div class="form-group row mb-1">
+                              <div class="col-md-3">
+                                <div class="d-flex align-items-center justify-content-end">
+                                  <label class="col-form-label me-3"
+                                    for="value">{{getLabelValue('admin.languages.stringResources.addRecord.resourceValue.value')}}
+                                    <span class="text-danger fw-bold position-absolute">*</span>
+                                  </label>
+                                  <div
+                                    [title]="getLabelValue('admin.languages.stringResources.addRecord.resourceValue.hint')"
+                                    data-toggle="tooltip" class="ico-help">
+                                    <i class="fas fa-question-circle text-primary"></i>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-9">
+                                <div class="input-group input-group-required">
+                                  <input class="form-control" formControlName="value" placeholder="Enter Value">
+                                </div>
+                                <div *ngIf="resourceForm.get('value')?.invalid && resourceForm.get('value')?.touched"
+                                  class="text-danger">
+                                  {{getLabelValue('admin.languages.edit.addNewRecord.value.error')}}
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- Add New Record Button -->
+                            <div class="row mt-3 col-md-12">
+                              <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                              <div class="col-md-9 ps-3">
+                                <button type="submit" class="btn btn-primary text-white">
+                                  <i class="fas fa-plus me-1"></i>
+                                  {{getLabelValue('admin.languages.stringResources.addRecord.addRecordButton.value')}}
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+
+
+                        </c-card-body>
+                      </c-card>
+                    </c-card-body>
+                  </c-card>
+                </c-card-body>
+              </c-card>
+            </c-col>
+          </c-row>
+
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <c-modal #deActiveModal alignment="center" id="deActiveModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.edit.stringResources.deActiveModal.title.value')}}</h5>
+      <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.edit.stringResources.deActiveModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.edit.stringResources.deActiveModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id "
+        (click)="deleteResource(resource)">{{getLabelValue('admin.languages.edit.stringResources.deActiveModal.deactiveButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-modal #activeModal alignment="center" id="activeModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.edit.stringResources.activeModal.title.value')}} </h5>
+      <button [cModalToggle]="activeModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.edit.stringResources.activeModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="activeModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.edit.stringResources.activeModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+        (click)="reActiveResource(resource)">{{getLabelValue('admin.languages.edit.stringResources.activeModal.activeButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-modal #deactiveLanguageEditModal alignment="center" id="deactiveLanguageEditModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.body.deActiveModal.title.value')}}</h5>
+      <button [cModalToggle]="deactiveLanguageEditModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.body.deActiveModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="deactiveLanguageEditModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.body.deActiveModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="deactiveLanguageEditModal.id"
+        (click)="deactivelanguage()">{{getLabelValue('admin.languages.body.deActiveModal.deactiveButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+  <c-modal #activeLanguageEditModal alignment="center" id="activeLanguageEditModal">
+    <c-modal-header>
+      <h5 cModalTitle>{{getLabelValue('admin.languages.body.activeModal.title.value')}} </h5>
+      <button [cModalToggle]="activeLanguageEditModal.id" cButtonClose></button>
+    </c-modal-header>
+    <c-modal-body>
+      {{getLabelValue('admin.languages.body.activeModal.body.text.value')}}
+    </c-modal-body>
+    <c-modal-footer>
+      <button [cModalToggle]="activeLanguageEditModal.id" cButton color="secondary">
+        {{getLabelValue('admin.languages.body.activeModal.closeButton.value')}}
+      </button>
+      <button cButton class="text-white" color="danger" [cModalToggle]="activeLanguageEditModal.id"
+        (click)="activeLanguage()">{{getLabelValue('admin.languages.body.activeModal.activeButton.value')}}</button>
+    </c-modal-footer>
+  </c-modal>
+
+</div>

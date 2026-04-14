@@ -1,0 +1,265 @@
+.slider-nav div {
+    padding: 10px;
+}
+
+.slider-nav img {
+    display: block;
+    width: 100%;  
+    height: auto;  
+}
+
+.color-box:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 12px #003686;; 
+  }
+
+  .color-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px; 
+  }
+  
+  .color-box {
+    margin-bottom: 5px; 
+  }
+  
+  .price-adjustment {
+    font-size: 0.9rem; 
+    color: #555; 
+    min-height: 1rem; 
+    line-height: 1rem; 
+  }
+  
+progress {
+    appearance: none; 
+    width: 100%; 
+    height: 10px; 
+    border-radius: 5px; 
+    background-color: #f0f0f0; 
+    /* // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);  */
+  }
+  
+  progress::-webkit-progress-bar {
+    background-color: #f0f0f0; 
+    border-radius: 5px;
+  }
+  
+  progress::-webkit-progress-value {
+    background-color: #4caf50; 
+    border-radius: 5px; 
+  }
+  
+  progress::-moz-progress-bar {
+    background-color: #4caf50; 
+    border-radius: 5px;
+  }
+  
+  progress::-webkit-progress-value {
+    transition: width 0.5s ease-in-out;
+  }
+  
+  progress::-moz-progress-bar {
+    transition: width 0.5s ease-in-out;
+  }
+  
+
+.responsive-image, .responsive-video {
+    height: 320px;
+    object-fit: cover; 
+}
+
+@media (min-width: 768px) {
+    .responsive-image, .responsive-video {
+        height: 80vh;
+        object-fit:fill;
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .responsive-image, .responsive-video {
+        height: auto; 
+        max-height: 300px; 
+    }
+}
+  .img-fluid {
+    height: 280px;
+   // object-fit: cover; 
+}
+
+@media (min-width: 768px) {
+    .img-fluid {
+        height: 280px; 
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .img-fluid{ 
+        height: auto; 
+        max-height: 200px; 
+        width: 100%;
+    }
+}
+
+
+.accordion-container {
+  // max-width: 600px;
+  margin: 20px 0px;
+}
+
+.modern-accordion .accordion-item {
+  margin-bottom: 10px; 
+  border: none;
+  border-bottom: 2px solid rgba(36, 87, 196, 0.15); 
+  border-radius: 0; 
+}
+
+.modern-accordion .accordion-button {
+  color: #0c121c;
+  font-weight: 500;
+  padding: 15px;
+  transition: background 0.3s ease;
+  border-radius: 0;
+}
+
+// .modern-accordion .accordion-button:not(.collapsed) {
+//   background: #dbe9f8;
+  
+// }
+
+.modern-accordion .accordion-button:focus {
+  box-shadow: none;
+}
+
+.modern-accordion .accordion-body {
+  font-size: 15px;
+  padding: 15px;
+}
+
+.spec-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; 
+}
+
+.spec-item {
+  background: transparent; 
+  padding: 12px 0; 
+  display: flex;
+  flex-direction: column;
+  border-bottom: 0.5px solid rgba(95, 95, 95, 0.1); 
+  box-shadow: none; 
+}
+
+.spec-item:last-child {
+  border-bottom: none; 
+}
+
+.spec-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
+}
+
+.spec-text {
+  font-size: 14px;
+  color: #555;
+}
+
+
+.radio-box {
+  position: relative;
+}
+
+.custom-radio-label {
+  display: inline-block;
+  padding: 10px 15px;
+  border: 1px solid #003686;
+  // border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fff;
+  color: #000000;
+  transition: all 0.3s ease;
+  min-width: 80px;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+input[type="radio"]:checked + .custom-radio-label {
+  background-color: #003686;
+  color: #fff;
+  border-color: #003686;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  gap: 15px;
+  width: 100%;
+}
+
+.main-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000; 
+  margin: 0;
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    gap: 15px; 
+    width: 100%;
+}
+
+.main-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #000; 
+    margin: 0;
+}
+
+.search-btn .btn {
+    padding: 7px 20px;
+    transition: 0.3s;
+}
+
+.nav-link.active{
+  color: white !important;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  /* Adjust height as needed */
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top-color: #007bff;
+  /* Primary color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

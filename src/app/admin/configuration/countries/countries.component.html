@@ -1,0 +1,867 @@
+<div *ngIf="!isAddCountries">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="countries-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Countries</strong>
+                                    <div>
+                                        <!-- <a class="btn btn-primary btn-sm" *ngIf="isAnyRowSelected()"
+                                            (click)="publishSelectedCountries()">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.countries.header.publishSelectedButton.value')}}
+                                        </a> -->
+
+
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm" [routerLink]="['/admin/Country/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.countries.header.addnewbutton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm" *ngIf="canDelete && isAnyRowSelected()" 
+                                            [cModalToggle]="deActiveSelectedCountriesModal.id">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.countries.header.deleteSelectedButton.value')}}
+                                        </a>
+                                    </div>
+                                    
+                                </c-card-header>
+                                <c-card-body>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>
+                                                        <c-form-check>
+                                                            <input cFormCheckInput id="selectAll" type="checkbox"
+                                                                [(ngModel)]="selectAllChecked"
+                                                                (change)="toggleSelectAll()" />
+                                                        </c-form-check>
+                                                    </th>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col" style="width: 10%;">Two letter ISO code</th>
+                                                    <th scope="col" style="width: 12%;">Three letter ISO code</th>
+                                                    <th scope="col">Numeric ISO code</th>
+                                                    <th scope="col">Subject to VAT</th>
+                                                    <th scope="col">Display Order</th>
+                                                    <th scope="col">Published</th>
+                                                    <th scope="col">Status</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr *ngIf="loading">
+                                                    <td colspan="10">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let country of allCountryList">
+                                                    <td>
+                                                        <c-form-check>
+                                                            <input cFormCheckInput type="checkbox"
+                                                                [(ngModel)]="country.isChecked"
+                                                                (change)="updateSelectAllState()" />
+                                                        </c-form-check>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/Country/Edit',country._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+
+                                                            <a class="btn btn-sm btn-danger text-white"
+                                                                *ngIf="country.isDeleted === false"
+                                                                [cModalToggle]="deActiveModal.id"
+                                                                (click)="setCountry(country)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-success text-white"
+                                                                *ngIf="country.isDeleted === true"
+                                                                [cModalToggle]="activeModal.id"
+                                                                (click)="setCountry(country)">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{country.countryName}} </td>
+                                                    <td>{{country.twoLetterIsoCode}}</td>
+                                                    <td>{{country.threeLetterIsoCode}}</td>
+                                                    <td>{{country.numericIsoCode}}</td>
+                                                    <td><i
+                                                            [class]="country.subjectToVat ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                                                    </td>
+                                                    <td>{{country.order}}</td>
+                                                    <td><i
+                                                            [class]="country.published ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !country.isDeleted, 'btn-danger': country.isDeleted}">
+                                                            {{ country.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                                <tr *ngIf="!allCountryList || allCountryList.length === 0">
+                                                    <td colspan="10" class="text-center "><b> No data found</b>
+                                                    </td>
+                                                </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div  *ngIf="allCountryList && allCountryList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+                                        <div  *ngIf="!allCountryList || allCountryList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deActiveSelectedCountriesModal alignment="center" id="deActiveSelectedCountriesModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.countries.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveSelectedCountriesModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.countries.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveSelectedCountriesModal.id" cButton color="secondary">
+                {{getLabelValue('admin.countries.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveSelectedCountriesModal.id"
+                (click)="unpublishSelectedCountries()">{{getLabelValue('admin.countries.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.countries.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.countries.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.countries.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteCountry(country)">{{getLabelValue('admin.countries.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.countries.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.countries.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.countries.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveCountry(country)">{{getLabelValue('admin.countries.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+<div *ngIf="isAddCountries">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="countries-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditCountry ? 'Edit country details - ':'Add a new country' }}
+                                        {{ isEditCountry ?countryName : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToCountryList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.countries.header.backToCountryButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCountry"
+                                            [title]="getLabelValue('admin.countries.header.saveButton.hint')"
+                                            (click)="createNewContryInfo(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.countries.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCountry"
+                                            [title]="getLabelValue('admin.countries.header.saveAndEditButton.hint')"
+                                            (click)="createNewContryInfo(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.countries.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCountry"
+                                            (click)="updateCountry(true)"
+                                            [title]="getLabelValue('admin.email.addEmail.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.email.addEmail.header.updateButton.value')}}
+                                        </a>
+
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCountry"
+                                            [title]="getLabelValue('admin.countries.header.saveAndEditButton.hint')"
+                                            (click)="updateCountry(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.countries.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditCountry && !countryData?.isDeleted"
+                                            [cModalToggle]="deactiveCountryEditModal.id"
+                                            [title]="getLabelValue('admin.countries.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.countries.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditCountry && countryData?.isDeleted"
+                                            [cModalToggle]="activeCountryEditModal.id"
+                                            [title]="getLabelValue('admin.countries.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.countries.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Country Info</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <form [formGroup]="countryForm">
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="countryName">{{getLabelValue('admin.countries.countryInfo.name.value')}}<span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.name.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="countryName" formControlName="countryName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="countryForm.get('countryName')?.invalid && countryForm.get('countryName')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.countries.countryInfo.name.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="twoLetterIsoCode">{{getLabelValue('admin.countries.countryInfo.twoLetterIsoCode.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.twoLetterIsoCode.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="twoLetterIsoCode"
+                                                                formControlName="twoLetterIsoCode" class="form-control"
+                                                                type="text">
+                                                        </div>
+                                                        <div *ngIf="countryForm.get('twoLetterIsoCode')?.invalid && countryForm.get('twoLetterIsoCode')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.countries.countryInfo.twoLetterIsoCode.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="threeLetterIsoCode">{{getLabelValue('admin.countries.countryInfo.threeLetterIsoCode.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.threeLetterIsoCode.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="threeLetterIsoCode"
+                                                                formControlName="threeLetterIsoCode"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="countryForm.get('threeLetterIsoCode')?.invalid && countryForm.get('threeLetterIsoCode')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.countries.countryInfo.threeLetterIsoCode.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="numericIsoCode">{{getLabelValue('admin.countries.countryInfo.numericIsoCode.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.numericIsoCode.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="numericIsoCode" formControlName="numericIsoCode"
+                                                                class="form-control" type="number">
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1 align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="subjectToVat">{{getLabelValue('admin.countries.countryInfo.subjectToVat.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.subjectToVat.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input id="subjectToVat" formControlName="subjectToVat"
+                                                            type="checkbox" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1 align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="published">{{getLabelValue('admin.countries.countryInfo.published.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.published.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input id="checkOne" formControlName="published"
+                                                            type="checkbox" />
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="order">{{getLabelValue('admin.countries.countryInfo.displayOrder.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.countries.countryInfo.displayOrder.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="order" formControlName="order"
+                                                                class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </c-card-body>
+                                    </c-card>
+
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(1)">
+                                            <strong><i class="fas fa-globe me-3 fw-bold"></i>States and
+                                                provinces</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                            <div *ngIf="isEditCountry" class="mb-4">
+                                                <c-card-body>
+                                                    <div style="overflow-x: auto;">
+
+                                                        <table class="table table-bordered">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                                    <th scope="col">Name</th>
+                                                                    <th scope="col">Abbreviation</th>
+                                                                    <th scope="col">Published</th>
+                                                                    <th scope="col">Display order</th>
+                                                                    <th scope="col">Status</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let state of stateList; let i = index">
+
+                                                                    <td class="text-center">
+                                                                        <div class="center-buttons">
+                                                                            <a class="btn btn-sm btn-secondary"
+                                                                                (click)="editState (state._id)"
+                                                                                [cModalToggle]="addNewStateModal.id">
+                                                                                <i class="fas fa-pencil"></i>
+                                                                            </a>
+                                                                            <a class="btn btn-sm btn-danger text-white"
+                                                                                *ngIf="state.isDeleted === false"
+                                                                                [cModalToggle]="deActiveModal.id"
+                                                                                (click)="setState(state)">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </a>
+                                                                            <a class="btn btn-sm btn-success text-white"
+                                                                                *ngIf="state.isDeleted === true"
+                                                                                [cModalToggle]="activeModal.id"
+                                                                                (click)="setState(state)">
+                                                                                <i class="fas fa-check"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td>{{state.stateName}}</td>
+                                                                    <td>{{state.abbreviation}}</td>
+                                                                    <td class=" d-flex justify-content-center">
+                                                                        <i [ngClass]="state.published ? 'fas fa-check text-success' : 'fas fa-times text-danger'"
+                                                                            [style.fontSize.px]="20">
+                                                                        </i>
+                                                                    </td>
+                                                                    <td>{{state.order}}</td>
+
+                                                                    <td class="text-center">
+                                                                        <a class="btn btn-sm text-white"
+                                                                            [ngClass]="{'btn-success': !state.isDeleted, 'btn-danger': state.isDeleted}">
+                                                                            {{ state.isDeleted ? 'Deactive' : 'Active'
+                                                                            }}
+                                                                        </a>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr *ngIf="!stateList || stateList.length === 0">
+                                                                    <td colspan="6" class="text-center "><b> No data
+                                                                            found</b>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="row mt-4 align-items-center">
+                                                        <div class="col-lg-4 col-md-6 mb-2">
+                                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                                <ul class="pagination">
+                                                                    <li class="page-item"
+                                                                        [class.disabled]="stateCurrentPage <= 1">
+                                                                        <a class="page-link"
+                                                                            (click)="changeStatePage(stateCurrentPage - 1)"
+                                                                            tabindex="-1">Previous</a>
+                                                                    </li>
+
+                                                                    <li class="page-item"
+                                                                        *ngFor="let page of getStatePagination()"
+                                                                        [class.active]="page === stateCurrentPage"
+                                                                        [class.disabled]="page === '...'">
+                                                                        <a class="page-link"
+                                                                            *ngIf="page !== '...'; else stateDotsTemplate"
+                                                                            (click)="changeStatePage(page)">
+                                                                            {{ page }}
+                                                                        </a>
+                                                                        <ng-template #stateDotsTemplate><span
+                                                                                class="page-link">...</span></ng-template>
+                                                                    </li>
+
+                                                                    <li class="page-item"
+                                                                        [class.disabled]="stateCurrentPage >= totalStatePages || totalStatePages === 0">
+                                                                        <a class="page-link"
+                                                                            (click)="changeStatePage(stateCurrentPage + 1)">Next</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                            <div class="dataTables_length">
+                                                                <label>
+                                                                    Show
+                                                                    <select
+                                                                        class="form-control form-control-sm d-inline-block w-auto"
+                                                                        [(ngModel)]="statePageSize"
+                                                                        (change)="updateStatePageSize()">
+                                                                        <option value="10">
+                                                                            10
+                                                                        </option>
+                                                                        <option value="25">
+                                                                            25
+                                                                        </option>
+                                                                        <option value="50">
+                                                                            50
+                                                                        </option>
+                                                                        <option value="100">
+                                                                            100
+                                                                        </option>
+                                                                    </select>
+                                                                    items
+                                                                </label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div *ngIf="stateList && stateList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                            <div class="dataTables_info">
+                                                                {{ (stateCurrentPage -
+                                                                1) * statePageSize
+                                                                + 1 }}-
+                                                                {{
+                                                                Math.min(stateCurrentPage
+                                                                *
+                                                                statePageSize,
+                                                                totalStateRecords)
+                                                                }} of {{
+                                                                totalStateRecords
+                                                                }} items
+                                                            </div>
+                                                        </div>
+                                                        <div  *ngIf="!stateList || stateList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                            No record found
+                                                        </div>
+                                                    </div>
+
+                                                    <a class="btn btn-primary btn-sm"
+                                                        [cModalToggle]="addNewStateModal.id"
+                                                        (click)="openAddStateModal()">
+                                                        <i class="fas fa-plus me-1"></i>
+                                                        {{getLabelValue('admin.countries.edit.state.addnewbutton.value')}}
+                                                    </a>
+
+                                                </c-card-body>
+                                            </div>
+                                            <div *ngIf="!isEditCountry">
+                                                {{getLabelValue('admin.countries.addNew.StatesAndProvinces.taxt.value')}}
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deactiveCountryEditModal alignment="center" id="deactiveCountryEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.countries.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveCountryEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.countries.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveCountryEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.countries.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveCountryEditModal.id"
+                (click)="deactiveCountry()">{{getLabelValue('admin.countries.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeCountryEditModal alignment="center" id="activeCountryEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.countries.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeCountryEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.countries.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeCountryEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.countries.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeCountryEditModal.id"
+                (click)="activeCountry()">{{getLabelValue('admin.countries.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.country.edit.state.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.country.edit.state.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.country.edit.state.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteState(state)">{{getLabelValue('admin.country.edit.state.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.country.edit.state.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.country.edit.state.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.country.edit.state.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveState(state)">{{getLabelValue('admin.country.edit.state.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>
+<c-modal size="lg" #addNewStateModal alignment="center" id="addNewStateModal" [visible]="visible"
+    (visibleChange)="handleLiveChange($event)">
+    <section class="content p-2">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="countries-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>{{ isEditState ? 'Edit ':' Add a new'}} state/province
+                                        <!-- {{ isEditState ?
+                      allLanguagesList.languageName : '' }} -->
+                                        <!-- <a class="btn btn-sm text-primary" (click)="backToCountryList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.countries.header.backToCountryButton.value')}}
+                                        </a> -->
+                                    </strong>
+                                    <div>
+                                        <a [cModalToggle]="addNewStateModal.id"
+                                            class="btn btn-secondary btn-sm text-white">
+                                            {{getLabelValue('admin.catalog.attributes.productAttributes.body.deActiveModal.closeButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="!isShowStateSaveUpdateButton"
+                                            [title]="getLabelValue('admin.countries.header.saveButton.hint')"
+                                            (click)="createNewState()" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.countries.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white" *ngIf="isShowStateSaveUpdateButton"
+                                            (click)="updateState()"
+                                            [title]="getLabelValue('admin.email.addEmail.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.email.addEmail.header.updateButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="stateForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="stateName">{{getLabelValue('admin.countries.edit.state.addNew.name.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.countries.edit.state.addNew.name.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="stateName" formControlName="stateName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="stateForm.get('stateName')?.invalid && stateForm.get('stateName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.countries.edit.state.addNew.name.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="abbreviation">{{getLabelValue('admin.countries.edit.state.addNew.abbreviation.value')}}
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.countries.edit.state.addNew.abbreviation.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="abbreviation" formControlName="abbreviation"
+                                                        class="form-control" type="text">
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1 align-items-center">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="published">{{getLabelValue('admin.countries.edit.state.addNew.published.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.countries.edit.state.addNew.published.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input id="checkOne" formControlName="published" type="checkbox" />
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="order">{{getLabelValue('admin.countries.edit.state.addNew.displayOrder.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.countries.edit.state.addNew.displayOrder.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="order" formControlName="order" class="form-control"
+                                                        type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+</c-modal>

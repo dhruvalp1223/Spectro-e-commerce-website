@@ -1,0 +1,169 @@
+/* Main Menu Styles */
+#main-menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #main-menu > .menu-item {
+    position: relative;
+  }
+  
+  #main-menu > .menu-item > .menu-link {
+    text-decoration: none;
+    font-size: 16px;
+    display: flex;
+    align-items: center; /* Aligns text and icon */
+    justify-content: space-between;
+  }
+  
+  #main-menu > .menu-item > .menu-link:hover {
+    color: #003686; /* Highlight color */
+  }
+  
+  /* Dropdown Arrow */
+  .dropdown-arrow {
+    font-size: 14px;
+    color: #ccc;
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+  }
+  
+  .menu-item:hover .dropdown-arrow {
+    transform: rotate(180deg); /* Rotate the arrow when hovered */
+  }
+  
+  /* Submenu Styles */
+  .submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px 0;
+    min-width: 200px;
+    display: none;
+    z-index: 10;
+  }
+  
+  .menu-item:hover .submenu {
+    display: block;
+  }
+  
+  .submenu-item {
+    padding: 10px 20px;
+  }
+  
+  .submenu-link {
+    text-decoration: none;
+    font-size: 14px;
+    color: #333;
+    display: block;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  
+  .submenu-link:hover {
+    background: #f4f4f4;
+    color: #003686;
+    border-radius: 3px;
+  }
+  
+  /* Mobile Adjustments */
+  @media (max-width: 768px) {
+    #main-menu {
+      flex-direction: column;
+    }
+  
+    .menu-item {
+      padding: 10px;
+    }
+  
+    .submenu {
+      position: static;
+      display: none;
+      box-shadow: none;
+      padding: 0;
+    }
+  
+    .menu-item:hover .submenu {
+      display: block;
+    }
+  
+    .submenu-item {
+      padding: 8px 16px;
+    }
+  }
+  
+/* Ensure the category list is displayed as block elements */
+#category-menu {
+  padding: 0;
+  list-style-type: none;
+}
+
+/* Each category item will take up a full row */
+.category-item {
+  display: block;
+  margin-bottom: 10px; /* Space between categories */
+  padding: 05px;
+  // border: 1px solid #ddd; /* Border around each category */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for categories */
+.category-item:hover {
+  background-color: #e0e0e0;
+}
+
+/* Style for the subcategory list */
+.category-item ul {
+  list-style-type: none;
+  padding-left: 20px; /* Indentation for subcategories */
+  margin-top: 5px;
+}
+
+/* Style for each subcategory */
+.category-item ul li {
+  padding: 5px 10px;
+  // background-color: #f0f0f0;
+  border-radius: 3px;
+  margin-top: 5px;
+}
+
+
+.category-item {
+  // display: flex;
+  align-items: center; /* Vertically center the icon and text */
+}
+
+.category-item i {
+  margin-right: 8px; /* Spacing between the icon and the text */
+  font-size: 12px; /* Adjust the size of the icon */
+  vertical-align: middle; /* Ensures the icon is vertically centered */
+}
+
+  /* Hide menu icon by default */
+.bar-style {
+  display: none;
+}
+
+/* Show menu icon only on mobile screens */
+@media (max-width: 1199px) {
+  .bar-style {
+      display: block; /* Show the menu icon on small screens */
+  }
+}
+
+.active-category
+ {
+  color: #003686 !important;
+  font-weight: bold;
+}
+
+.category-section{
+padding: 0px 20px;
+}
+

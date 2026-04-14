@@ -1,0 +1,19 @@
+td{
+    min-width: max-content;
+}
+
+
+  .center-buttons {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    gap: 5px; /* Add spacing between buttons */
+  }
+  
+  @media (max-width: 768px) {
+    .btn-container {
+        flex-direction: column !important;
+        gap: 8px; /* Adds spacing between buttons */
+    }
+  }
+  

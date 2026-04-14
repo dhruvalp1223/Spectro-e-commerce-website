@@ -1,0 +1,148 @@
+<!-- <div class="breadcrumb-section">
+    <div class="container">
+        <h2>Customer's login</h2>
+        <nav class="theme-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a [routerLink]="['/home']">Home</a>
+                </li>
+                <li class="breadcrumb-item active">Customer's login</li>
+            </ol>
+        </nav>
+    </div>
+</div> -->
+
+
+
+<!--section start-->
+<section class="login-page section-b-space">
+    <div class="container" *ngIf="isLoginView">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>Login</h3>
+                <div class="theme-card">
+                    <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+                        <div class="form-box input_feild mb-2">
+                            <label for="email" class="form-label">Email<span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input type="text" class="form-control" id="email" placeholder="Email"
+                                formControlName="email" required>
+                            </div>
+                            <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+                                class="text-danger">
+                                <div *ngIf="loginForm.get('email')?.errors?.['required']">
+                                    Email is required.
+                                </div>
+                                <div *ngIf="loginForm.get('email')?.errors?.['email']">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+                        <div class="form-box input_feild mb-2">
+                            <label for="password" class="form-label">Password<span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password"
+                                formControlName="pwd" required>
+                            </div>
+                            <div *ngIf="loginForm.get('pwd')?.touched && loginForm.get('pwd')?.invalid"
+                                class="text-danger">
+                                Password is required.
+                            </div>
+                        <div class="text-end mt-2">
+                            <a class="" [routerLink]="['/forgot-password']">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-solid">Login</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-6 right-login">
+                <h3>New Customer</h3>
+                <div class="theme-card authentication-right">
+                    <div class="feild">
+                        <h6 class="title-font">Create A Account</h6>
+                        <p>Sign up for a free account at our store. Registration is quick and easy. It allows you to be
+                            able to order from our shop. To start shopping click register.</p>
+                        <a [routerLink]="['/register']" class="btn btn-solid" style="margin-top: 20px;">Create an
+                            Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+        <!-- Forgot Password Form -->
+        <div *ngIf="isForgotPasswordView" class="forgot-password-form">
+            <h3 class="text-center">Forgot Password?</h3>
+            <form (ngSubmit)="generateOtp()">
+                <div class="form-group input_feild">
+                    <label for="email">Email Address</label>
+                    <input id="email" [(ngModel)]="forgotPasswordEmail" name="email" placeholder="Enter your email"
+                        class="form-control" type="email" required>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="btn btn-solid">Generate OTP</button>
+                    <button type="button" class="btn btn-md btn-outline fw-bold" [routerLink]="['/login']">Back to
+                        Login</button>
+                </div>
+            </form>
+        </div>
+        
+    <!-- generate otp Form -->
+    <div *ngIf="isGenerateOtpView" class="forgot-password-form">
+        <h3 class="text-center">Otp Verification</h3>
+        <p class="text-center">Enter your Otp here</p>
+        <form (ngSubmit)="processOtp()">
+            <div class="form-group otp-input-group">
+                <input #otp1Input [(ngModel)]="otp1" name="otp1" maxlength="1" class="form-control otp-input    "
+                    type="text" required (input)="onInput(otp1Input, otp2Input)">
+                <input #otp2Input [(ngModel)]="otp2" name="otp2" maxlength="1" class="form-control otp-input"
+                    type="text" required (input)="onInput(otp2Input, otp3Input)">
+                <input #otp3Input [(ngModel)]="otp3" name="otp3" maxlength="1" class="form-control otp-input"
+                    type="text" required (input)="onInput(otp3Input, otp4Input)">
+                <input #otp4Input [(ngModel)]="otp4" name="otp4" maxlength="1" class="form-control otp-input"
+                    type="text" required>
+            </div>
+            <div class="text-end mt-1 mb-1">
+                <a class="" style="cursor: pointer;" (click)="resendOtp()">Resend Otp?</a>
+            </div>
+            <div class="button-container">
+                <button *ngIf="isFromSignUp" type="submit" class="btn btn-solid">Register</button>
+                <button *ngIf="!isFromSignUp" type="submit" class="btn btn-solid">Next</button>
+                <button type="button" class="btn btn-md btn-outline fw-bold"
+                    [routerLink]="['/forgot-password']">Back</button>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+    <!-- Reset Password Form -->
+    <div *ngIf="isResetPasswordView" class="reset-password-form">
+        <h3 class="text-center">Reset Your Password</h3>
+        <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+            <div class="form-group input_feild">
+                <label for="password">New Password</label>
+                <input id="password" formControlName="newPassword" name="password" placeholder="Enter your new password"
+                    class="form-control" type="password" required>
+            </div>
+            <div class="form-group input_feild">
+                <label for="confirm-password">Confirm New Password</label>
+                <input id="confirm-password" formControlName="confirmPassword" name="confirmPassword"
+                    placeholder="Confirm your new password" class="form-control" type="password" required>
+                <!-- <div *ngIf="resetPasswordForm.errors?.mismatch" class="error">
+                    Passwords do not match.
+                </div> -->
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn btn-solid">Reset Password</button>
+                <button type="button" class="btn btn-md btn-outline fw-bold" [routerLink]="['/login']">Back to
+                    Login</button>
+            </div>
+        </form>
+    </div>
+
+
+</section>

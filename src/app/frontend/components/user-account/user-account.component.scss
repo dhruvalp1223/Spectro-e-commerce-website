@@ -1,0 +1,109 @@
+
+.modal-dialog-end {
+    max-width: 400px;
+    margin: 0;
+  }
+  .profile-top-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+ 
+  .profile-top {
+    display: flex;
+    align-items: center; 
+    padding: 10px;
+    // border: 1px solid #ddd; 
+    border-radius: 8px; 
+    // background-color: #f9f9f9;
+    // max-width: 500px; 
+}
+
+.profile-row {
+    display: flex;
+    align-items: center; 
+    width: 100%; 
+}
+
+.profile-image {
+    flex-shrink: 0; 
+    margin-right: 15px; 
+}
+
+.user-round {
+    width: 50px;
+    height: 50px;
+    background-color: #f1f1f1; 
+    border-radius: 50%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    font-size: 20px !important; 
+    font-weight: bold !important;
+    color: #555; 
+    text-transform: uppercase;
+}
+
+.profile-detail {
+    flex-grow: 1; 
+}
+
+.profile-detail h5 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333; 
+}
+
+.profile-detail h6 {
+    margin: 0;
+    font-size: 14px;
+    color: #777; 
+}
+
+
+
+.input_feild {
+    position: relative;
+    border: 1.63px solid #D0D5DD;
+    height: 44px;
+    border-radius: 5px;
+    margin-top: 20px !important;
+}
+
+.input_feild input {
+    font-size: 14.04px;
+    font-weight: 400;
+    line-height: 18.28px;
+    text-align: left;
+    color: #000000;
+    border: none;
+    height: 100%;
+    width: 100%;
+    background: none;
+    padding: 10px 20px;
+}
+
+.input_feild input:focus {
+    outline: none;
+}
+
+.input_feild label {
+    font-size: 13.03px;
+    font-weight: 400;
+    line-height: 15.27px;
+    text-align: left;
+    color: #1F1B1B;
+    position: absolute;
+    left: 10px;
+    top: -16px;
+    background: #ffffff;
+    padding: 4px 8px;
+}
+
+/* Hover effect for categories */
+.category-item:hover {
+    background-color: #e0e0e0;
+  }
+  

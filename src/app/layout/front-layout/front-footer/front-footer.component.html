@@ -1,0 +1,162 @@
+<footer class="footer-style-1">
+    <section class="section-b-space darken-layout">
+        <div class="container">
+            <div class="row footer-theme g-md-5 g-2">
+                <div class="col-xl-3 col-lg-5 col-md-6 sub-title ">
+                    <div>
+                        <div class=""><a [routerLink]='["/home"]'><img alt="logo" class="img-fluid w-60 m-auto"
+                                    [src]="commonService.rootData.uploadsUrl + this.selectedImageForfooterLogo">
+                            </a>
+                        </div>
+                        <div>
+                            <p>{{generalSettingData?.description}}
+                            </p>
+                        </div>
+                        <ul class="contact-list">
+                            <li><i class="ri-map-pin-line"></i>
+                                {{generalSettingData?.address}} </li>
+
+                            <li><i class="ri-phone-line"></i>
+                                Call Us: {{generalSettingData?.contact}}</li>
+                            <li><i class="ri-mail-line"></i>
+                                Email Us: {{generalSettingData?.email}}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-4 col-md-6">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Categories</h4>
+                        </div>
+                        <div class="footer-content">
+                            <ul *ngFor="let category of allCategoriesList; let i = index">
+                                <li><a class="text-content" [routerLink]="['/product-category']"
+                                        [queryParams]="{ searchEngineFriendlyPageName: category.searchEngineFriendlyPageName,categoryId: category._id }">{{category.categoryName}}
+                                    </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl col-lg-3 col-md-3">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Useful Links</h4>
+                        </div>
+                        <div class="footer-content">
+                            <ul>
+                                <li><a class="text-content" [routerLink]='["/home"]'>Home</a></li>
+                                <!-- <li><a class="text-content" href="collection.html">Collections</a> -->
+                                <!-- </li> -->
+                                <li><a class="text-content" [routerLink]="['/about-us']">About Us</a>
+                                </li>
+                                <!-- <li><a class="text-content">Blogs</a></li> -->
+                                <!-- <li><a class="text-content" href="search.html">Search</a></li> -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-md-3">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Help Center</h4>
+                        </div>
+                        <div class="footer-content">
+                            <ul>
+                                <li *ngIf="!isLoggedIn()"><a class="text-content" [routerLink]="['/login']">Login</a>
+                                </li>
+                                <li *ngIf="!isLoggedIn()"><a class="text-content"
+                                        [routerLink]="['/register']">Register</a></li>
+
+                                <li *ngIf="isLoggedIn()"><a class="text-content" [routerLink]='["/my-account"]'>My
+                                        Account</a></li>
+                                <!-- <li *ngIf="isLoggedIn()" ><a class="text-content">My
+                                        Orders</a>
+                                </li> -->
+                                <!-- <li><a class="text-content" href="order-tracking.html">Track -->
+                                <!-- Order</a></li> -->
+                                <!-- <li><a class="text-content" href="wishlist.html">Wishlist</a> -->
+                                <!-- </li> -->
+                                <!-- <li><a class="text-content" href="faq.html">Faq's</a></li> -->
+                                <li><a class="text-content" [routerLink]="['/contact-us']">Contact
+                                        Us</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Follow Us</h4>
+                        </div>
+                        <div class="footer-content">
+                            <p class="mb-cls-content">Never Miss Anything From
+                                Store By Signing Up To Our Newsletter.</p>
+                            <form novalidate="" [formGroup]="newsLatterForm" class="form-inline">
+                                <div class="form-group me-sm-3 mb-2">
+                                    <input type="email" formControlName="email" class="form-control"
+                                        placeholder="Enter Email Address">
+                                    <div *ngIf="newsLatterForm.get('email')?.touched && newsLatterForm.get('email')?.invalid"
+                                        class="text-danger">
+                                        <div *ngIf="newsLatterForm.get('email')?.errors?.['required']">
+                                            Email is required.
+                                        </div>
+                                        <div *ngIf="newsLatterForm.get('email')?.errors?.['email']">
+                                            Please enter a valid email address.
+                                        </div>
+                                        <div *ngIf="newsLatterForm.get('email')?.errors?.['emailExists']">
+                                            This email address already exists.
+                                          </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-solid mb-2" (click)="addNewsLatter()">Subscribe</button>
+                            </form>
+                            <div class="footer-social">
+                                <ul>
+                                    <li>
+                                        <a target="_blank" [href]="generalSettingData?.facebookUrl">
+                                            <i class="ri-facebook-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" [href]="generalSettingData?.twitterUrl">
+                                            <i class="ri-twitter-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" [href]="generalSettingData?.instagramUrl">
+                                            <i class="ri-instagram-fill"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a target="_blank" [href]="generalSettingData?.youtubeUrl">
+                                            <i class="ri-youtube-fill"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="sub-footer dark-subfooter">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <div class="footer-end">
+                        <p><i class="ri-copyright-line"></i>2024-25 All Rights Reserved By
+                            {{generalSettingData?.storeName}}</p>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6 col-sm-12">
+                    <!-- <div class="payment-card-bottom">
+                        <img alt="payment options" src="../../../../assets/userAssets/images/payment.png"
+                            class="img-fluid">
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

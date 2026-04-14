@@ -1,0 +1,643 @@
+<div *ngIf="!isAddNewsItems">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>News items
+                                    </strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm" [routerLink]="['/admin/News/NewsItemCreate']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.newsItems.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="title">
+                                                            {{getLabelValue('admin.newsItems.search.title.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.newsItems.search.title.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line"
+                                                            [(ngModel)]="title" data-val="true" data-val-length-min="0"
+                                                            data-val-required="Please provide a name." id="title"
+                                                            name="title" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3 col-md-12">
+                                                <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                                <div class="col-md-9 ps-3">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllNewsItemsList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{getLabelValue('admin.newsItems.search.searchButton.value')}}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                    <br>
+
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">Title</th>
+                                                            <th scope="col">View comments</th>
+                                                            <th scope="col">Start date</th>
+                                                            <th scope="col">End date</th>
+                                                            <th scope="col">Published</th>
+                                                            <th scope="col">Created on</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="8">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                        <tr
+                                                            *ngFor="let news of allNewsItemsList; let langIndex = index">
+
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/News/NewsItemEdit',news._id]">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+                                                                    <a class="btn btn-sm btn-danger text-white"
+                                                                        *ngIf="news.isDeleted === false"
+                                                                        [cModalToggle]="deActiveModal.id"
+                                                                        (click)="setNews(news)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-success text-white"
+                                                                        *ngIf="news.isDeleted === true"
+                                                                        [cModalToggle]="activeModal.id"
+                                                                        (click)="setNews(news)">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{news.title}}</td>
+                                                            <td></td>
+                                                            <td>{{news.startDate?.split('T')[0] || ''}}</td>
+                                                            <td>{{news.endDate?.split('T')[0] || ''}}</td>
+                                                            <td><i
+                                                                    [class]="news.published ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                                                            </td>
+                                                            <td>{{news.createdAt?.split('T')[0] || ''}}</td>
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !news.isDeleted, 'btn-danger': news.isDeleted}">
+                                                                    {{ news.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="!allNewsItemsList || allNewsItemsList.length === 0">
+                                                            <td colspan="8" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <!-- Previous Button -->
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <!-- Page Numbers -->
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <!-- Next Button -->
+                                                            <li class="page-item"
+                                                            [class.disabled]="currentPage >= totalPages || totalPages === 0">
+                                                            <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allNewsItemsList && allNewsItemsList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+                                                <div  *ngIf="!allNewsItemsList || allNewsItemsList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.newsItems.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.newsItems.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.newsItems.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteNewsItems(news)">{{getLabelValue('admin.newsItems.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.newsItems.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.newsItems.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.newsItems.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveNewsItems(news)">{{getLabelValue('admin.newsItems.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>
+
+<div *ngIf="isAddNewsItems">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="manufacturer-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditNewsItems ? 'Edit news item detail ':'Add a new news item' }}
+                                        {{ isEditNewsItems ? allNewsItemsList.title : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToBlogList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.backToTopicListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditNewsItems"
+                                            [title]="getLabelValue('admin.newsItems.addNew.header.saveButton.hint')"
+                                            (click)="createNewNewsItems(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditNewsItems"
+                                            [title]="getLabelValue('admin.newsItems.addNew.header.saveAndEditButton.hint')"
+                                            (click)="createNewNewsItems(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditNewsItems"
+                                            (click)="updateNewsItems(true)"
+                                            [title]="getLabelValue('admin.newsItems.addNew.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditNewsItems"
+                                            (click)="updateNewsItems(false)"
+                                            [title]="getLabelValue('admin.newsItems.addNew.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white" *ngIf="isEditNewsItems && !newsItemData?.isDeleted" 
+                                        [cModalToggle]="deactiveNewsEditModal.id"
+                                            [title]="getLabelValue('admin.newsItems.addNew.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.newsItems.addNew.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white" *ngIf="isEditNewsItems && newsItemData?.isDeleted" 
+                                        [cModalToggle]="activeNewsEditModal.id"
+                                        [title]="getLabelValue('admin.newsItems.addNew.header.activeButton.hint')"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <i class="fas fa-check me-1"></i>
+                                        {{getLabelValue('admin.newsItems.addNew.header.activeButton.value')}}
+                                    </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="newsForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Info</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="newsForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="title">{{getLabelValue('admin.newsItems.addNew.info.title.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.title.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="title" formControlName="title"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="newsForm.get('title')?.invalid  && newsForm.get('title')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.newsItems.addNew.info.title.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="shortDescription">{{getLabelValue('admin.newsItems.addNew.info.shortDescription.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.shortDescription.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="shortDescription"
+                                                                class="form-control" formControlName="shortDescription"
+                                                                rows="3"></textarea>
+                                                            <!-- <angular-editor id="body"
+                                                            formControlName="body" [config]="editorConfig">
+                                                        </angular-editor> -->
+                                                        </div>
+                                                        <div *ngIf="newsForm.get('shortDescription')?.invalid  && newsForm.get('shortDescription')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.newsItems.addNew.info.shortDescription.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="fullDescription">{{getLabelValue('admin.newsItems.addNew.info.fullDescription.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.fullDescription.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <!-- <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="fullDescription"
+                                                                class="form-control" formControlName="fullDescription"
+                                                                rows="3"></textarea>
+                                                        </div> -->
+                                                        <angular-editor id="fullDescription"
+                                                            formControlName="fullDescription" [config]="editorConfig">
+                                                        </angular-editor>
+                                                        <div *ngIf="newsForm.get('fullDescription')?.invalid  && newsForm.get('fullDescription')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.newsItems.addNew.info.fullDescription.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="allowComments">{{getLabelValue('admin.newsItems.addNew.info.allowComments.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.allowComments.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="allowComments" formControlName="allowComments"
+                                                                type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="startDate">{{getLabelValue('admin.newsItems.addNew.info.startDate.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.startDate.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="startDate" formControlName="startDate"
+                                                                class="form-control" type="date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="endDate">{{getLabelValue('admin.newsItems.addNew.info.endDate.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.endDate.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="endDate" formControlName="endDate"
+                                                                class="form-control" type="date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="published">{{getLabelValue('admin.newsItems.addNew.info.published.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.info.published.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="published" formControlName="published"
+                                                                type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+
+
+
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(1)">
+                                                <strong><i class="fas fa-search-plus me-3 fw-bold"></i>SEO</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="newsForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="searchEngineFriendlyPageName">{{getLabelValue('admin.newsItems.addNew.seo.searchEngineFriendlyPageName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.seo.searchEngineFriendlyPageName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="searchEngineFriendlyPageName"
+                                                                formControlName="searchEngineFriendlyPageName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaTitle">{{getLabelValue('admin.newsItems.addNew.seo.metaTitle.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.seo.metaTitle.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaTitle" formControlName="metaTitle"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaKeywords">{{getLabelValue('admin.newsItems.addNew.seo.metaKeywords.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.seo.metaKeywords.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaKeywords" formControlName="metaKeywords"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaDescription">{{getLabelValue('admin.newsItems.addNew.seo.metaDescription.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.newsItems.addNew.seo.metaDescription.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="metaDescription"
+                                                                class="form-control" formControlName="metaDescription"
+                                                                rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deactiveNewsEditModal alignment="center" id="deactiveNewsEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.newsItems.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveNewsEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.newsItems.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveNewsEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.newsItems.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveNewsEditModal.id"
+                (click)="deactiveNewsItems()">{{getLabelValue('admin.newsItems.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeNewsEditModal alignment="center" id="activeNewsEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.newsItems.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeNewsEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.newsItems.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeNewsEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.newsItems.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeNewsEditModal.id"
+                (click)="activeNewsItems()">{{getLabelValue('admin.newsItems.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

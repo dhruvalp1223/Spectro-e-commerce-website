@@ -1,0 +1,1512 @@
+<div *ngIf="!isAddCustomer">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Customers
+                                    </strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm" [routerLink]="['/admin/Customer/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.customers.header.addnewbutton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm" *ngIf="canDelete && isAnyRowSelected()" 
+                                             [cModalToggle]="deActiveSelectedCustomerModal.id">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.customers.header.deleteSelectedButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse1(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="categoryname">
+                                                            {{getLabelValue('admin.categories.search.categoryname.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.categoryname.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="categoryName"
+                                                            data-val-required="Please provide a name." id="Name"
+                                                            name="Name" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="Name">
+                                                            {{getLabelValue('admin.categories.search.published.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.published.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="published" [(ngModel)]="published"
+                                                            [items]="publishes" bindLabel="label" bindValue="value"
+                                                            [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="false"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+
+                                            </div> -->
+
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="email">
+                                                            {{getLabelValue('admin.customer.search.email.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.email.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="email"
+                                                            data-val-required="Please provide a email." id="email"
+                                                            name="email" type="text">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2 text-end" for="Name">
+                                                            {{getLabelValue('admin.customer.search.lastActivityForm.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.lastActivityForm.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="lastActivityForm" [(ngModel)]="lastActivityForm"
+                                                            class="form-control" type="date">
+                                                    </div>
+                                                </div> -->
+
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="dateOfBirth">
+                                                            {{getLabelValue('admin.customer.search.dateOfBirth.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.dateOfBirth.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="dateOfBirth" [(ngModel)]="dateOfBirth"
+                                                            class="form-control" type="date">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="firstName">
+                                                            {{getLabelValue('admin.customer.search.firstName.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.firstName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="firstName"
+                                                            data-val-required="Please provide a firstName."
+                                                            id="firstName" name="firstName" type="text">
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="Name">
+                                                            {{getLabelValue('admin.customer.search.lastActivityTo.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.lastActivityTo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="lastActivityTo" [(ngModel)]="lastActivityTo"
+                                                            class="form-control" type="date">
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="lastName">
+                                                            {{getLabelValue('admin.customer.search.lastName.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.lastName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="lastName"
+                                                            data-val-required="Please provide a lastName." id="lastName"
+                                                            name="lastName" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="companyName">
+                                                            {{getLabelValue('admin.customer.search.company.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.company.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="companyNames"
+                                                            data-val-required="Please provide a companyName."
+                                                            id="companyName" name="companyName" type="text">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2 " for="customerRoles">
+                                                            {{getLabelValue('admin.customer.search.customerRole.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.customerRole.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="customerRoles" [(ngModel)]="customerRoles"
+                                                            [items]="allCustomerRoleList" bindLabel="customerRoleName"
+                                                            bindValue="_id" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="true"
+                                                            [multiple]="true" appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.customerRoleName }}
+                                                            </ng-template>
+                                                        </ng-select>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="form-group row mb-1"> -->
+                                              
+                                                <!-- <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="ipAddress">
+                                                            {{getLabelValue('admin.customer.search.ipAddress.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.ipAddress.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="ipAddress"
+                                                            data-val-required="Please provide a ipAddress."
+                                                            id="ipAddress" name="ipAddress" type="text">
+                                                    </div>
+                                                </div> -->
+                                            <!-- </div> -->
+
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2 text-end"
+                                                            for="registrationDateForm">
+                                                            {{getLabelValue('admin.customer.search.registrationDateForm.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.registrationDateForm.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="registrationDateForm"
+                                                            [(ngModel)]="registrationDateForm" class="form-control"
+                                                            type="date">
+                                                    </div>
+                                                </div>
+                                               
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2 text-end"
+                                                            for="registrationDateTo">
+                                                            {{getLabelValue('admin.customer.search.registrationDateTo.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.customer.search.registrationDateTo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="registrationDateTo" [(ngModel)]="registrationDateTo"
+                                                            class="form-control" type="date">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="form-group row mb-1">
+                                               
+                                            </div> -->
+
+                                            <div class="row mt-3 justify-content-center">
+                                                <div class="col-md-6 text-center">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllCustomerList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{ getLabelValue('admin.customer.search.searchButton.value') }}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+
+                                        </c-card-body>
+                                    </c-card>
+
+                                    <br>
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput id="selectAll"
+                                                                        type="checkbox" [(ngModel)]="selectAllChecked"
+                                                                        (change)="toggleSelectAll()" />
+                                                                </c-form-check>
+                                                            </th>
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">Email</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Customer roles</th>
+                                                            <th scope="col">Company name</th>
+                                                            <th scope="col">Active</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="8">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                        <tr
+                                                            *ngFor="let customer of allCustomerList; let langIndex = index">
+                                                            <td>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput type="checkbox"
+                                                                        [(ngModel)]="customer.isChecked"
+                                                                        (change)="updateSelectAllCustomer()" />
+                                                                </c-form-check>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/Customer/Edit',customer._id]">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+                                                                    <a class="btn btn-sm btn-danger text-white"
+                                                                        *ngIf="customer.isDeleted === false"
+                                                                        [cModalToggle]="deActiveModal.id"
+                                                                        (click)="setCustomer(customer)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-success text-white"
+                                                                        *ngIf="customer.isDeleted === true"
+                                                                        [cModalToggle]="activeModal.id"
+                                                                        (click)="setCustomer(customer)">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{customer.email}}</td>
+                                                            <td>{{customer.firstName}} {{customer.lastName}}</td>
+                                                            <td>{{customer.customerRoleNames}}</td>
+                                                            <td>{{customer.companyName}}</td>
+                                                            <td><i
+                                                                    [class]="customer.active ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !customer.isDeleted, 'btn-danger': customer.isDeleted}">
+                                                                    {{ customer.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr *ngIf="!allCustomerList || allCustomerList.length === 0">
+                                                            <td colspan="8" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                [class.disabled]="currentPage >= totalPages||totalPages === 0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allCustomerList && allCustomerList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="!allCustomerList || allCustomerList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deActiveSelectedCustomerModal alignment="center" id="deActiveSelectedCustomerModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveSelectedCustomerModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveSelectedCustomerModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveSelectedCustomerModal.id"
+            (click)="deleteSelectedCustomer()" >{{getLabelValue('admin.customer.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteCustomer(customer)">{{getLabelValue('admin.customer.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveCustomer(customer)">{{getLabelValue('admin.customer.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>
+
+
+<div *ngIf="isAddCustomerDetail">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="categories-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditCustomer ? ('Edit customer details' + (customerName ? ' - ' + customerName : '')) : 'Add a new customer' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToCustomerList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.backToCustomerListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCustomer"
+                                            [title]="getLabelValue('admin.customers.addNew.header.saveButton.hint')"
+                                            (click)="createNewCustomer(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCustomer"
+                                            [title]="getLabelValue('admin.customers.addNew.header.saveAndEditButton.hint')"
+                                            (click)="createNewCustomer(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCustomer"
+                                            (click)="updateCustomer(true)"
+                                            [title]="getLabelValue('admin.customers.addNew.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCustomer"
+                                            [title]="getLabelValue('admin.customers.addNew.header.saveAndEditButton.hint')"
+                                            (click)="updateCustomer(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditCustomer && !customerData?.isDeleted"
+                                            [cModalToggle]="deactiveCustomerEditModal.id"
+                                            [title]="getLabelValue('admin.customers.addNew.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditCustomer && customerData?.isDeleted"
+                                            [cModalToggle]="activeCustomerEditModal.id"
+                                            [title]="getLabelValue('admin.customers.addNew.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.customers.addNew.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="customerForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Customer
+                                                    info</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="customerForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="email">{{getLabelValue('admin.customers.addNew.customerInfo.email.value')}}
+                                                                <span
+                                                                class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.email.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="email" formControlName="email"
+                                                            class="form-control" type="email">
+                                                        </div>
+                                                        <div *ngIf="customerForm.get('email')?.touched && customerForm.get('email')?.errors" class="text-danger">
+                                                            <div *ngIf="customerForm.get('email')?.errors?.['required']">
+                                                              {{ getLabelValue('admin.customers.customerInfo.email.error') }}
+                                                            </div>
+                                                            <div *ngIf="customerForm.get('email')?.errors?.['email']">
+                                                              {{ getLabelValue('admin.customers.customerInfo.email.valid.error') }}
+                                                            </div>
+                                                          </div>
+                                                          
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="password">{{getLabelValue('admin.customers.addNew.customerInfo.password.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.password.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input aria-describedby="button-addon2" id="password"
+                                                                formControlName="pwd" cFormControl type="password"
+                                                                class="form-control"   [attr.placeholder]="isEditCustomer ? '*****' : ''"  />
+                                                            <a cButton class="btn-secondary" (click)="changePassword()">
+                                                                {{getLabelValue('admin.customers.addNew.header.changePasswordButton.value')}}
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="firstName">{{getLabelValue('admin.customers.addNew.customerInfo.firstName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.firstName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="firstName" formControlName="firstName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="lastName">{{getLabelValue('admin.customers.addNew.customerInfo.lastName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.lastName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="lastName" formControlName="lastName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="gender">{{getLabelValue('admin.customers.addNew.customerInfo.gender.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.gender.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div
+                                                            class="input-group input-group-required d-flex align-items-center gap-3">
+                                                            <!-- Bind radio buttons to the "gender" form control -->
+                                                            <c-form-check>
+                                                                <input cFormCheckInput id="male"
+                                                                    formControlName="gender" type="radio"
+                                                                    value="Male" />
+                                                                <label cFormCheckLabel
+                                                                    for="male">{{getLabelValue('admin.customers.addNew.customerInfo.gender.male.value')}}</label>
+                                                            </c-form-check>
+                                                            <c-form-check>
+                                                                <input cFormCheckInput id="female"
+                                                                    formControlName="gender" type="radio"
+                                                                    value="Female" />
+                                                                <label cFormCheckLabel
+                                                                    for="female">{{getLabelValue('admin.customers.addNew.customerInfo.gender.female.value')}}</label>
+                                                            </c-form-check>
+                                                            <!-- <c-form-check>
+                                                                <input cFormCheckInput id="other" formControlName="gender" type="radio" value="Other" />
+                                                                <label cFormCheckLabel for="other">{{getLabelValue('admin.customers.addNew.customerInfo.gender.other.value')}}</label>
+                                                            </c-form-check> -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="dateOfBirth">{{getLabelValue('admin.customers.addNew.customerInfo.dateOfBirth.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.dateOfBirth.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="dob" formControlName="dob"   [max]="todayDate" class="form-control"
+                                                                type="date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="companyName">{{getLabelValue('admin.customers.addNew.customerInfo.companyName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.companyName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="companyName" formControlName="companyName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="isTaxExempt">{{getLabelValue('admin.customers.addNew.customerInfo.isTaxExempt.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.isTaxExempt.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="isTaxExempt" formControlName="isTaxExempt"
+                                                                type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="customerRole">{{getLabelValue('admin.customers.customerInfo.customerRole.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.customers.customerInfo.customerRole.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group">
+                                                            <ng-select id="customerRole" [items]="allCustomerRoleList"
+                                                                bindLabel="customerRoleName" bindValue="_id"
+                                                                [searchable]="true" class="form-control"
+                                                                style="padding: 0 !important;" [clearable]="false"
+                                                                appendTo="body" [multiple]="true"
+                                                                formControlName="customerRoleId">
+                                                                <ng-template ng-option-tmp let-item="item">
+                                                                    {{ item.customerRoleName }}
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        </div>
+                                                        <div *ngIf="customerForm.get('customerRoleId')?.invalid  && customerForm.get('customerRoleId')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.customers.customerInfo.customerRole.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="active">{{getLabelValue('admin.customers.addNew.customerInfo.active.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.active.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="active" formControlName="active" type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="adminComment">{{getLabelValue('admin.customers.addNew.customerInfo.adminComment.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.customers.addNew.customerInfo.adminComment.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="adminComment"
+                                                                class="form-control" formControlName="adminComment"
+                                                                rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+
+                                    <c-card class="mb-4" *ngIf="isEditCustomer">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(1)">
+                                            <strong><i class="far fa-address-book me-3 fw-bold"></i>Address</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">First name</th>
+                                                            <th scope="col">Last name</th>
+                                                            <th scope="col">Email</th>
+                                                            <th scope="col">Phone number</th>
+                                                            <th scope="col">Fax number</th>
+                                                            <th scope="col">Address</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr
+                                                            *ngFor="let address of allAddressList; let langIndex = index">
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a class="btn btn-sm btn-secondary"
+                                                                        (click)="editAddressParams(address._id)">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-danger text-white"
+                                                                        *ngIf="address.isDeleted === false"
+                                                                        [cModalToggle]="deActiveAddressModal.id"
+                                                                        (click)="setAddress(address)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-success text-white"
+                                                                        *ngIf="address.isDeleted === true"
+                                                                        [cModalToggle]="activeAddressModal.id"
+                                                                        (click)="setAddress(address)">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{address.firstName}}</td>
+                                                            <td>{{address.lastName}}</td>
+                                                            <td>{{address.email}}</td>
+                                                            <td>{{address.phoneNumber}}</td>
+                                                            <td>{{address.faxNumber}}</td>
+                                                            <td>{{address.address1}}</td>
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !address.isDeleted, 'btn-danger': address.isDeleted}">
+                                                                    {{ address.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr *ngIf="!allAddressList || allAddressList.length === 0">
+                                                            <td colspan="6" class="text-center "><b> No data
+                                                                    found</b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item"
+                                                                [class.disabled]="predefinedCurrentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changeAddressPage(predefinedCurrentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                *ngFor="let page of getAddressPagination()"
+                                                                [class.active]="page === predefinedCurrentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else predefinedDotsTemplate"
+                                                                    (click)="changeAddressPage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #predefinedDotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                [class.disabled]="predefinedCurrentPage >= totalAddressPages || totalAddressPages === 0">
+                                                                <a class="page-link"
+                                                                    (click)="changeAddressPage(predefinedCurrentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="predefinedPageSize"
+                                                                (change)="updateAddressPageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allAddressList && allAddressList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (predefinedCurrentPage - 1) * predefinedPageSize + 1 }}-
+                                                        {{ Math.min(predefinedCurrentPage * predefinedPageSize,
+                                                        totalAddressRecords) }}
+                                                        of {{
+                                                        totalAddressRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+                                                <div  *ngIf="!allAddressList || allAddressList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+
+
+                                            <a class="btn btn-primary btn-sm" (click)="addAddress()">
+                                                {{getLabelValue('admin.customers.edit.addresses.addNewAddressbutton.value')}}
+                                            </a>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deactiveCustomerEditModal alignment="center" id="deactiveCustomerEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveCustomerEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveCustomerEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveCustomerEditModal.id"
+                (click)="deactiveCustomer()">{{getLabelValue('admin.customer.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeCustomerEditModal alignment="center" id="activeCustomerEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeCustomerEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeCustomerEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeCustomerEditModal.id"
+                (click)="activeCustomer()">{{getLabelValue('admin.customer.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveAddressModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.edit.address.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveAddressModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.edit.address.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveAddressModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.edit.address.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveAddressModal.id"
+                (click)="deleteAddress(address)">{{getLabelValue('admin.customer.body.edit.address.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeAddressModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.edit.address.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeAddressModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.edit.address.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeAddressModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.edit.address.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeAddressModal.id"
+                (click)="reActiveAddress(address)">{{getLabelValue('admin.customer.body.edit.address.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+<div *ngIf="isAddAdress">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditAddress? 'Edit':'Add a new' }} addresses
+                                        <a class="btn btn-sm text-primary" (click)="backToAddressList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.backToCustomerDetailsButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditAddress"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveButton.hint')"
+                                            (click)="createAddress(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" (click)="createAddress(false)"
+                                            *ngIf="!isEditAddress"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditAddress"
+                                            (click)="updateAddress(true)"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.updateButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" (click)="updateAddress(false)"
+                                            *ngIf="isEditAddress"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditAddress && !addressData?.isDeleted"
+                                            [cModalToggle]="deactiveAddressEditModal.id"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.deleteButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditAddress && addressData?.isDeleted"
+                                            [cModalToggle]="activeAddressEditModal.id"
+                                            [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.customer.edit.addresses.addNewAddress.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="addressForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="firstName">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.firstName.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.firstName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="firstName" formControlName="firstName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('firstName')?.invalid  && addressForm.get('firstName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.firstName.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="lastName">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.lastName.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.lastName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="lastName" formControlName="lastName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('lastName')?.invalid  && addressForm.get('lastName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.lastName.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="email">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.email.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.email.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="email" formControlName="email" class="form-control"
+                                                        type="email">
+                                                </div>
+                                                <div *ngIf="addressForm.get('email')?.invalid  && addressForm.get('email')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.email.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="companyName">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.company.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.company.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="companyName" formControlName="companyName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="countryName">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.country.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.country.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="countryName" formControlName="countryId"
+                                                        [items]="allCountryList" bindLabel="countryName" bindValue="_id"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="false"
+                                                        appendTo="body" (change)="onCountryChange($event)">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.countryName }}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="state">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.state.value')}}
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.state.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="state" formControlName="stateId"
+                                                        [items]="allStateList" bindLabel="stateName" bindValue="_id"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="false"
+                                                        appendTo="body">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.stateName }}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="region">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.region.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.region.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="region" formControlName="region" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="city">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.city.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.city.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="city" formControlName="city" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('city')?.invalid  && addressForm.get('city')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.city.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="address1">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.address1.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.address1.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="address1" formControlName="address1" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('address1')?.invalid  && addressForm.get('address1')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.address1.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="address2">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.address2.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.address2.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="address2" formControlName="address2" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="zipCode">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.zipCode.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.zipCode.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="zipCode" formControlName="zipCode" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('zipCode')?.invalid  && addressForm.get('zipCode')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.zipCode.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="phoneNumber">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.phoneNumber.value')}}
+                                                        <span
+                                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.phoneNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="phoneNumber" formControlName="phoneNumber"
+                                                        class="form-control" maxlength="10" (input)="limitContactLength($event)" type="text">
+                                                </div>
+                                                <div *ngIf="addressForm.get('phoneNumber')?.invalid  && addressForm.get('phoneNumber')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.customer.edit.addresses.addNewAddress.phoneNumber.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="faxNumber">{{getLabelValue('admin.customer.edit.addresses.addNewAddress.faxNumber.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.customer.edit.addresses.addNewAddress.faxNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="faxNumber" formControlName="faxNumber"
+                                                        class="form-control" type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveAddressEditModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.edit.address.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveAddressEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.edit.address.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveAddressEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.edit.address.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveAddressEditModal.id"
+                (click)="deactiveAddress()">{{getLabelValue('admin.customer.body.edit.address.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeAddressEditModal alignment="center" id="activeAddressEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.customer.body.edit.address.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeAddressEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.customer.body.edit.address.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeAddressEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.customer.body.edit.address.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeAddressEditModal.id"
+                (click)="activeAddress()">{{getLabelValue('admin.customer.body.edit.address.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

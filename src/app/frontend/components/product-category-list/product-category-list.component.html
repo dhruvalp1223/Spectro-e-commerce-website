@@ -1,0 +1,347 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <h2>{{searchEngineFriendlyPageName || "Categories" }}</h2>
+        <nav class="theme-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a [routerLink]="['/home']">Home</a>
+                </li>
+                <li class="breadcrumb-item active">{{searchEngineFriendlyPageName|| "Categories" }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- breadcrumb end -->
+
+<!-- section start -->
+<div class="container">
+    <section class="section-b-space ratio_asos">
+        <div class="collection-wrapper">
+            <div class="">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-4 collection-filter">
+                        <!-- side-bar collapse block stat -->
+                        <div class="collection-filter-block">
+                            <!-- brand filter start -->
+                            <!-- <button class="collection-mobile-back btn">
+                                <span class="filter-back">back</span>
+                                <i class="ri-arrow-left-s-line"></i>
+                            </button> -->
+                            <div class="collection-collapse-block open">
+                                <div class="accordion collection-accordion" id="accordionPanelsStayOpenExample">
+
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button pt-0" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne"
+                                                aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                                Categories
+                                            </button>
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+                                                <ul class="collection-listing">
+                                                    <li *ngFor="let category of allCategoriesList; let i = index">
+                                                        <!-- <div class="form-check" (click)="onCategoryFilter(category._id)"> -->
+                                                        <div class="form-check" [routerLink]="['/product-category']"
+                                                            [queryParams]="{ searchEngineFriendlyPageName: category.searchEngineFriendlyPageName,categoryId: category._id }"
+                                                            [ngClass]="{ 'active-category': category._id === categoryId }">
+
+                                                            <i class="fa fa-circle" style="cursor: pointer;"></i>
+                                                            <label class="form-check-label">{{ category.categoryName
+                                                                }}</label>
+                                                        </div>
+
+                                                        <!-- Subcategories -->
+                                                        <ul *ngIf="category.showSubcategories"
+                                                            style="margin-left: 20px;">
+                                                            <li *ngFor="let subcategory of category.subcategories">
+                                                                <!-- <div class="form-check" (click)="onSubCategoryFilter(subcategory._id, $event)"> -->
+                                                                <div class="form-check"
+                                                                    [routerLink]="['/product-category']"
+                                                                    [queryParams]="{ categoryName: subcategory.categoryName,categoryId:subcategory._id}"
+                                                                    [ngClass]="{ 'active-category': subcategory._id === categoryId }">
+                                                                    <i class="fa fa-circle"
+                                                                        style="cursor: pointer;"></i>
+                                                                    <label class="form-check-label">{{
+                                                                        subcategory.categoryName }}</label>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- </div>
+                        <div class="collection-filter-block" style="margin-top: 10px;"> -->
+                            <!-- brand filter start -->
+                            <!-- <button class="collection-mobile-back btn">
+                                <span class="filter-back">back</span>
+                                <i class="ri-arrow-left-s-line"></i>
+                            </button> -->
+                            <div class="collection-collapse-block open">
+                                <div class="accordion collection-accordion" id="accordionPanelsStayOpenExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
+                                                aria-controls="panelsStayOpen-collapseTwo">
+                                                Manufacturer </button>
+                                        </h2>
+                                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
+                                            <div class="accordion-body">
+                                                <ul class="collection-listing">
+                                                    <li *ngFor="let manufacturer of allManufacturerList; let i = index">
+                                                        <div class="form-check" [routerLink]="['/product-manufacturer']"
+                                                            [queryParams]="{ searchEngineFriendlyPageName: manufacturer.searchEngineFriendlyPageName,manufacturerId: manufacturer._id }"
+                                                            [ngClass]="{ 'active-manufacturer': manufacturer._id === manufacturerId }">
+                                                            <i class="fa fa-circle" style="cursor: pointer;"></i>
+                                                            <label class="form-check-label">{{
+                                                                manufacturer.manufacturerName
+                                                                }}</label>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- side-bar collapse block end here -->
+                    </div>
+                    <div class="collection-content col-xl-9 col-lg-8">
+                        <div class="page-main-content">
+                            <div class="row">
+                                <div class="col-sm-12">
+
+                                    <!-- <div class="title1" *ngIf="allSubCategoriesList && allSubCategoriesList.length > 0">
+                                        <h2 class="title-inner1">Sub-Categories</h2>
+                                    </div>
+                                    
+                                    <div class="pb-0 banner-section">
+                                        <div class="container">
+                                            <div class="row partition2 category-slider ">
+                                                <div *ngFor="let category of allSubCategoriesList; let i = index"
+                                                    class="slider-item col-md-4 text-center">
+                                                    <h3 class="">{{category.categoryName}}</h3>
+                                                    <a [routerLink]="['/product-category', category._id]"
+                                                        class="collection-banner d-flex justify-content-center">
+                                                        <img style="height: 250px; width: 400px;"
+                                                            [src]="commonService.rootData.uploadsUrl + category.categoryImage"
+                                                            class="img-fluid blur-up lazyload " alt="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button class="filter-btn btn"><i class="ri-filter-fill"></i> Filter
+                                    </button> -->
+                                    <div class="title1">
+                                        <h2 class="title-inner1">Products</h2>
+                                    </div>
+
+                                    <div *ngIf="loading" class="loader-container">
+                                        <div class="loader"></div>
+                                    </div>
+                                    <div *ngIf="productData && productData.length === 0 && (allSubCategoriesList && allSubCategoriesList.length === 0) &&  !loading"
+                                        class="no-data-message">
+                                        <h3 class="text-center">No Products Found</h3>
+                                    </div>
+                                    <button class="filter-btn btn" onclick="openShowMenu()"><i
+                                            class="ri-filter-fill"></i> Filter
+                                    </button>
+                                    <!-- <div class="collection-product-wrapper"
+                                        *ngIf="productData && productData.length > 0">
+                                        <div class="product-wrapper-grid">
+                                            <div class="row g-3 g-sm-4">
+                                                <div *ngFor="let product of productData" class="col">
+                                                    <div class="basic-product theme-product-1">
+                                                        <div class="overflow-hidden">
+                                                            <div class="img-wrapper">
+                                                                <a [routerLink]="['/product-details', product._id]">
+                                                                    <img [src]="commonService.rootData.uploadsUrl + product.productImageUrl"
+                                                                        class="img-fluid blur-up lazyload w-100"
+                                                                        [alt]="product.productName" />
+                                                                </a>
+                                                                <div class="rating-label">
+                                                                    <i class="fa fa-star"></i>
+                                                                    <span>{{ product.averageRating }}</span>
+                                                                </div>
+                                                                <div class="cart-info">
+                                                                    <button data-bs-toggle="modal"
+                                                                        data-bs-target="#addtocart" title="Add to cart">
+                                                                        <i class="ri-shopping-cart-line"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="product-detail">
+                                                                <div>
+                                                                    <div class="brand-w-color">
+                                                                        <a class="product-title">{{ product.productName
+                                                                            }}</a>
+                                                                    </div>
+                                                                    <h4 class="price">
+                                                                        ₹ {{ product.price.toFixed(2) }}
+                                                                        <span *ngIf="product.oldPrice"
+                                                                            class="old-price"><del>₹{{ product.oldPrice
+                                                                                }}</del></span>
+                                                                    </h4>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                            </div> 
+                                        </div> 
+                                    </div> -->
+                                    <!-- <div class="collection-product-wrapper" *ngIf="productData && productData.length > 0">
+                                        <div class="product-wrapper-grid">
+                                            <div class="row g-3 g-sm-4">
+                                                <div *ngFor="let product of productData" class="col">
+                                                    <div class="product-banner">
+                                                        <img [src]="commonService.rootData.uploadsUrl + product.productImageUrl"
+                                                            [alt]="product.productName" class="product-image" />
+                                                        
+                                                        <div class="product-overlay">
+                                                            <h1 class="product-title">{{ product.productName || '100R XRF' }}</h1>
+                                                            <a [routerLink]="['/product-details', product._id]" class="shop-now-btn">SHOP NOW!</a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    
+                                                </div> 
+                                            </div> 
+                                        </div> 
+                                    </div> -->
+                                    <div class="container-fluid" *ngIf=" !loading">
+                                        <div class="row partition2" >
+                                            <div class="col-md-6 products" *ngFor="let product of productData">
+                                                <a [routerLink]="['/product-details',product._id]">
+                                                    <div class="collection-banner p-right text-end">
+                                                        <div class="img-part">
+                                                            <img [src]="product.productImageUrl ? (commonService.rootData.uploadsUrl + product.productImageUrl) : '../../../../assets/userAssets/images/spectroimages/no-product-image.png'"
+                                                                class="img-fluid blur-up lazyload bg-img" alt="">
+                                                        </div>
+                                                        <div class="contain-banner">
+                                                            <div>
+                                                                <h4>{{ product.productName.split(' ')[0] }}</h4>
+                                                                <h2 class="font-smaller">{{ product.productName.split('
+                                                                    ').slice(1).join(' ') }}
+                                                                </h2>
+                                                                <div class="search-col">
+                                                                    <div class="search-btn" style="display: flex; justify-content: end;" >
+                                                                        <a class="btn btn-solid d-block" tabindex="0"
+                                                                            [routerLink]="['/product-details',product._id]">SHOP
+                                                                            NOW!</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+<!-- section End -->
+
+<div id="showmenu" class="sidenav">
+    <a class="sidebar-overlay" onclick="closeShowMenu()"></a>
+    <nav>
+        <div onclick="closeShowMenu()">
+            <div class="sidebar-back text-start"><i class="fa fa-angle-left pe-2"></i>
+                Back</div>
+        </div>
+
+        <div class="collection-filter-block">
+            <div class="collection-collapse-block open" style="padding: 0px 20px;">
+                <div class="accordion collection-accordion" id="accordionPanelsStayOpenExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button pt-0" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                                aria-controls="panelsStayOpen-collapseOne">
+                                Categories
+                            </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <ul class="collection-listing">
+                                    <li *ngFor="let category of allCategoriesList; let i = index" class="category-item">
+                                        <!-- <div class="form-check" (click)="onCategoryFilter(category._id)"> -->
+                                        <div class="form-check" [routerLink]="['/product-category']"
+                                            onclick="closeShowMenu()"
+                                            [queryParams]="{ categoryName: category.categoryName,categoryId: category._id }"
+                                            [ngClass]="{ 'active-category': category._id === categoryId }">
+                                            <i class="fa fa-circle" style="cursor: pointer;"></i>
+                                            <label class="form-check-label">{{ category.categoryName }}</label>
+                                        </div>
+
+                                        <!-- Subcategories -->
+                                        <ul *ngIf="category.showSubcategories" style="margin-left: 20px;">
+                                            <li *ngFor="let subcategory of category.subcategories">
+                                                <!-- <div class="form-check" (click)="onSubCategoryFilter(subcategory._id, $event)"> -->
+                                                <div class="form-check" [routerLink]="['/product-category']"
+                                                    [queryParams]="{ categoryName: subcategory.categoryName,categoryId:subcategory._id}"
+                                                   >
+                                                    <i class="fa fa-circle" style="cursor: pointer;"></i>
+                                                    <label class="form-check-label">{{
+                                                        subcategory.categoryName }}</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
+                                aria-controls="panelsStayOpen-collapseTwo">
+                                Manufacturer </button>
+                        </h2>
+                        <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <ul class="collection-listing">
+                                    <li *ngFor="let manufacturer of allManufacturerList; let i = index">
+                                        <div class="form-check" [routerLink]="['/product-manufacturer']"
+                                            onclick="closeShowMenu()"
+                                            [queryParams]="{ manufacturerName: manufacturer.manufacturerName,manufacturerId: manufacturer._id }"
+                                            [ngClass]="{ 'active-manufacturer': manufacturer._id === manufacturerId }">
+                                            <i class="fa fa-circle" style="cursor: pointer;"></i>
+                                            <label class="form-check-label">{{ manufacturer.manufacturerName
+                                                }}</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,1025 @@
+<div *ngIf="!isAddShipment">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Shipments
+                                    </strong>
+                                    <a class="btn btn-primary btn-sm" *ngIf="canDelete && isAnyRowSelected()"
+                                        [href]="rootUrl + 'admin/order/generateInvoicesZip/' + this.selectedShipmentIds.join(',')">
+                                        <i class="far fa-file-pdf me-1"></i>
+                                        {{getLabelValue('admin.sales.orders.header.printPdfInvoices.value')}}
+                                    </a>
+                                </c-card-header>
+                                <c-card-body>
+                                    <!-- <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse1(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'"> -->
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="categoryname">
+                                                            {{getLabelValue('admin.categories.search.categoryname.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.categoryname.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="categoryName"
+                                                            data-val-required="Please provide a name." id="Name"
+                                                            name="Name" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="Name">
+                                                            {{getLabelValue('admin.categories.search.published.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.published.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="published" [(ngModel)]="published"
+                                                            [items]="publishes" bindLabel="label" bindValue="value"
+                                                            [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="false"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+
+                                            </div> -->
+
+
+
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="startDate">
+                                                            {{getLabelValue('admin.orders.search.startDate.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.startDate.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="startDate"
+                                                            data-val-required="Please provide a startDate."
+                                                            id="startDate" name="startDate" type="date">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="endDate">
+                                                            {{getLabelValue('admin.orders.search.endDate.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.endDate.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="endDate"
+                                                            data-val-required="Please provide a endDate." id="endDate"
+                                                            name="endDate" type="date">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="billingPhoneNumber">
+                                                            {{getLabelValue('admin.orders.search.billingPhoneNumber.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.billingPhoneNumber.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="billingPhoneNumber"
+                                                            data-val-required="Please provide a billingPhoneNumber."
+                                                            id="billingPhoneNumber" name="billingPhoneNumber"
+                                                            type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="billingEmailAddress">
+                                                            {{getLabelValue('admin.orders.search.billingEmailAddress.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.billingEmailAddress.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="billingEmailAddress"
+                                                            data-val-required="Please provide a billingEmailAddress."
+                                                            id="billingEmailAddress" name="billingEmailAddress"
+                                                            type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="product">
+                                                            {{getLabelValue('admin.orders.search.product.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.product.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="productName"
+                                                            data-val-required="Please provide a product." id="product"
+                                                            name="productName" type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="billingLastName">
+                                                            {{getLabelValue('admin.orders.search.billingLastName.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.billingLastName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="billingLastName"
+                                                            data-val-required="Please provide a billingLastName."
+                                                            id="billingLastName" name="billingLastName" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="warehouse">
+                                                            {{getLabelValue('admin.orders.search.warehouse.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.warehouse.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="warehouse" [(ngModel)]="warehouseId"
+                                                            [items]="warehousesList" bindLabel="warehouseName"
+                                                            bindValue="_id" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!warehouseId"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.warehouseName }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="orderStatuses">
+                                                            {{getLabelValue('admin.orders.search.orderStatuses.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.orderStatuses.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="orderStatuses" [(ngModel)]="orderStatus"
+                                                            [items]="orderStatusesList" bindLabel="label"
+                                                            bindValue="value" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!orderStatus"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="billingCountry">
+                                                            {{getLabelValue('admin.orders.search.billingCountry.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.billingCountry.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="billingCountry" [(ngModel)]="warehouseId"
+                                                            [items]="allCountryList" bindLabel="countryName"
+                                                            bindValue="_id" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!warehouseId"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.countryName }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="paymentStatuses">
+                                                            {{getLabelValue('admin.orders.search.paymentStatuses.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.paymentStatuses.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="paymentStatuses" [(ngModel)]="warehouseId"
+                                                            [items]="paymentStatusesList" bindLabel="label"
+                                                            bindValue="value" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!warehouseId"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="paymentMethod">
+                                                            {{getLabelValue('admin.catalog.products.search.paymentMethod.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.catalog.products.search.paymentMethod.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="paymentMethod" [(ngModel)]="warehouseId"
+                                                            [items]="warehousesList" bindLabel="warehouseName"
+                                                            bindValue="_id" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!warehouseId"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.warehouseName }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="shippingStatuses">
+                                                            {{getLabelValue('admin.catalog.products.search.shippingStatuses.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.catalog.products.search.shippingStatuses.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="shippingStatuses" [(ngModel)]="warehouseId"
+                                                            [items]="warehousesList" bindLabel="warehouseName"
+                                                            bindValue="_id" [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="!!warehouseId"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.warehouseName }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                            <!-- <div class="form-group row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-2" for="orderNotes">
+                                                            {{getLabelValue('admin.orders.search.orderNotes.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.orders.search.orderNotes.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="billingLastName"
+                                                            data-val-required="Please provide a orderNotes."
+                                                            id="billingLastName" name="billingLastName" type="text">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                            <!-- <div class="row mt-3 justify-content-center">
+                                                <div class="col-md-6 text-center">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllShipmentList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{ getLabelValue('admin.sales.shipment.search.searchButton.value') }}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card> -->
+
+                                    <!-- <br> -->
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput id="selectAll"
+                                                                        type="checkbox" [(ngModel)]="selectAllChecked"
+                                                                        (change)="toggleSelectAll()" />
+                                                                </c-form-check>
+                                                            </th>
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">Shipment #</th>
+                                                            <th scope="col">Order #</th>
+                                                            <th scope="col">Tracking number</th>
+                                                            <th scope="col">Date shipped</th>
+                                                            <th scope="col">Date delivered</th>
+                                                            <!-- <th scope="col">View</th> -->
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="8">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                        <tr *ngFor="let shipment of allShipmentList; let i = index">
+                                                            <td>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput type="checkbox"
+                                                                        [(ngModel)]="shipment.isChecked"
+                                                                        (change)="downloadSelectOrders()" />
+                                                                </c-form-check>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true"
+                                                                        class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/shipments/Edit']"
+                                                                        [queryParams]="{ shipmentId: shipment._id ,orderId: shipment.orderId}">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+                                                                        <a class="btn btn-sm btn-danger text-white"
+                                                                            *ngIf="shipment.isDeleted === false"
+                                                                            [cModalToggle]="deActiveModal.id"
+                                                                            (click)="setShipment(shipment)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-sm btn-success text-white"
+                                                                            *ngIf="shipment.isDeleted === true"
+                                                                            [cModalToggle]="activeModal.id"
+                                                                            (click)="setShipment(shipment)">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{shipment._id}}</td>
+                                                            <td>{{shipment.orderNumber}}</td>
+                                                            <td>{{shipment.trackingNumber}}</td>
+                                                            <td>{{shipment.shippedDate}}</td>
+                                                            <td>{{shipment.deliveredDate}}</td>
+                                                            <!-- <td>
+                                                                <a class="btn btn-sm btn-secondary"
+                                                                    [routerLink]="['/admin/shipments/Edit']"
+                                                                    [queryParams]="{ shipmentId: shipment._id }">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </a>
+                                                            </td> -->
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !shipment.isDeleted, 'btn-danger': shipment.isDeleted}">
+                                                                    {{ shipment.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr *ngIf="!allShipmentList || allShipmentList.length === 0">
+                                                            <td colspan="8" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                            [class.disabled]="currentPage >= totalPages || totalPages===0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allShipmentList && allShipmentList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="!allShipmentList || allShipmentList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sales.shipments.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sales.shipments.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sales.shipments.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteShipment(shipment)">{{getLabelValue('admin.sales.shipments.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sales.shipments.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sales.shipments.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sales.shipments.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveShipment(shipment)">{{getLabelValue('admin.sales.shipments.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+
+<div *ngIf="isAddShipment">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="categories-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditShipment ? 'View shipment details': 'Add a new shipment to order' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToOrderDetail()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.sales.shipments.edit.header.backToOrderDetailButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditShipment && !shipmentData?.isDeleted"
+                                            [cModalToggle]="deactiveShipmentEditModal.id"
+                                            [title]="getLabelValue('admin.sales.shipments.edit.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.sales.shipments.edit.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditShipment && shipmentData?.isDeleted"
+                                            [cModalToggle]="activeShipmentEditModal.id"
+                                            [title]="getLabelValue('admin.sales.shipments.edit.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.sales.shipments.edit.header.activeButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditShipment"
+                                            [title]="getLabelValue('admin.shipment.addShipmentButton.header.saveButton.hint')"
+                                            (click)="createNewShipment(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{ getLabelValue('admin.shipment.addShipmentButton.header.saveButton.value')
+                                            }}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditShipment"
+                                            [title]="getLabelValue('admin.shipment.addShipmentButton.header.saveAndEditButton.hint')"
+                                            (click)="createNewShipment(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{
+                                            getLabelValue('admin.shipment.addShipmentButton.header.saveAndEditButton.value')
+                                            }}
+                                        </a>
+
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="shipmentForm">
+                                        <c-card class="mb-4">
+                                            <!-- <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fa fa-circle-info me-3 fw-bold"></i>info</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header> -->
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <c-card>
+                                                    <c-card-body> -->
+                                                <div class="form-group row mb-1" *ngIf="isEditShipment">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="order">{{getLabelValue('admin.sales.shipments.edit.order.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.order.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <a [routerLink]="['/admin/order/Edit', shipmentData?.orderId]"
+                                                            class="text-decoration-none">
+                                                            {{ shipmentData?.orderId }} - View
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="trackingNumber">{{getLabelValue('admin.sales.shipments.edit.trackingNumber.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.trackingNumber.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <c-input-group class="mb-3">
+                                                            <input id="trackingNumber" formControlName="trackingNumber"
+                                                                class="form-control" type="text">
+                                                            <button *ngIf="isEditShipment" cButton color="primary"
+                                                                id="trackingNumber" type="button"
+                                                                (click)="updateShipment()">
+                                                                {{getLabelValue('admin.sales.shipments.edit.trackingNumber.setTrackingNumberButton.value')}}
+                                                            </button>
+                                                        </c-input-group>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="adminComment">{{getLabelValue('admin.sales.shipments.edit.adminComment.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.adminComment.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <c-input-group class="mb-3">
+                                                            <input id="adminComment" formControlName="adminComment"
+                                                                class="form-control" type="text">
+                                                            <button *ngIf="isEditShipment" cButton color="primary"
+                                                                id="adminComment" type="button"
+                                                                (click)="updateShipment()">
+                                                                {{getLabelValue('admin.sales.shipments.edit.adminComment.setAdminComment.value')}}
+                                                            </button>
+                                                        </c-input-group>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1" *ngIf="!isEditShipment">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="shipped">{{getLabelValue('admin.sales.shipments.edit.shipped.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.shipped.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <input id="shipped" formControlName="shipped" type="checkbox">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1" *ngIf="isShipped && !isEditShipment">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="delivered">{{getLabelValue('admin.sales.shipments.edit.delivered.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.delivered.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <input id="delivered" formControlName="delivered"
+                                                            type="checkbox">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1" *ngIf="isEditShipment">
+                                                    <div class="col-md-3">
+                                                        <div class="d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3" for="dateReadyForPickup">
+                                                                {{
+                                                                getLabelValue('admin.sales.shipments.edit.dateReadyForPickup.value')
+                                                                }}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.dateReadyForPickup.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <ng-container
+                                                            *ngIf="!isEditingShippedDate; else editModeShipped">
+                                                            {{ shipmentData?.shippedDate }}
+                                                            <button class="btn btn-sm btn-primary ms-2"
+                                                                (click)="editShippedDate()">
+                                                                 {{
+                                                                    getLabelValue('admin.sales.shipments.edit.editShippedButton.value')
+                                                                    }}
+                                                            </button>
+                                                        </ng-container>
+
+                                                        <ng-template #editModeShipped>
+                                                            <input type="date" class="form-control me-2"
+                                                                formControlName="shippedDate">
+                                                            <button type="submit" class="btn btn-sm btn-success me-2"
+                                                                (click)="updateShipment()">{{
+                                                                    getLabelValue('admin.sales.shipments.edit.saveShippedButton.value')
+                                                                    }}</button>
+                                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                                (click)="cancelEditShippedDate()">{{
+                                                                    getLabelValue('admin.sales.shipments.edit.cancelShippedButton.value')
+                                                                    }}</button>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1" *ngIf="isEditShipment">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3" for="dateDelivered">
+                                                                {{
+                                                                getLabelValue('admin.sales.shipments.edit.dateDelivered.value')
+                                                                }}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.sales.shipments.edit.dateDelivered.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-9 d-flex align-items-center">
+                                                        <ng-container
+                                                            *ngIf="!isEditingDeliveredDate; else editModeDelivered">
+                                                            {{ shipmentData?.deliveredDate }}
+                                                            <button class="btn btn-sm btn-primary ms-2"
+                                                                (click)="editDeliveredDate()">{{
+                                                                    getLabelValue('admin.sales.shipments.edit.EditDeliveredButton.value')
+                                                                    }}</button>
+                                                        </ng-container>
+
+                                                        <ng-template #editModeDelivered>
+                                                            <input type="date" class="form-control me-2"
+                                                                formControlName="deliveredDate">
+                                                            <button type="submit" class="btn btn-sm btn-success me-2"
+                                                                (click)="updateShipment()">{{
+                                                                    getLabelValue('admin.sales.shipments.edit.saveDeliveredButton.value')
+                                                                    }}</button>
+                                                            <button type="button" class="btn btn-sm btn-secondary"
+                                                                (click)="cancelEditDeliveredDate()">{{
+                                                                    getLabelValue('admin.sales.shipments.edit.cancelDeliveredButton.value')
+                                                                    }}</button>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(3)">
+                                            <strong>Products shipped
+                                            </strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[3] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[3] ? 'open' : 'closed'">
+
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th scope="col">Product Image</th>
+                                                            <th scope="col">Product Name</th>
+                                                            <th scope="col">Price</th>
+                                                            <th scope="col">Product Attributes</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngIf="productList">
+                                                            <td>
+                                                                <img [src]="commonService.rootData.uploadsUrl + productList.product.productImage"
+                                                                    alt="Product Image" class="card-img-top"
+                                                                    style="max-width:150px; object-fit: fill;" />
+                                                            </td>
+                                                            <td>{{ productList.product.productName }}</td>
+                                                            <td>{{ productList.totalPrice }}</td>
+                                                            <td>
+                                                                <span
+                                                                    *ngFor="let attribute of productList?.selectedProductAttributes">
+                                                                    <strong>{{ attribute.productAttributeName
+                                                                        }}:</strong> {{
+                                                                    attribute.productAttributeMappingValueName }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                
+                                                        <tr *ngIf="!productList || productList.length === 0">
+                                                            <td colspan="6" class="text-center "><b> No data
+                                                                    found</b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item"
+                                                                [class.disabled]="orderCurrentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changeOrderPage(orderCurrentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                *ngFor="let page of getOrderPagination()"
+                                                                [class.active]="page === orderCurrentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else orderDotsTemplate"
+                                                                    (click)="changeOrderPage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #orderDotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                [class.disabled]="orderCurrentPage >= totalOrderPages || totalOrderPages === 0">
+                                                                <a class="page-link"
+                                                                    (click)="changeOrderPage(orderCurrentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="orderPageSize"
+                                                                (change)="updateOrderPageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (orderCurrentPage - 1) * orderPageSize + 1
+                                                        }}-
+                                                        {{ Math.min(orderCurrentPage * orderPageSize,
+                                                        totalOrderRecords) }}
+                                                        of {{
+                                                        totalOrderRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deactiveShipmentEditModal alignment="center" id="deactiveShipmentEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sales.shipments.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveShipmentEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sales.shipments.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveShipmentEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sales.shipments.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveShipmentEditModal.id"
+                (click)="deactiveShipment()">{{getLabelValue('admin.sales.shipments.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeShipmentEditModal alignment="center" id="activeShipmentEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sales.shipments.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeShipmentEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sales.shipments.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeShipmentEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sales.shipments.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeShipmentEditModal.id"
+                (click)="activeShipment()">{{getLabelValue('admin.sales.shipments.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+  
+</div>

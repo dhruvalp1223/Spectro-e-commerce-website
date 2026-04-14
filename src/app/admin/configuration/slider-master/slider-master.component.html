@@ -1,0 +1,569 @@
+<div *ngIf="!isAddSlider">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Slider Master</strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                            [routerLink]="['/admin/SliderMaster/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <div style="overflow-x: auto;">
+
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Image</th>
+                                                    <th scope="col">Title</th>
+                                                    <th scope="col">Start date</th>
+                                                    <th scope="col">End date</th>
+                                                    <th scope="col">Order</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngIf="loading">
+                                                    <td colspan="8">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let slider of allSliderList; let langIndex = index">
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true"
+                                                                class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/SliderMaster/Edit', slider._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                    *ngIf="slider.isDeleted === false"
+                                                                    [cModalToggle]="deActiveModal.id"
+                                                                    (click)="setSlider(slider)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                                <a class="btn btn-sm btn-success text-white"
+                                                                    *ngIf="slider.isDeleted === true"
+                                                                    [cModalToggle]="activeModal.id"
+                                                                    (click)="setSlider(slider)">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                    <td><img [src]="commonService.rootData.uploadsUrl + slider.sliderImage"
+                                                            alt="Product Image" class="card-img-top"
+                                                            style="max-width:150px;  object-fit: fill;" />
+                                                    </td>
+                                                    <td>{{slider.title}}</td>
+                                                    <td>{{slider.startDate?.split('T')[0] || ''}}</td>
+                                                    <td>{{slider.endDate?.split('T')[0] || ''}}</td>
+                                                    <td>{{slider.order}}</td>
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !slider.isDeleted, 'btn-danger': slider.isDeleted}">
+                                                            {{ slider.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <!-- Previous Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <!-- Page Numbers -->
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <!-- Next Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="allSliderList && allSliderList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+                                        <div  *ngIf="!allSliderList || allSliderList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sliderMaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sliderMaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sliderMaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteSlider(slider)">{{getLabelValue('admin.sliderMaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sliderMaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sliderMaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sliderMaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveSlider(slider)">{{getLabelValue('admin.sliderMaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+<div *ngIf="isAddSlider">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditSlider ? 'Edit slider details':'Add a new slider' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToSliderList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.backToUserButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditSlider"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.saveButton.hint')"
+                                            (click)="createNewSlider(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.saveButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditSlider"
+                                            (click)="createNewSlider(false)"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditSlider"
+                                            (click)="updateSlider(true)"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.updateButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditSlider"
+                                            (click)="updateSlider(false)"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditSlider && !sliderData?.isDeleted"
+                                            [cModalToggle]="deactiveSliderEditModal.id"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditSlider && sliderData?.isDeleted"
+                                            [cModalToggle]="activeSliderEditModal.id"
+                                            [title]="getLabelValue('admin.sliderMaster.addNew.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.sliderMaster.addNew.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="sliderForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="sliderImage">{{getLabelValue('admin.sliderMaster.addNew.sliderImage.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.sliderImage.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="image-container">
+                                                    <input type="file" id="sliderImage"
+                                                        (change)="onFileSelected($event, 'sliderImage')"
+                                                        accept="image/*" hidden />
+                                                    <div class="image-box" (click)="triggerFileInput('sliderImage')">
+                                                        <ng-container *ngIf="!selectedSliderImage">
+                                                            <i class="fas fa-plus text-primary"></i>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectedSliderImage">
+                                                            <img [src]="selectedSliderImage.startsWith('data:') ? selectedSliderImage : commonService.rootData.uploadsUrl + selectedSliderImage"
+                                                                alt="Selected user image" />
+
+                                                            <button type="button" class="cancel-btn"
+                                                                (click)="removeImage($event, 'sliderImage')">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="sliderForm.get('sliderImage')?.invalid && sliderForm.get('sliderImage')?.touched"
+                                                    class="text-danger">
+                                                    {{ getLabelValue('admin.sliderMaster.addNew.sliderImage.error')}}
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="backgroundImage">{{getLabelValue('admin.sliderMaster.addNew.backgroundImage.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.backgroundImage.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="image-container">
+                                                    <input type="file" id="backgroundImage"
+                                                        (change)="onFileSelected($event, 'backgroundImage')"
+                                                        accept="image/*" hidden />
+                                                    <div class="image-box" (click)="triggerFileInput('backgroundImage')">
+                                                        <ng-container *ngIf="!selectedBackgroundImage">
+                                                            <i class="fas fa-plus text-primary"></i>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectedBackgroundImage">
+                                                            <img [src]="selectedBackgroundImage.startsWith('data:') ? selectedBackgroundImage : commonService.rootData.uploadsUrl + selectedBackgroundImage"
+                                                                alt="Selected background image" />
+
+                                                            <button type="button" class="cancel-btn"
+                                                                (click)="removeImage($event, 'backgroundImage')">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="sliderForm.get('backgroundImage')?.invalid && sliderForm.get('backgroundImage')?.touched"
+                                                    class="text-danger">
+                                                    {{ getLabelValue('admin.sliderMaster.addNew.backgroundImage.error')}}
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="title">{{getLabelValue('admin.sliderMaster.addNew.title.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.title.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="title" formControlName="title" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <!-- <div *ngIf="sliderForm.get('title')?.invalid  && sliderForm.get('title')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.title.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="description">{{getLabelValue('admin.sliderMaster.addNew.description.value')}}
+                                                        <!-- <span
+                                                            class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.description.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <!-- <div class="input-group input-group-required">
+                                                    <input id="description" formControlName="description"
+                                                        class="form-control" type="text">
+                                                </div> -->
+
+
+                                                <angular-editor id="description" formControlName="description"
+                                                    [config]="editorConfig">
+                                                </angular-editor>
+                                                <!-- <div *ngIf="sliderForm.get('description')?.invalid  && sliderForm.get('description')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.description.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="buttonTitle">{{getLabelValue('admin.sliderMaster.addNew.buttonTitle.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.buttonTitle.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="buttonTitle" formControlName="buttonTitle"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <!-- <div *ngIf="sliderForm.get('buttonTitle')?.invalid && sliderForm.get('buttonTitle')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.buttonTitle.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="url">{{getLabelValue('admin.sliderMaster.addNew.url.value')}}
+                                                        <!-- <span
+                                                            class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.url.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="url" formControlName="url" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <!-- <div *ngIf="sliderForm.get('url')?.invalid  && sliderForm.get('url')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.url.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="startDate">{{getLabelValue('admin.sliderMaster.addNew.startDate.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.startDate.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="startDate" formControlName="startDate"
+                                                        class="form-control" type="date">
+                                                </div>
+                                                <!-- <div *ngIf="sliderForm.get('startDate')?.invalid  && sliderForm.get('startDate')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.startDate.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="endDate">{{getLabelValue('admin.sliderMaster.addNew.endDate.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.endDate.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="endDate" formControlName="endDate" class="form-control"
+                                                        type="date">
+                                                </div>
+                                                <!-- <div *ngIf="sliderForm.get('endDate')?.invalid  && sliderForm.get('endDate')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.endDate.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="order">{{getLabelValue('admin.sliderMaster.addNew.order.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.sliderMaster.addNew.order.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="order" formControlName="order" class="form-control"
+                                                        type="number">
+                                                </div>
+                                                <div *ngIf="sliderForm.get('order')?.invalid  && sliderForm.get('order')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.sliderMaster.addNew.order.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveSliderEditModal alignment="center" id="deactiveSliderEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sliderMaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveSliderEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sliderMaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveSliderEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sliderMaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveSliderEditModal.id"
+                (click)="deactiveSlider()">{{getLabelValue('admin.sliderMaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeSliderEditModal alignment="center" id="activeSliderEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.sliderMaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeSliderEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.sliderMaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeSliderEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.sliderMaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeSliderEditModal.id"
+                (click)="activeSlider()">{{getLabelValue('admin.sliderMaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

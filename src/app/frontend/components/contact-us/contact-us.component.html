@@ -1,0 +1,178 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+  <div class="container">
+    <h2>Contact us</h2>
+    <nav class="theme-breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a [routerLink]='["/home"]'>Home</a>
+        </li>
+        <li class="breadcrumb-item active">Contact us</li>
+      </ol>
+    </nav>
+  </div>
+</div>
+<!-- breadcrumb End -->
+
+<!--contact section start-->
+<section class="contact-page">
+  <div class="container">
+    <div class="row g-sm-4 g-3">
+      <div class="col-lg-5">
+        <!-- <div class="contact-title">
+                        <h2>Get In Touch</h2>
+                        <p>We're here to help! Reach out to us with any questions, feedback, or inquiries, and we'll get
+                            back to you as soon as possible.</p>
+                    </div> -->
+        <div class="title1">
+          <h2 class="title-inner1">{{this.pagesList?.title}}</h2>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-8 offset-lg-2">
+              <div class="product-para">
+                <p class="text-center" [innerHTML]="sanitizedBody"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-7">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="theme-form contact-form">
+          <div class="row g-4">
+            <div class="col-12">
+              <div class="form-box input_feild ">
+                <label for="name" class="form-label">Full Name
+                  <span class="text-danger fw-bold position-absolute">*</span>
+                </label>
+                <input type="text" id="name" formControlName="fullName" class="form-control" placeholder="Enter FullName" />
+              </div>
+              <div *ngIf="contactForm.get('fullName')?.invalid && contactForm.get('fullName')?.touched"
+                class="text-danger small">
+                Name is required.
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-box input_feild ">
+                <label for="email">Email
+                  <span class="text-danger fw-bold position-absolute">*</span></label>
+                <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter Email" />
+              </div>
+              <div *ngIf="contactForm.get('email')?.touched && contactForm.get('email')?.invalid" class="text-danger small">
+                <div *ngIf="contactForm.get('email')?.errors?.['required']">
+                  Email is required.
+                </div>
+                <div *ngIf="contactForm.get('email')?.errors?.['email']">
+                  Please enter a valid email address.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-box input_feild">
+                <label for="phone">Phone
+                  <span class="text-danger fw-bold position-absolute">*</span>
+
+                </label>
+                <input type="number" id="phone" formControlName="contact" class="form-control"
+                  placeholder="Enter Your Phone Number" maxlength="10" (input)="limitContactLength($event)" />
+                <div *ngIf="contactForm.get('contact')?.invalid && contactForm.get('contact')?.touched"
+                  class="text-danger small">
+                  PhoneNumber is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-box input_feild">
+                <label for="subject">Subject
+                  <span class="text-danger fw-bold position-absolute">*</span>
+
+                </label>
+                <input type="text" id="subject" formControlName="subject" class="form-control" placeholder=" Enter Subject" />
+                <div *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched"
+                  class="text-danger small">
+                  Subject is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-box">
+                <label for="message">Write Your Message
+                  <span class="text-danger fw-bold position-absolute">*</span>
+
+                </label>
+                <textarea rows="2" id="message" formControlName="description" class="form-control text-area"
+                  placeholder="Write Your Message"></textarea>
+
+                <!-- <input
+                                type="text"
+                                id="message"
+                                formControlName="description"
+                                class="form-control"
+                                placeholder="Write Your Message"
+                              /> -->
+                <div *ngIf="contactForm.get('description')?.invalid && contactForm.get('description')?.touched"
+                  class="text-danger small">
+                  Message must be at least 10 characters long.
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="form-box">
+                <button class="btn btn-solid" type="submit">Send Your Message</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+    <div class="col-12" style="padding-bottom:20px ;">
+      <div class="contact-right">
+        <ul>
+          <li class="">
+            <div class="contact-icon">
+              <i class="ri-phone-fill"></i>
+            </div>
+            <div class="media-body">
+              <h6>Contact Us</h6>
+              <p>{{generalSettingData?.contact}}</p>
+            </div>
+          </li>
+          <li>
+            <div class="contact-icon">
+              <i class="ri-map-pin-fill"></i>
+            </div>
+            <div class="media-body">
+              <h6>Address</h6>
+              <p>{{generalSettingData?.address}}</p>
+            </div>
+          </li>
+          <li>
+            <div class="contact-icon">
+              <i class="ri-mail-fill"></i>
+            </div>
+            <div class="media-body">
+              <h6>Email</h6>
+              <p>{{generalSettingData?.email}}</p>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<!--contact section ends-->
+
+
+<!-- map section start -->
+<!-- <section class="map-section">
+        <iframe frameborder="0" class="w-100 h-100"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1605.811957341231!2d25.45976406005396!3d36.3940974010114!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1550912388321"></iframe>
+    </section> -->
+<!-- map section End -->

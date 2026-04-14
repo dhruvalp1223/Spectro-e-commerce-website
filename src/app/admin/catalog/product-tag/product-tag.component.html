@@ -1,0 +1,392 @@
+<div *ngIf="!isAddProductTag">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Product tags</strong>
+                                    <a class="btn btn-danger btn-sm " *ngIf="canDelete && isAnyRowSelected()"
+                                        [cModalToggle]="deActiveProductTagsModal.id">
+                                        <i class="fas fa-trash me-1"></i>
+                                        {{getLabelValue('admin.productTags.header.deleteSelectedButton.value')}}
+                                    </a>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="tagName">
+                                                            {{getLabelValue('admin.productTags.search.tagName.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.productTags.search.tagName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="tagName"
+                                                            data-val-required="Please provide a name." id="Name"
+                                                            name="Name" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3 col-md-12">
+                                                <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                                <div class="col-md-9 ps-3">
+                                                    <a class="btn btn-primary text-white" (click)="getAllTagsList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{getLabelValue('admin.productTags.search.searchButton.value')}}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                    <c-card style="margin-top: 10px;">
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput id="selectAll"
+                                                                        type="checkbox" [(ngModel)]="selectAllChecked"
+                                                                        (change)="toggleSelectAll()" />
+                                                                </c-form-check>
+                                                            </th>
+                                                            <th scope="col" style="width: 8%;">Actions</th>
+                                                            <th scope="col">Tag name</th>
+                                                            <th scope="col">Tagged products</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="6">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+
+                                                        <tr *ngFor="let tags of allTagsList; let langIndex = index">
+                                                            <td>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput type="checkbox"
+                                                                        [(ngModel)]="tags.isChecked"
+                                                                        (change)="updateSelectAllTag()" />
+                                                                </c-form-check>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true"
+                                                                        class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/Products/EditProductTag',tags._id]">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+
+                                                                        <a class="btn btn-sm btn-danger text-white"
+                                                                            *ngIf="tags.isDeleted === false"
+                                                                            [cModalToggle]="deActiveModal.id"
+                                                                            (click)="setTag(tags)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-sm btn-success text-white"
+                                                                            *ngIf="tags.isDeleted === true"
+                                                                            [cModalToggle]="activeModal.id"
+                                                                            (click)="setTag(tags)">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{tags.tagName}}</td>
+                                                            <td>{{tags.productTagCount}}</td>
+
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !tags.isDeleted, 'btn-danger': tags.isDeleted}">
+                                                                    {{ tags.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr *ngIf="!allTagsList || allTagsList.length === 0">
+                                                            <td colspan="6" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <!-- Previous Button -->
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <!-- Page Numbers -->
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <!-- Next Button -->
+                                                            <li class="page-item"
+                                                            [class.disabled]="currentPage >= totalPages || totalPages ===0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allTagsList && allTagsList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords }} items
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="!allTagsList || allTagsList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deActiveProductTagsModal alignment="center" id="deActiveProductTagsModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.productTags.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveProductTagsModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.productTags.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveProductTagsModal.id" cButton color="secondary">
+                {{getLabelValue('admin.productTags.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveProductTagsModal.id"
+                (click)="deleteSelectedTags()">{{getLabelValue('admin.productTags.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.productTags.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.productTags.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.productTags.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteTag(tags)">{{getLabelValue('admin.productTags.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.productTags.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.productTags.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.productTags.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveTag(tags)">{{getLabelValue('admin.productTags.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+<div *ngIf="isAddProductTag">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditTag ? 'Edit product tag details':'Add a new' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToTagList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.productTags.edit.header.backToTagsList.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditTag"
+                                            (click)="updateTags(true)"
+                                            [title]="getLabelValue('admin.productTags.edit.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.productTags.edit.header.updateButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" (click)="updateTags(false)"
+                                            *ngIf="isEditTag"
+                                            [title]="getLabelValue('admin.productTags.edit.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.productTags.edit.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditTag && !productTagData?.isDeleted"
+                                            [cModalToggle]="deactiveProductTagModal.id"
+                                            [title]="getLabelValue('admin.productTags.edit.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.productTags.edit.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditTag && productTagData?.isDeleted"
+                                            [cModalToggle]="activeProductTagModal.id"
+                                            [title]="getLabelValue('admin.productTags.edit.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.productTags.edit.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="tagsForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="tagName">{{getLabelValue('admin.productTags.edit.name.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.productTags.edit.name.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="tagName" formControlName="tagName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="tagsForm.get('tagName')?.invalid  && tagsForm.get('tagName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.productTags.edit.name.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deactiveProductTagModal alignment="center" id="deactiveProductTagModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.productTags.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveProductTagModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.productTags.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveProductTagModal.id" cButton color="secondary">
+                {{getLabelValue('admin.productTags.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveProductTagModal.id"
+                (click)="deactiveTag()">{{getLabelValue('admin.productTags.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeProductTagModal alignment="center" id="activeProductTagModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.productTags.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeProductTagModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.productTags.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeProductTagModal.id" cButton color="secondary">
+                {{getLabelValue('admin.productTags.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeProductTagModal.id"
+                (click)="activeTag()">{{getLabelValue('admin.productTags.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

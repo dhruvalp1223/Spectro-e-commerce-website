@@ -1,0 +1,48 @@
+<!--sidebar-->
+<c-sidebar
+  #sidebar1="cSidebar"
+  class="d-print-none sidebar sidebar-fixed border-end"
+  colorScheme="dark"
+  id="sidebar1"
+  visible
+>
+<c-sidebar-header class="border-bottom d-flex justify-content-center align-items-center" style="padding: 0 !important;">
+  <c-sidebar-brand [routerLink]="['/admin/dashboard']">
+    <img  style="max-width: 133px;margin: auto;"
+      src="../../../assets/images/image.png" 
+      class="sidebar-brand-full logo-center" 
+      
+      alt="Logo" 
+      title="Logo" />  
+  </c-sidebar-brand>
+</c-sidebar-header>
+
+
+  <ng-scrollbar #scrollbar="ngScrollbar" (updated)="onScrollbarUpdate(scrollbar.state)" class="overflow" pointerEventsMethod="scrollbar" visibility="hover">
+    <c-sidebar-nav #overflow [navItems]="navItems" dropdownMode="none" compact />
+  </ng-scrollbar>
+
+  <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+    <button cSidebarToggler aria-label="Toggle sidebar fold"></button>
+  </c-sidebar-footer>
+</c-sidebar>
+
+
+<!--main-->
+<div class="wrapper d-flex flex-column min-vh-100">
+  <!--app-header-->
+  <app-default-header
+    [cShadowOnScroll]="'sm'"
+    class="mb-4 d-print-none header header-sticky p-0 shadow-sm"
+    position="sticky"
+    sidebarId="sidebar1"
+  />
+  <!--app-body-->
+  <div class="body flex-grow-1">
+    <c-container class="h-auto px-4">
+      <router-outlet />
+    </c-container>
+  </div>
+  <!--app footer-->
+  <!-- <app-default-footer /> -->
+</div>

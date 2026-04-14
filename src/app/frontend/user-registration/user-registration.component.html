@@ -1,0 +1,190 @@
+<!-- breadcrumb start -->
+<!-- <div class="breadcrumb-section">
+        <div class="container">
+            <h2>Create account</h2>
+            <nav class="theme-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a [routerLink]="['/home']">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Create account</li>
+                </ol>
+            </nav>
+        </div>
+    </div> -->
+<!-- breadcrumb End -->
+
+<!--section start-->
+<section class="login-page section-b-space">
+    <div class="container">
+        <h3>create account</h3>
+        <div class="theme-card">
+            <!-- <form class="theme-form"> -->
+            <form class="theme-form" [formGroup]="registrationForm" (ngSubmit)="createNewUser()">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="fname" class="form-label">First Name<span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input style="margin: 0px !important;" type="text" class="form-control" id="fname"
+                                formControlName="firstName" placeholder="First Name" required>
+                            <div *ngIf="registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid"
+                                class="text-danger small">
+                                First Name is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="lname" class="form-label">Last Name <span
+                                    class="text-danger fw-bold position-absolute">*</span> </label>
+                            <input style="margin: 0px !important;" type="text" class="form-control" id="lname"
+                                formControlName="lastName" placeholder="Last Name" required>
+                            <div *ngIf="registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid"
+                                class="text-danger small">
+                                Last Name is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="dob" class="form-label">Date of Birth <span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input style="margin: 0px !important;" type="date" placeholder="Select Date" class="form-control" [max]="todayDate" id="dob"
+                                formControlName="dob" required>
+                            <div *ngIf="registrationForm.get('dob')?.touched && registrationForm.get('dob')?.invalid"
+                                class="text-danger small">
+                                Date of Birth is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="email" class="form-label">Email<span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input style="margin: 0px !important;" type="email" class="form-control" id="email"
+                                formControlName="email" placeholder="Email" required>
+                            <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid"
+                                class="text-danger small">
+                                <div *ngIf="registrationForm.get('email')?.errors?.['required']">
+                                    Email is required.
+                                </div>
+                                <div *ngIf="registrationForm.get('email')?.errors?.['email']">
+                                    Please enter a valid email address.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="password" class="form-label">Password <span
+                                    class="text-danger fw-bold position-absolute">*</span></label>
+                            <input style="margin: 0px !important;" type="password" class="form-control" id="password"
+                                formControlName="pwd" placeholder="Enter your password" required>
+                            <div *ngIf="registrationForm.get('pwd')?.touched && registrationForm.get('pwd')?.invalid"
+                                class="text-danger small">
+                                Password is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="confirmpwd" class="form-label">Confirm Password<span
+                                    class="text-danger fw-bold position-absolute">*</span> </label>
+                            <input style="margin: 0px !important;" type="password" class="form-control" id="confirmpwd"
+                                formControlName="confirmpwd" placeholder="Confirm your password" required>
+                        
+                            <div *ngIf="registrationForm.get('confirmpwd')?.touched && registrationForm.get('confirmpwd')?.hasError('required')"
+                                class="text-danger small">
+                                Confirm Password is required.
+                            </div>
+                            <div *ngIf="registrationForm.get('confirmpwd')?.touched && registrationForm.get('confirmpwd')?.hasError('mismatch')"
+                                class="text-danger small">
+                                Password and Confirm Password do not match.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="contact" class="form-label">Contact No<span
+                                    class="text-danger fw-bold position-absolute">*</span> </label>
+                            <input style="margin: 0px !important;" type="number" class="form-control" id="contact"
+                                formControlName="contact" placeholder="Contact No"  maxlength="10" (input)="limitContactLength($event)" required>
+                            <div *ngIf="registrationForm.get('contact')?.touched && registrationForm.get('contact')?.invalid"
+                                class="text-danger small">
+                                Contact Number is required.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-box input_feild">
+                            <label for="companyName" class="form-label">Company Name
+                                <!-- <span
+                                    class="text-danger fw-bold position-absolute">*</span> -->
+                                 </label>
+                            <input style="margin: 0px !important;" type="text" class="form-control" id="companyName"
+                                formControlName="companyName" placeholder="Company Name" >
+                            <!-- <div *ngIf="registrationForm.get('companyName')?.touched && registrationForm.get('companyName')?.invalid"
+                                class="text-danger">
+                                Company Name is required.
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-box">
+                            <label class="form-label">Gender 
+                                <!-- <span
+                                    class="text-danger fw-bold position-absolute">*</span> -->
+                                </label>
+                            <div class="d-flex align-items-center">
+                                <div class="form-check  d-flex align-items-center" style="padding: 0px !important;">
+                                    <input type="radio" class="form-check-input"
+                                        style="margin: 0px; margin-right: 8px; " id="genderMale" value="male"
+                                        formControlName="gender">
+                                    <label for="genderMale" class="form-check-label mb-0">Male</label>
+
+                                </div>
+
+                                <div class="form-check d-flex align-items-center">
+                                    <input type="radio" class="form-check-input"
+                                        style="margin: 0px ; margin-right: 8px;" id="genderFemale" value="female"
+                                        formControlName="gender">
+                                    <label for="genderFemale" class="form-check-label mb-0">Female</label>
+
+                                </div>
+                            </div>
+                            <!-- <div *ngIf="registrationForm.get('gender')?.touched && registrationForm.get('gender')?.invalid"
+                                class="text-danger">
+                                Gender is required.
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-box">
+                            <label class="form-label"  for="newsletter">Newsletter</label>
+                            <div class="form-check">
+                                <input type="checkbox" style="margin-top: 10px;" class="form-check-input"
+                                    id="newsletter" formControlName="newsletter">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-solid w-auto">Create Account</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</section>
+<!--Section ends-->

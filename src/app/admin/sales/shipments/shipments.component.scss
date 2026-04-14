@@ -1,0 +1,9 @@
+td{
+    min-width: max-content;
+  }
+  .center-buttons {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    gap: 5px; /* Add spacing between buttons */
+  }

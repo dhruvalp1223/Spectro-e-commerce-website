@@ -1,0 +1,657 @@
+<div *ngIf="!isAddWarehouse">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Warehouse</strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                            [routerLink]="['/admin/Shipping/CreateWarehouse']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.warehouse.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="warehouseName">
+                                                            {{getLabelValue('admin.warehouse.search.warehouseName.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.warehouse.search.warehouseName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="warehouseName"
+                                                            data-val-required="Please provide a name." id="Name"
+                                                            name="Name" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3 col-md-12">
+                                                <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                                <div class="col-md-9 ps-3">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllWarehouseList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{getLabelValue('admin.warehouse.search.searchButton.value')}}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                    <br>
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th scope="col" style="width: 8%;">Actions</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="8">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                        <tr
+                                                            *ngFor="let warehouse of allWarehouseList; let langIndex = index">
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/Shipping/EditWarehouse',warehouse._id]">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+                                                                    <a class="btn btn-sm btn-danger text-white"
+                                                                        *ngIf="warehouse.isDeleted === false"
+                                                                        [cModalToggle]="deActiveModal.id"
+                                                                        (click)="setWarehouse(warehouse)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-success text-white"
+                                                                        *ngIf="warehouse.isDeleted === true"
+                                                                        [cModalToggle]="activeModal.id"
+                                                                        (click)="setWarehouse(warehouse)">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{warehouse.warehouseName}}</td>
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !warehouse.isDeleted, 'btn-danger': warehouse.isDeleted}">
+                                                                    {{ warehouse.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="!allWarehouseList || allWarehouseList.length === 0">
+                                                            <td colspan="6" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <!-- Previous Button -->
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <!-- Page Numbers -->
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <!-- Next Button -->
+                                                            <li class="page-item"
+                                                                [class.disabled]="currentPage >= totalPages || totalPages === 0 ">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allWarehouseList && allWarehouseList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords }} items
+                                                    </div>
+                                                </div>
+                                                <div  *ngIf="!allWarehouseList || allWarehouseList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.warehouse.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.warehouse.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.warehouse.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteWarehouse(warehouse)">{{getLabelValue('admin.warehouse.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.warehouse.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.warehouse.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.warehouse.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveWarehouse(warehouse)">{{getLabelValue('admin.warehouse.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+<div *ngIf="isAddWarehouse">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditWarehouse ? 'Edit warehouse details - ':'Add a new warehouse' }} {{ isEditWarehouse ? name:'' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToWarehouseList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.backToWarehouseListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditWarehouse"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.saveButton.hint')"
+                                            (click)="createWarehouse(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" (click)="createWarehouse(false)"
+                                            *ngIf="!isEditWarehouse"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditWarehouse"
+                                            (click)="updateWarehouse(true)"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.updateButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditWarehouse"
+                                            (click)="updateWarehouse(false)"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white" *ngIf="isEditWarehouse && !warehouseData?.isDeleted" 
+                                        [cModalToggle]="deactiveWarehouseEditModal.id"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white" *ngIf="isEditWarehouse && warehouseData?.isDeleted" 
+                                        [cModalToggle]="activeWarehouseEditModal.id"
+                                            [title]="getLabelValue('admin.shipping.warehouse.addnew.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.shipping.warehouse.addnew.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="warehouseForm">
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="warehouseName">{{getLabelValue('admin.shipping.warehouse.addnew.name.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.name.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="warehouseName" formControlName="warehouseName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="warehouseForm.get('warehouseName')?.invalid  && warehouseForm.get('warehouseName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.shipping.warehouse.addnew.name.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="firstName">{{getLabelValue('admin.shipping.warehouse.addnew.firstName.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.firstName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="firstName" formControlName="firstName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="lastName">{{getLabelValue('admin.shipping.warehouse.addnew.lastName.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.lastName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="lastName" formControlName="lastName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="email">{{getLabelValue('admin.shipping.warehouse.addnew.email.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.email.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="email" formControlName="email" class="form-control"
+                                                        type="email">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="companyName">{{getLabelValue('admin.shipping.warehouse.addnew.company.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.company.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="companyName" formControlName="companyName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="countryName">{{getLabelValue('admin.shipping.warehouse.addnew.country.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.country.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="countryName" formControlName="countryId"
+                                                        [items]="allCountryList" bindLabel="countryName" bindValue="_id"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="false"
+                                                        appendTo="body" (change)="onCountryChange($event)">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.countryName }}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                                                <div *ngIf="warehouseForm.get('countryId')?.invalid  && warehouseForm.get('countryId')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.shipping.warehouse.addnew.countryId.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="state">{{getLabelValue('admin.shipping.warehouse.addnew.state.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.state.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="state" formControlName="stateId"
+                                                        [items]="allStateList" bindLabel="stateName" bindValue="_id"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="false"
+                                                        appendTo="body">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.stateName }}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="region">{{getLabelValue('admin.shipping.warehouse.addnew.region.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.region.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="region" formControlName="region" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="city">{{getLabelValue('admin.shipping.warehouse.addnew.city.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.city.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="city" formControlName="cityName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="address1">{{getLabelValue('admin.shipping.warehouse.addnew.address1.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.address1.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="address1" formControlName="address1" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="address2">{{getLabelValue('admin.shipping.warehouse.addnew.address2.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.address2.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="address2" formControlName="address2" class="form-control"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="zipCode">{{getLabelValue('admin.shipping.warehouse.addnew.zipCode.value')}}
+                                                        <span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.zipCode.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="zipCode" formControlName="zipCode" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="warehouseForm.get('zipCode')?.invalid  && warehouseForm.get('zipCode')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.shipping.warehouse.addnew.zipCode.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="phoneNumber">{{getLabelValue('admin.shipping.warehouse.addnew.phoneNumber.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.phoneNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="phoneNumber" formControlName="phoneNumber" maxlength="10" (input)="limitContactLength($event)"
+                                                        class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="faxNumber">{{getLabelValue('admin.shipping.warehouse.addnew.faxNumber.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.faxNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="faxNumber" formControlName="faxNumber"
+                                                        class="form-control" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="adminComment">{{getLabelValue('admin.shipping.warehouse.addnew.adminComment.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.shipping.warehouse.addnew.adminComment.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+
+                                                    <textarea cFormControl id="adminComment" class="form-control"
+                                                        formControlName="adminComment" rows="3"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveWarehouseEditModal alignment="center" id="deactiveWarehouseEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.warehouse.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveWarehouseEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.warehouse.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveWarehouseEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.warehouse.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveWarehouseEditModal.id"
+                (click)="deactiveWarehouse()">{{getLabelValue('admin.warehouse.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeWarehouseEditModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.warehouse.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeWarehouseEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.warehouse.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeWarehouseEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.warehouse.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeWarehouseEditModal.id"
+                (click)="activeWarehouse()">{{getLabelValue('admin.warehouse.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

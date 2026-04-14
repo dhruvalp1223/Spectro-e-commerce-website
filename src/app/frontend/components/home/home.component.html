@@ -1,0 +1,371 @@
+<!-- slider layout start -->
+<div>
+    <div *ngIf="loading" class="loader-container">
+        <div class="loader"></div>
+    </div>
+    <div #slickSlider class="slider" *ngIf=" !loading">
+        <div class="slide" *ngFor="let slider of allSliderList">
+            <img class="background-image" [src]="commonService.rootData.uploadsUrl + slider.backgroundImage"
+                alt="Slide Image" loading="lazy">
+            <div class="slide__content">
+                <div class="slide__content--image animated" data-animation-in="fadeInLeft">
+                    <img [src]="commonService.rootData.uploadsUrl + slider.sliderImage" alt="Side Image" loading="lazy">
+                </div>
+                <div class="slide__content--text animated" data-animation-in="fadeInRight">
+                    <p [innerHTML]="slider.sanitizedDescription"></p>
+                    <a [routerLink]="['/product-details', slider.url]" class="btn btn-solid d-block shop-btn"
+                        style="max-width: max-content; margin: auto; display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
+                        {{ slider.buttonTitle }} <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- slider layout end -->
+
+
+<!-- Slider layout start -->
+<!-- <div>
+    <div *ngIf="loading" class="loader-container">
+      <div class="loader"></div>
+    </div>
+  
+    <div #slickSlider class="slider" *ngIf="!loading">
+      <div class="slide" *ngFor="let slider of allSliderList">
+        <img class="background-image" [src]="commonService.rootData.uploadsUrl + slider.backgroundImage" alt="Slide Image" loading="lazy">
+  
+        <div class="slide__content-wrapper">
+          <div class="slide__left animated" data-animation-in="fadeInLeft">
+            <img [src]="commonService.rootData.uploadsUrl + slider.sliderImage" alt="Side Image" loading="lazy">
+          </div>
+  
+          <div class="slide__right animated" data-animation-in="fadeInRight">
+            <p [innerHTML]="slider.sanitizedDescription"></p>
+            <a [routerLink]="['/product-details', slider.url]" class="btn btn-solid d-block shop-btn"
+            style="max-width: max-content; margin: auto; display: inline-flex; align-items: center; justify-content: center; gap: 10px;">
+              {{ slider.buttonTitle }} <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+<!-- Slider layout end -->
+
+<!-- category layout -->
+<section class="banner-padding banner-goggles banner-section ratio2_1"
+    *ngIf="allCategoriesList && allCategoriesList.length > 0">
+    <div class="container title1">
+        <h2 class="title-inner1">product category</h2>
+    </div>
+    <div class="container" >
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6 col-12" *ngFor="let category of allCategoriesList; let i = index">
+                <div class="category-card" data-aos="fade-up">
+                    <a [routerLink]="['/product-category']"
+                        [queryParams]="{ searchEngineFriendlyPageName: category.searchEngineFriendlyPageName,categoryId: category._id }"  >
+                        <img [src]="category.categoryImage ? (commonService.rootData.uploadsUrl + category.categoryImage) : '../../../../assets/userAssets/images/spectroimages/no-product-image.png'"
+                            class="category-img" alt="Category Image">
+                        <div class="category-overlay">
+                            <h3 class="category-title">{{ category.categoryName }}</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- category layout end -->
+
+
+
+<!-- blog section -->
+<div class="section2 background-services" *ngIf=" !loading" data-aos="fade-up">
+    <div class="container " style="padding: 40px;">
+        <div class="container title1">
+            <h2 class="title-inner1">{{this.pagesList?.title}}</h2>
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="blog-paragraph product-para">
+                        <p class="text-center" [innerHTML]="sanitizedBody"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row rowcards">
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-left">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-cogs icon"></i>
+                        </div>
+                        <span class="title">Products Support</span>
+                        <p class="description">
+                            Unparalleled product support for precise metal analytics, ensuring your instruments
+                            perform at their peak reliability.
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-left" data-aos-duration="1500">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-lightbulb icon"></i>
+                        </div>
+                        <span class="title">Automation</span>
+                        <p class="description">
+                            Transform your metal analysis with automated brilliance & fusing precision and
+                            innovation to redefine purity standard.
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-left">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-eye icon"></i>
+                        </div>
+                        <span class="title">Process optimization</span>
+                        <p class="description">
+                            Optimize processes for peak efficiency with our advanced solutions, driving performance
+                            to new heights.
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-right">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-book icon"></i>
+                        </div>
+                        <span class="title">Total QC</span>
+                        <p class="description">
+                            Transform the landscape of quality control by implementing our comprehensive Total QC
+                            solutions, guaranteeing excellence at every stage of the process.
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-right" data-aos-duration="1500">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-truck icon"></i>
+                        </div>
+                        <span class="title">Authentication of Diamonds & Gemstones</span>
+                        <p class="description">
+                            Illuminate your gems with our touch of certainty, Unveil brilliance, authenticate
+                            essence.
+                        </p>
+                    </div>
+                </a>
+            </div>
+            <div class="col-md-6 col-lg-4 mb-4" data-aos="flip-right">
+                <a>
+                    <div class="classic-effect custom-box">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-screwdriver-wrench icon"></i>
+                        </div>
+                        <span class="title">Research and Development</span>
+                        <p class="description">
+                            Nurturing success and fueling growth, the catalyst for development is found in the
+                            relentless pursuit of excellence in Research and Development.
+                        </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- blog section end -->
+
+
+<!-- product layout start -->
+<div class="container" *ngIf="allProductList && allProductList.length > 0" data-aos="fade-up">
+    <section class="pb-0 ratio2_1  section2" style="padding-top: 0 !important;">
+        <div class="container title1">
+            <h2 class="title-inner1">{{this.productPagesList?.title}}</h2>
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="product-para">
+                        <p class="text-center" [innerHTML]="sanitizedProductTitle"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row partition2">
+                <div class="col-md-6" *ngFor="let product of allProductList">
+                    <a [routerLink]="['/product-details',product._id]">
+                        <div class="collection-banner p-right text-end">
+                            <div class="img-part">
+                                <img [src]="product.productImageUrl ? (commonService.rootData.uploadsUrl + product.productImageUrl) : '../../../../assets/userAssets/images/spectroimages/no-product-image.png'"
+                                    class="img-fluid  lazyload bg-img" alt="">
+                            </div>
+                            <div class="contain-banner">
+                                <div>
+                                    <h4>{{ product.productName.split(' ')[0] }}</h4>
+                                    <h2 class="font-smaller">{{ product.productName.split(' ').slice(1).join(' ') }}
+                                    </h2>
+                                    <div class="search-col">
+                                        <div class="search-btn">
+                                            <a href="#!" class="btn btn-solid d-block" tabindex="0">SHOP NOW!</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- product layout end -->
+
+
+<!-- service layout -->
+<div class="section2 bg-section " data-aos="fade-up" *ngIf=" !loading">
+    <div class="container">
+        <section class="service border-section small-section">
+            <div class="row">
+                <div class="col-md-4 service-block">
+                    <div class="media">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50" height="50"
+                            fill="#ec8951">
+                            <path
+                                d="M10 2h4a2 2 0 0 1 2 2v2h5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5V4a2 2 0 0 1 2-2zm-7 8v7h18v-7H3zm7-4v2h4V6h-4z">
+                            </path>
+                        </svg>
+                        <div class="media-body">
+                            <h4>
+                                <span class="purecounter" data-purecounter-start="0" data-purecounter-end="24"
+                                    data-purecounter-duration="1.5">0</span>+
+                            </h4>
+                            <p>Years of analytical leadership in precious metals testing.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 service-block">
+                    <div class="media">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ec8951" width="48px"
+                            height="48px">
+                            <path
+                                d="M16 11c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5zM7 10c2.2 0 4-1.8 4-4S9.2 2 7 2 3 3.8 3 6s1.8 4 4 4zm9 2c-2.7 0-8 1.3-8 4v3h16v-3c0-2.7-5.3-4-8-4zM7 12c-.3 0-.6 0-1 .1C2.3 13 0 14.7 0 16v3h6v-3c0-1.1.4-2.1 1-3-.3 0-.6 0-1 0z" />
+                        </svg>
+                        <div class="media-body">
+                            <h4>
+                                <span class="purecounter" data-purecounter-start="0" data-purecounter-end="2300"
+                                    data-purecounter-duration="2">0</span>+
+                            </h4>
+                            <p>satisfied customers across India.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 service-block">
+                    <div class="media">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="50" height="50"
+                            fill="#ec8951">
+                            <path
+                                d="M128 0c17.7 0 32 14.3 32 32v96h128V32c0-17.7 14.3-32 32-32h64c17.7 0 32 14.3 32 32v448h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H288 160 32c-17.7 0-32-14.3-32-32s14.3-32 32-32H64V32C64 14.3 78.3 0 96 0h32zM96 480h64V416H96v64zm128 0h64V416h-64v64zm192-64H352v64h64V416zM320 288h64V224h-64v64zm0 64v64h64V352H320zm-64-64V224H192v64h64zm0 64H192v64h64V352zM128 288V224H64v64h64zm0 64H64v64h64V352z" />
+                        </svg>
+                        <div class="media-body">
+                            <h4>
+                                <span class="purecounter" data-purecounter-start="0" data-purecounter-end="10"
+                                    data-purecounter-duration="1.5">0</span>+
+                            </h4>
+                            <p>Offices and service locations nationwide.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<!-- service layout  end -->
+
+
+<!-- manufacturer section start -->
+<div class="container" *ngIf="allManufactureList && allManufactureList.length > 0" data-aos="fade-up">
+    <section class="ratio_portrait">
+        <div class="row">
+            <div class="col-12">
+                <div class="title1">
+                    <h2 class="title-inner1">{{this.manufacturerPagesList?.title}}</h2>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="slide-4 category-m  no-arrow">
+                    <div class="row">
+                        <div class="col-md-6" *ngFor="let manufacturer of allManufactureList; let i = index">
+                            <a [routerLink]="['/product-manufacturer']"
+                                [queryParams]="{ searchEngineFriendlyPageName: manufacturer.searchEngineFriendlyPageName,manufacturerId: manufacturer._id }">
+                                <div class="category-wrapper">
+                                    <div>
+                                        <div>
+                                            <img [src]="commonService.rootData.uploadsUrl + manufacturer.manufacturerImage"
+                                                class="img-fluid blur-up lazyload manufactureImg" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!--  manufacturer end -->
+
+<!-- tap to top -->
+<div class="tap-top top-cls" id="tap-to-top" (click)="scrollToTop()">
+    <div>
+      <i class="ri-arrow-up-double-line"></i>
+    </div>
+  </div>
+<!-- tap to top end -->
+
+ <!--modal popup start-->
+ <!-- <div class="modal fade bd-example-modal-lg theme-modal" id="exampleModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body modal1">
+                <div class="container-fluid p-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="modal-bg">
+                                <button type="button" class="btn-close"
+                                    data-bs-dismiss="modal"><span>&times;</span></button>
+                                <div class="offer-content"> <img src="../../../../assets/userAssets/images/bicycle/banner/1.jpg"
+                                        class="img-fluid blur-up lazyload" alt="">
+                                    <h2>newsletter</h2>
+                                    <form
+                                        action="https://pixelstrap.us19.list-manage.com/subscribe/post?u=5a128856334b598b395f1fc9b&amp;id=082f74cbda"
+                                        class="auth-form needs-validation" method="post"
+                                        id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+                                        target="_blank">
+                                        <div class="form-group mx-sm-3">
+                                            <input type="email" class="form-control" name="EMAIL" id="mce-EMAIL"
+                                                placeholder="Enter your email" required="required">
+                                            <button type="submit" class="btn btn-solid"
+                                                id="mc-submit">subscribe</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<!--modal popup end-->

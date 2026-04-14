@@ -1,0 +1,1431 @@
+<div *ngIf="!isShowSpecificationAttributesList">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="productattributes-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Specification attributes</strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                            [routerLink]="['/admin/SpecificationAttribute/CreateSpecificationAttributeGroup']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.addGroupbutton.value')}}
+                                        </a>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                            [routerLink]="['/admin/SpecificationAttribute/CreateSpecificationAttribute']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.addAttributebutton.value')}}
+                                        </a>
+                                        <a  class="btn btn-danger btn-sm " *ngIf="canDelete && isAnyRowSelected()" 
+                                            [cModalToggle]="deActiveSelectedAttributeModal.id">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.deleteAttributesSelectedButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card>
+                                        <div class="p-3">
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.text.value')}}
+                                        </div>
+                                        <c-card-body>
+                                            <div style="overflow-x:auto">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Actions</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Display Order</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="5">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+
+                                                        <tr  *ngIf="currentPage === 1">
+                                                            <td>
+                                                                <i class="fas"
+                                                                    [ngClass]="{'fa-chevron-down': expandedRows[0],'fa-chevron-right': !expandedRows[0],}"
+                                                                    (click)="toggleCard(0,'')">
+                                                                </i>
+                                                            </td>
+                                                            <th></th>
+                                                            <td>Default group (non-grouped
+                                                                specification attributes)</td>
+                                                            <td>0</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <!-- Expanded Content Row for Default Group -->
+                                                        <tr *ngIf="expandedRows[0] && currentPage === 1">
+                                                            <td colspan="5">
+                                                                <div class="container">
+                                                                    <div style="overflow-x:auto">
+                                                                        <table class="table table-bordered">
+                                                                            <thead class="thead-light">
+                                                                                <tr>
+                                                                                    <th>
+                                                                                        <c-form-check>
+                                                                                            <input cFormCheckInput
+                                                                                                id="selectAll"
+                                                                                                type="checkbox"
+                                                                                                [(ngModel)]="selectAllCheckedArray[0]"
+                                                                                                (change)="toggleSelectAll(0)" />
+                                                                                        </c-form-check>
+                                                                                    </th>
+                                                                                    <th scope="col" style="width: 10%;">
+                                                                                        Actions</th>
+                                                                                    <th>Name</th>
+                                                                                    <th>Display Order</th>
+                                                                                    <th>Status</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr
+                                                                                    *ngFor="let specificationAttributes of allSpecificationAttributesList[0]">
+                                                                                    <td>
+                                                                                        <c-form-check>
+                                                                                            <input cFormCheckInput
+                                                                                                type="checkbox"
+                                                                                                [(ngModel)]="specificationAttributes.isChecked"
+                                                                                                (change)="updateSelectAllproductAttributes(0)" />
+                                                                                        </c-form-check>
+                                                                                    </td>
+                                                                                    <td class="text-center">
+                                                                                        <div class="center-buttons">
+                                                                                            <a *ngIf="this.canEdit == true"
+                                                                                                class="btn btn-sm btn-secondary"
+                                                                                                [routerLink]="['/admin/SpecificationAttribute/EditSpecificationAttribute',specificationAttributes._id]">
+                                                                                                <i
+                                                                                                    class="fas fa-pencil"></i>
+                                                                                            </a>
+                                                                                            <div
+                                                                                                *ngIf="this.canDelete == true">
+                                                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                                                    *ngIf="!specificationAttributes.isDeleted"
+                                                                                                    [cModalToggle]="deActiveAttributeModal.id"
+                                                                                                    (click)="setAttribute(specificationAttributes)">
+                                                                                                    <i
+                                                                                                        class="fas fa-trash"></i>
+                                                                                                </a>
+                                                                                                <a class="btn btn-sm btn-success text-white"
+                                                                                                    *ngIf="specificationAttributes.isDeleted"
+                                                                                                    [cModalToggle]="activeAttributeModal.id"
+                                                                                                    (click)="setAttribute(specificationAttributes)">
+                                                                                                    <i
+                                                                                                        class="fas fa-check"></i>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>{{
+                                                                                        specificationAttributes.specificationAttributeName
+                                                                                        }}</td>
+                                                                                    <td>{{ specificationAttributes.order
+                                                                                        }}</td>
+                                                                                    <td class="text-center">
+                                                                                        <a class="btn btn-sm text-white"
+                                                                                            [ngClass]="{'btn-success': !specificationAttributes.isDeleted, 'btn-danger': specificationAttributes.isDeleted}">
+                                                                                            {{
+                                                                                            specificationAttributes.isDeleted
+                                                                                            ? 'Deactive' : 'Active' }}
+                                                                                        </a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Pagination controls -->
+                                                                <div class="row mt-4 align-items-center">
+                                                                    <div class="col-lg-4 col-md-6 mb-2">
+                                                                        <ul class="pagination">
+                                                                            <li class="page-item"
+                                                                                [class.disabled]="paginationState[0].currentPage === 1">
+                                                                                <a class="page-link"
+                                                                                    (click)="changeAttributePage(0, paginationState[0].currentPage - 1)">
+                                                                                    Previous
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li class="page-item"
+                                                                                *ngFor="let page of getAttributePagination(0)"
+                                                                                [class.active]="page === paginationState[0].currentPage"
+                                                                                [class.disabled]="page === '...'">
+                                                                                <a class="page-link"
+                                                                                    *ngIf="page !== '...'; else attributeTemplate"
+                                                                                    (click)="changeAttributePage(0, page)">
+                                                                                    {{ page }}
+                                                                                </a>
+                                                                                <ng-template #attributeTemplate>
+                                                                                    <span class="page-link">...</span>
+                                                                                </ng-template>
+                                                                            </li>
+
+                                                                            <li class="page-item"
+                                                                                [class.disabled]="paginationState[0].currentPage >= paginationState[0].totalPages || paginationState[0].totalPages === 0">
+                                                                                <a class="page-link"
+                                                                                    (click)="changeAttributePage(0, paginationState[0].currentPage + 1)">
+                                                                                    Next
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+
+                                                                    <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                                        <label> Show
+                                                                            <select
+                                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                                [(ngModel)]="paginationState[0].pageSize"
+                                                                                (change)="updateAttributePageSize(0)">
+                                                                                <option value="10">10</option>
+                                                                                <option value="25">25</option>
+                                                                                <option value="50">50</option>
+                                                                                <option value="100">100</option>
+                                                                            </select> items
+                                                                        </label>
+                                                                    </div>
+
+                                                                    <div class="col-lg-4 col-md-6 mb-2 text-end">
+                                                                        {{ ((paginationState[0].currentPage - 1) *
+                                                                        paginationState[0].pageSize + 1) }} -
+                                                                        {{ Math.min(paginationState[0].currentPage *
+                                                                        paginationState[0].pageSize,
+                                                                        paginationState[0].totalRecords) }}
+                                                                        of {{ paginationState[0].totalRecords }} items
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+
+
+                                                        <!-- Dynamic Rows with Expanded Content -->
+                                                        <ng-container
+                                                            *ngFor="let specificationGroup of allSpecificationGroupList; let i = index">
+                                                            <!-- Main Row -->
+                                                            <tr>
+                                                                <td>
+                                                                    <i class="fas"
+                                                                       (click)="toggleCard(i + 1, specificationGroup._id)"
+                                                                       [ngClass]="{
+                                                                         'fa-chevron-right': !expandedRows[i + 1],
+                                                                         'fa-chevron-down': expandedRows[i + 1]
+                                                                       }">
+                                                                    </i>
+                                                                  </td>
+                                                                  
+                                                                <td class="text-center">
+                                                                    <div class="center-buttons">
+                                                                        <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                            [routerLink]="['/admin/SpecificationAttribute/EditSpecificationAttributeGroup',specificationGroup._id]">
+                                                                            <i class="fas fa-pencil"></i>
+                                                                        </a>
+                                                                        <div *ngIf="this.canDelete == true">
+
+                                                                        <a class="btn btn-sm btn-danger text-white"
+                                                                            *ngIf="specificationGroup.isDeleted === false"
+                                                                            [cModalToggle]="deActiveGroupModal.id"
+                                                                            (click)="setGroup(specificationGroup)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-sm btn-success text-white"
+                                                                            *ngIf="specificationGroup.isDeleted === true"
+                                                                            [cModalToggle]="activeGroupModal.id"
+                                                                            (click)="setGroup(specificationGroup)">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><a
+                                                                        [routerLink]="['/admin/SpecificationAttribute/EditSpecificationAttributeGroup',specificationGroup._id]">
+                                                                        {{specificationGroup.specificationAttributeGroupName}}</a>
+                                                                </td>
+                                                                <td>{{ specificationGroup.order }}</td>
+                                                                <td class="text-center">
+                                                                    <a class="btn btn-sm text-white"
+                                                                        [ngClass]="{'btn-success': !specificationGroup.isDeleted, 'btn-danger': specificationGroup.isDeleted}">
+                                                                        {{ specificationGroup.isDeleted ? 'Deactive' :
+                                                                        'Active' }}
+                                                                    </a>
+                                                                </td>
+
+                                                            </tr>
+                                                            <!-- Expanded Content Row -->
+                                                            <tr *ngIf="expandedRows[i + 1]">
+                                                                <td colspan="5">
+                                                                    <div class="container">
+                                                                        <div style="overflow-x:auto">
+                                                                            <table class="table table-bordered">
+                                                                                <thead class="thead-light">
+                                                                                    <tr>
+                                                                                        <th>
+                                                                                            <c-form-check>
+                                                                                                <input cFormCheckInput
+                                                                                                    id="selectAll"
+                                                                                                    type="checkbox"
+                                                                                                    [(ngModel)]="selectAllCheckedArray[i+1]"
+                                                                                                    (change)="toggleSelectAll(i+1)" />
+                                                                                            </c-form-check>
+                                                                                        </th>
+                                                                                        <th scope="col"
+                                                                                            style="width: 10%;">
+                                                                                            Actions</th>
+                                                                                        <th>Name</th>
+                                                                                        <th>Display Order</th>
+                                                                                        <th>Status</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr
+                                                                                        *ngFor="let specificationAttributes of allSpecificationAttributesList[i + 1]; let j = index">
+
+                                                                                        <td>
+                                                                                            <c-form-check>
+                                                                                                <input cFormCheckInput
+                                                                                                    type="checkbox"
+                                                                                                    [(ngModel)]="specificationAttributes.isChecked"
+                                                                                                    (change)="updateSelectAllproductAttributes(i)" />
+                                                                                            </c-form-check>
+                                                                                        </td>
+                                                                                        <td class="text-center">
+                                                                                            <div class="center-buttons">
+                                                                                                <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                                                    [routerLink]="['/admin/SpecificationAttribute/EditSpecificationAttribute',specificationAttributes._id]">
+                                                                                                    <i
+                                                                                                        class="fas fa-pencil"></i>
+                                                                                                </a>
+                                                                                                <div *ngIf="this.canDelete == true">
+                                                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                                                    *ngIf="specificationAttributes.isDeleted === false"
+                                                                                                    [cModalToggle]="deActiveAttributeModal.id"
+                                                                                                    (click)="setAttribute(specificationAttributes)">
+                                                                                                    <i
+                                                                                                        class="fas fa-trash"></i>
+                                                                                                </a>
+                                                                                                <a class="btn btn-sm btn-success text-white"
+                                                                                                    *ngIf="specificationAttributes.isDeleted === true"
+                                                                                                    [cModalToggle]="activeAttributeModal.id"
+                                                                                                    (click)="setAttribute(specificationAttributes)">
+                                                                                                    <i
+                                                                                                        class="fas fa-check"></i>
+                                                                                                </a>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td>{{
+                                                                                            specificationAttributes.specificationAttributeName
+                                                                                            }}</td>
+                                                                                        <td>{{
+                                                                                            specificationAttributes.order
+                                                                                            }}
+                                                                                        </td>
+                                                                                        <td class="text-center">
+                                                                                            <a class="btn btn-sm text-white"
+                                                                                                [ngClass]="{'btn-success': !specificationAttributes.isDeleted, 'btn-danger': specificationAttributes.isDeleted}">
+                                                                                                {{
+                                                                                                specificationAttributes.isDeleted
+                                                                                                ? 'Deactive' : 'Active'
+                                                                                                }}
+                                                                                            </a>
+                                                                                        </td>
+
+                                                                                    </tr>
+                                                                                    <tr
+                                                                                        *ngIf="!allSpecificationAttributesList[i + 1] || allSpecificationAttributesList[i + 1].length === 0">
+                                                                                        <td colspan="5"
+                                                                                            class="text-center">No
+                                                                                            data available</td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- Pagination controls -->
+                                                                    <div class="row mt-4 align-items-center">
+                                                                        <div class="col-lg-4 col-md-6 mb-2">
+                                                                            <ul class="pagination">
+                                                                                <li class="page-item"
+                                                                                    [class.disabled]="paginationState[i+1].currentPage === 1">
+                                                                                    <a class="page-link"
+                                                                                        (click)="changeAttributePage(i+1, paginationState[i+1].currentPage - 1)">
+                                                                                        Previous
+                                                                                    </a>
+                                                                                </li>
+
+                                                                                <li class="page-item"
+                                                                                    *ngFor="let page of getAttributePagination(i+1)"
+                                                                                    [class.active]="page === paginationState[i+1].currentPage"
+                                                                                    [class.disabled]="page === '...'">
+                                                                                    <a class="page-link"
+                                                                                        *ngIf="page !== '...'; else attributeTemplate"
+                                                                                        (click)="changeAttributePage(i+1, page)">
+                                                                                        {{ page }}
+                                                                                    </a>
+                                                                                    <ng-template #attributeTemplate>
+                                                                                        <span
+                                                                                            class="page-link">...</span>
+                                                                                    </ng-template>
+                                                                                </li>
+
+                                                                                <li class="page-item"
+                                                                                    [class.disabled]="paginationState[i+1].currentPage >= paginationState[i+1].totalPages || paginationState[i+1].totalPages === 0">
+                                                                                    <a class="page-link"
+                                                                                        (click)="changeAttributePage(i+1, paginationState[i+1].currentPage + 1)">
+                                                                                        Next
+                                                                                    </a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </div>
+
+                                                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                                            <label> Show
+                                                                                <select
+                                                                                    class="form-control form-control-sm d-inline-block w-auto"
+                                                                                    [(ngModel)]="paginationState[i+1].pageSize"
+                                                                                    (change)="updateAttributePageSize(0)">
+                                                                                    <option value="10">10</option>
+                                                                                    <option value="25">25</option>
+                                                                                    <option value="50">50</option>
+                                                                                    <option value="100">100</option>
+                                                                                </select> items
+                                                                            </label>
+                                                                        </div>
+
+                                                                        <div *ngIf="allSpecificationAttributesList[i + 1] || allSpecificationAttributesList[i + 1].length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                                            {{ ((paginationState[i+1].currentPage - 1) *
+                                                                            paginationState[i+1].pageSize + 1) }} -
+                                                                            {{ Math.min(paginationState[i+1].currentPage
+                                                                            * paginationState[i+1].pageSize,
+                                                                            paginationState[i+1].totalRecords) }}
+                                                                            of {{ paginationState[i+1].totalRecords }}
+                                                                            items
+                                                                        </div>
+
+                                                                        <div  *ngIf="!allSpecificationAttributesList[i + 1] || allSpecificationAttributesList[i + 1].length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                                            No record found
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
+                                                        </ng-container>
+                                                    </tbody>
+
+
+                                                </table>
+
+                                            </div>
+
+
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                [class.disabled]="currentPage >= totalPages || totalPages ===0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="allSpecificationGroupList && allSpecificationGroupList .length !== 0"class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="!allSpecificationGroupList  || allSpecificationGroupList.length=== 0"  class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deActiveGroupModal alignment="center" id="deActiveGroupModal" [visible]="visibleDeactiveGroupModal"
+        (visibleChange)="handleDeactiveGroupModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveGroupModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveGroupModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="deleteSpecificationGroup(specificationGroup)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeGroupModal alignment="center" id="activeGroupModal" [visible]="visibleActiveGroupModal"
+        (visibleChange)="handleActiveGroupModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeGroupModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeGroupModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="reActiveSpecificationGroup(specificationGroup)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveSelectedAttributeModal alignment="center" id="deActiveSelectedAttributeModal">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveSelectedAttributeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveSelectedAttributeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveSelectedAttributeModal.id"
+                (click)="deleteSelectedSpecificationAttributes()">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+
+    <c-modal #deActiveAttributeModal alignment="center" id="deActiveAttributeModal" [visible]="visibleDeactiveModal"
+        (visibleChange)="handleDeactiveModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveAttributeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveAttributeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="deleteAttributes(specificationAttributes)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeAttributeModal alignment="center" id="activeAttributeModal" [visible]="visibleActiveModal"
+        (visibleChange)="handleActiveModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeAttributeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeAttributeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="reActiveAttributes(specificationAttributes)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+
+<div *ngIf="isAddSpecificationAttributes">
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="productAttributes-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditProductAttributes ?
+                                        'Edit specification attribute details ':'Add a new specification attribute' }}
+                                        {{ isEditProductAttributes ?
+                                        allSpeceficationOptionList.specificationAttributeOptionName : '' }}
+                                        <a class="btn btn-sm text-primary"
+                                            (click)="backToSpecificationAttributesList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.backToSpecificationAttributesListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditProductAttributes"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveButton.hint')"
+                                            (click)="createNewSpecificationAttribute(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditProductAttributes"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveAndEditButton.hint')"
+                                            (click)="createNewSpecificationAttribute(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditProductAttributes"
+                                            (click)="updateSpecificationAttributes(true)"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditProductAttributes"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveAndEditButton.hint')"
+                                            (click)="updateSpecificationAttributes(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditProductAttributes && !specificationAttributeData?.isDeleted"
+                                            [cModalToggle]="deactiveSpecificationEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditProductAttributes && specificationAttributeData?.isDeleted"
+                                            [cModalToggle]="activeSpecificationEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+
+                                <c-card-body>
+                                    <form [formGroup]="specificationAttributesForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Attribute info
+                                                </strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="specificationAttributeName">{{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.name.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.name.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="specificationAttributeName"
+                                                                formControlName="specificationAttributeName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="specificationAttributesForm.get('specificationAttributeName')?.invalid  && specificationAttributesForm.get('specificationAttributeName')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.name.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="specificationAttributeGroup">{{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.group.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.group.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group ">
+                                                            <ng-select id="specificationAttributeGroup"
+                                                                [items]="allSpecificationActiveGroupList"
+                                                                bindLabel="specificationAttributeGroupName"
+                                                                bindValue="_id" [searchable]="true" class="form-control"
+                                                                style="padding: 0 !important;" [clearable]="true"
+                                                                appendTo="body"
+                                                                formControlName="specificationAttributeGroupId">
+                                                                <ng-template ng-option-tmp let-item="item">
+                                                                    {{ item.specificationAttributeGroupName }}
+                                                                </ng-template>
+                                                            </ng-select>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="order">{{getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.displayOrder.value')}}
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.addAttributes.attributesInfo.displayOrder.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="order" formControlName="order"
+                                                                class="form-control" type="number">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(1)">
+                                            <strong><i class="fas fa-object-group me-3 fw-bold"></i>Option</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                            <div *ngIf="!isEditProductAttributes">
+                                                {{getLabelValue('admin.catalog.attributes.productAttributes.addNew.predefinedValues.text')}}
+                                            </div>
+
+                                            <div *ngIf="isEditProductAttributes">
+                                                <section class="content">
+                                                    <div class="container-fluid">
+                                                        <div class="form-horizontal">
+                                                            <div id="productAttributes-grid_wrapper"
+                                                                class="dataTables_wrapper dt-bootstrap4 no-footer">
+                                                                <c-row ngPreserveWhitespaces>
+                                                                    <c-col>
+                                                                        <div style="overflow-x:auto">
+                                                                            <table class="table table-bordered">
+                                                                                <thead class="thead-light">
+                                                                                    <tr>
+                                                                                        <th scope="col"
+                                                                                            style="width: 10%;">Actions
+                                                                                        </th>
+                                                                                        <th scope="col">Name</th>
+                                                                                        <th scope="col">Display order
+                                                                                        </th>
+                                                                                        <th scope="col">Number of
+                                                                                            associated products </th>
+                                                                                        <th scope="col">Status</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    <tr
+                                                                                        *ngFor="let options of allSpeceficationOptionList">
+                                                                                        <td
+                                                                                            class="d-flex justify-content-center">
+                                                                                            <div>
+                                                                                                <a class="btn btn-sm btn-secondary"
+                                                                                                    [cModalToggle]="addNewOptionModal.id"
+                                                                                                    (click)="editOption(options._id)">
+                                                                                                    <i
+                                                                                                        class="fas fa-pencil"></i>
+                                                                                                </a>
+                                                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                                                    *ngIf="options.isDeleted === false"
+                                                                                                    [cModalToggle]="deActiveOptionModal.id"
+                                                                                                    (click)="setOption(options)">
+                                                                                                    <i
+                                                                                                        class="fas fa-trash"></i>
+                                                                                                </a>
+                                                                                                <a class="btn btn-sm btn-success text-white"
+                                                                                                    *ngIf="options.isDeleted === true"
+                                                                                                    [cModalToggle]="activeOptionModal.id"
+                                                                                                    (click)="setOption(options)">
+                                                                                                    <i
+                                                                                                        class="fas fa-check"></i>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td>{{options.specificationAttributeOptionName}}
+                                                                                        </td>
+                                                                                        <td>{{options.order}}
+                                                                                        </td>
+                                                                                        <td>{{options.weightAdjustment}}
+                                                                                        </td>
+                                                                                        <td class="text-center">
+                                                                                            <a class="btn btn-sm text-white"
+                                                                                                [ngClass]="{'btn-success': !options.isDeleted, 'btn-danger': options.isDeleted}">
+                                                                                                {{
+                                                                                                options.isDeleted
+                                                                                                ? 'Deactive' : 'Active'
+                                                                                                }}
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr
+                                                                                        *ngIf="!allSpeceficationOptionList || allSpeceficationOptionList.length === 0">
+                                                                                        <td colspan="5"
+                                                                                            class="text-center "><b> No
+                                                                                                data found</b>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                        <div class="row mt-4 align-items-center">
+                                                                            <div class="col-lg-4 col-md-6 mb-2">
+                                                                                <div
+                                                                                    class="dataTables_paginate paging_simple_numbers">
+                                                                                    <ul class="pagination">
+                                                                                        <li class="page-item"
+                                                                                            [class.disabled]="optionCurrentPage === 1">
+                                                                                            <a class="page-link"
+                                                                                                (click)="changeOptionPage(optionCurrentPage - 1)"
+                                                                                                tabindex="-1">Previous</a>
+                                                                                        </li>
+
+                                                                                        <li class="page-item"
+                                                                                            *ngFor="let page of getOptionPagination()"
+                                                                                            [class.active]="page === optionCurrentPage"
+                                                                                            [class.disabled]="page === '...'">
+                                                                                            <a class="page-link"
+                                                                                                *ngIf="page !== '...'; else optionTemplate"
+                                                                                                (click)="changeOptionPage(page)">
+                                                                                                {{ page }}
+                                                                                            </a>
+                                                                                            <ng-template
+                                                                                                #optionTemplate>
+                                                                                                <span
+                                                                                                    class="page-link">...</span>
+                                                                                            </ng-template>
+                                                                                        </li>
+
+                                                                                        <li class="page-item"
+                                                                                            [class.disabled]="optionCurrentPage >=totalOptionPages|| totalOptionPages=== 0">
+                                                                                            <a class="page-link"
+                                                                                                (click)="changeOptionPage(optionCurrentPage + 1)">Next</a>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div
+                                                                                class="col-lg-4 col-md-6 mb-2 text-center">
+                                                                                <div class="dataTables_length">
+                                                                                    <label>
+                                                                                        Show
+                                                                                        <select
+                                                                                            class="form-control form-control-sm d-inline-block w-auto"
+                                                                                            [(ngModel)]="optionPageSize"
+                                                                                            (change)="updateOptionPageSize()">
+                                                                                            <option value="10">10
+                                                                                            </option>
+                                                                                            <option value="25">25
+                                                                                            </option>
+                                                                                            <option value="50">50
+                                                                                            </option>
+                                                                                            <option value="100">100
+                                                                                            </option>
+                                                                                        </select>
+                                                                                        items
+                                                                                    </label>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div
+                                                                                class="col-lg-4 col-md-6 mb-2 text-end">
+                                                                                <div class="dataTables_info">
+                                                                                    {{ (optionCurrentPage - 1) *
+                                                                                    optionPageSize
+                                                                                    + 1 }}-
+                                                                                    {{ Math.min(optionCurrentPage *
+                                                                                    optionPageSize, totalOptionRecords)
+                                                                                    }} of {{
+                                                                                    totalOptionRecords }} items
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <a class="btn btn-primary btn-sm"
+                                                                            [cModalToggle]="addNewOptionModal.id"
+                                                                            (click)="openAddPredefinedProductModal()">
+                                                                            <i class="fas fa-plus me-1"></i>
+                                                                            {{getLabelValue('admin.catalog.attributes.productAttributes.edit.predefinedValues.addNewValuebutton.value')}}
+                                                                        </a>
+                                                                    </c-col>
+                                                                </c-row>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveSpecificationEditModal alignment="center" id="deactiveSpecificationEditModal"
+        [visible]="visibleDeactiveModal" (visibleChange)="handleDeactiveModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deactiveSpecificationEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveSpecificationEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="deactiveAttributes()">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.deActiveAttributeModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeSpecificationEditModal alignment="center" id="activeSpecificationEditModal"
+        [visible]="visibleActiveModal" (visibleChange)="handleActiveModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeSpecificationEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeSpecificationEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="activeAttributes()">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.body.activeAttributeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveOptionModal alignment="center" id="deActiveOptionModal" [visible]="deAcOptionModal"
+        (visibleChange)="handleDeActiveOptionModalChange($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.deActiveOptionModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveOptionModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.deActiveOptionModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveOptionModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.deActiveOptionModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="deleteOption(options)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.deActiveOptionModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeOptionModal alignment="center" id="activeOptionModal" [visible]="acOptionModal"
+        (visibleChange)="handleActiveOptionModalChange($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.activeOptionModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeOptionModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.activeOptionModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeOptionModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.activeOptionModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="reActiveOption(options)">{{getLabelValue('admin.catalog.attributes.specificationAttributes.icon.edit.option.activeOptionModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+
+
+    <c-modal size="lg" #addNewOptionModal alignment="center" id="addNewOptionModal" [visible]="visible"
+        (visibleChange)="handleLiveChange($event)">
+        <section class="content p-2">
+            <div class="container-fluid">
+                <div class="form-horizontal">
+                    <div id="countries-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <c-row ngPreserveWhitespaces>
+                            <c-col>
+                                <c-card class="mb-4">
+                                    <c-card-header class="d-flex justify-content-between align-items-center">
+                                        <strong>{{ isEditOption ? 'Edit ':' Add a new'}} option
+                                        </strong>
+                                        <div>
+                                            <a [cModalToggle]="addNewOptionModal.id"
+                                                class="btn btn-secondary btn-sm text-white">
+                                                {{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.body.addNewOption.header.closeButton.value')}}
+                                            </a>
+                                            <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditOption"
+                                                [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.body.addNewOption.header.saveButton.hint')"
+                                                (click)="createNewOption()" data-bs-toggle="tooltip"
+                                                data-bs-placement="bottom">
+                                                <i class="fas fa-save me-1"></i>
+                                                {{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.body.addNewOption.header.saveButton.value')}}
+                                            </a>
+                                            <a class="btn btn-success btn-sm text-white" *ngIf="isEditOption"
+                                                (click)="updateOption()"
+                                                [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.body.addNewOption.header.updateButton.hint')"
+                                                data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                                <i class="fas fa-save me-1"></i>
+                                                {{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.body.addNewOption.header.updateButton.value')}}
+                                            </a>
+                                        </div>
+                                    </c-card-header>
+                                    <c-card-body>
+                                        <form [formGroup]="optionForm">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="name">{{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.name.value')}}<span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.name.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="name"
+                                                            formControlName="specificationAttributeOptionName"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <div *ngIf="optionForm.get('specificationAttributeOptionName')?.invalid && optionForm.get('specificationAttributeOptionName')?.touched"
+                                                        class="text-danger">
+                                                        {{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.name.error')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="SpecifyColor">{{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.specifyColor.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.specifyColor.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="SpecifyColor" formControlName="SpecifyColor"
+                                                        type="checkbox" (change)="toggleRgbColorVisibility()" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1" *ngIf="isRgbColorVisible">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="rgbColor">{{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.rgbColor.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.rgbColor.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <!-- <div class="input-group input-group-required">
+                                                        <input id="rgbColor" formControlName="rgbColor"
+                                                            class="form-control" type="text">
+                                                    </div> -->
+                                                    <c-row class="align-items-center g-2">
+                                                        <!-- <c-col xs="auto">
+                                                          <label cLabel="col" for="exampleColorInput">Color picker</label>
+                                                        </c-col> -->
+                                                        <c-col xs="auto">
+                                                            <input formControlName="rgbColor" cFormControl
+                                                                (change)="onColorChange($event)" id="exampleColorInput"
+                                                                title="Choose your color" type="color">
+                                                        </c-col>
+                                                        <c-col xs="auto">
+                                                            <div [ngStyle]="{'backgroundColor':  this.optionForm.get('rgbColor')?.value}"
+                                                                class="color-box p-1 m-1"></div>
+                                                        </c-col>
+                                                        <c-col xs="auto">
+                                                            <strong>{{ optionForm.get('rgbColor')?.value }}</strong>
+                                                        </c-col>
+                                                    </c-row>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="order">{{getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.displayOrder.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.catalog.attributes.specificationOption.icon.edit.option.addNewOption.displayOrder.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="order" formControlName="order" class="form-control"
+                                                            type="number">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </c-card-body>
+                                </c-card>
+                            </c-col>
+                        </c-row>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </c-modal>
+</div>
+
+
+
+
+
+<div *ngIf="isAddSpecificationGroup">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="productAttributes-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>
+                                        {{ isEditGroup ? 'Edit specification attribute group details ':
+                                        'Add a new specification attribute group ' }}
+
+                                        <a class="btn btn-sm text-primary"
+                                            (click)="backToSpecificationAttributesList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.backToSpecificationAttributesListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditGroup"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveButton.hint')"
+                                            (click)="createNewSpecificationGroup(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveAndEditButton.hint')"
+                                            *ngIf="!isEditGroup" (click)="createNewSpecificationGroup(false)"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditGroup"
+                                            (click)="updateSpecificationGroup(true)"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveAndEditButton.hint')"
+                                            *ngIf="isEditGroup" (click)="updateSpecificationGroup(false)"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditGroup && !specificationGroupData?.isDeleted"
+                                            [cModalToggle]="deactiveGroupEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditGroup && specificationGroupData?.isDeleted"
+                                            [cModalToggle]="activeGroupEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="specificationGroupForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Attribute group
+                                                    info
+                                                </strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="productAttributesForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="name">{{getLabelValue('admin.catalog.attributes.specificationAttributes.attributeGroupInfo.name.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.attributeGroupInfo.name.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="name"
+                                                                formControlName="specificationAttributeGroupName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="specificationGroupForm.get('specificationAttributeGroupName')?.invalid  && specificationGroupForm.get('specificationAttributeGroupName')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.catalog.attributes.specificationAttributes.attributeGroupInfo.name.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="order">{{getLabelValue('admin.catalog.attributes.specificationAttributes.attributeGroupInfo.displayOrder.value')}}
+                                                                <!-- <span
+                                                    class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.attributes.specificationAttributes.attributeGroupInfo.displayOrder.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="order" formControlName="order"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deactiveGroupEditModal alignment="center" id="deactiveGroupEditModal"
+        [visible]="visibleDeactiveGroupModal" (visibleChange)="handleDeactiveGroupModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deactiveGroupEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveGroupEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="deactiveSpecificationGroup()">{{getLabelValue('admin.catalog.attributes.specificationAttributes.body.deActiveGroupModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeGroupEditModal alignment="center" id="activeGroupEditModal" [visible]="visibleActiveGroupModal"
+        (visibleChange)="handleActiveGroupModal($event)">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeGroupEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeGroupEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger"
+                (click)="activeSpecificationGroup()">{{getLabelValue('admin.catalog.attributes.specificationAttributes.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.deActiveModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.deActiveModal.closeButton.value')}}
+            </button>
+            <!-- <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deletepredefinedProductAttributes(predefinedProductAttributes)">{{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.deActiveModal.deactiveButton.value')}}</button> -->
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.activeModal.closeButton.value')}}
+            </button>
+            <!-- <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActivepredefinedProductAttributes(predefinedProductAttributes)">{{getLabelValue('admin.catalog.productAttributes.edit.predefinedvalues.activeModal.activeButton.value')}}</button> -->
+        </c-modal-footer>
+    </c-modal>
+
+</div>

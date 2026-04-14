@@ -1,0 +1,28 @@
+
+
+
+/* Target submenu-row specifically inside the table */
+table .submenu-row {
+  padding-left: 30px;
+  margin-bottom: 10px;
+}
+
+table .subsubmenu-row  {
+  padding-left: 50px;
+}
+
+table .submenu-row .submenu-row {
+  padding-left: 40px;
+  margin-bottom: 8px;
+}
+
+td{
+  min-width: max-content;
+}
+
+@media (max-width: 768px) {
+  .btn-container {
+      flex-direction: column !important;
+      gap: 8px; /* Adds spacing between buttons */
+  }
+}

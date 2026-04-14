@@ -1,0 +1,924 @@
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <c-row ngPreserveWhitespaces>
+                    <c-col>
+                        <c-card class="mb-4">
+                            <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                <strong>General settings</strong>
+                                <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                    <a (click)="saveGeneralSettingsData()" class="btn btn-primary btn-sm text-white"
+                                        [title]="getLabelValue('admin.generalsettings.header.saveButton.hint')"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <i class="fas fa-save me-1"></i>
+                                        {{getLabelValue('admin.generalsettings.header.saveButton.value')}}
+                                    </a>
+                                </div>
+                            </c-card-header>
+                            <c-card-body>
+                                <form [formGroup]="generalSettingsForm">
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Common</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <!-- <form [formGroup]="generalSettingsForm"> -->
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="storeName">{{getLabelValue('admin.generalsettings.common.storeName.value')}}
+                                                            <!-- <span
+                                                                    class="text-danger fw-bold position-absolute">*</span> -->
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.storeName.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="storeName" formControlName="storeName"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="generalSettingsForm.get('storeName')?.invalid  && generalSettingsForm.get('storeName')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.generalsettings.common.storeName.error')}}
+                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="logo">{{getLabelValue('admin.generalsettings.common.logo.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.logo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-md-9">
+                                                        <div class="image-container">
+                                                            <input type="file" id="logo"
+                                                                (change)="onFileSelected($event)" accept="image/*"
+                                                                hidden />
+                                                            <div class="image-box" (click)="triggerFileInput()">
+                                                                <ng-container *ngIf="!selectedImage">
+                                                                    <i class="fas fa-plus text-primary"></i>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="selectedImage">
+                                                                    <img [src]="selectedImage" alt="Selected Image" />
+                                                                    <button type="button" class="cancel-btn"
+                                                                        (click)="removeImage($event)">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </button>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+
+                                                <div class="col-md-9">
+                                                    <div class="image-container">
+                                                        <input type="file" id="commonLogo"
+                                                            (change)="onFileSelected($event, 'commonLogo')"
+                                                            accept="image/*" hidden />
+                                                        <div class="image-box" (click)="triggerFileInput('commonLogo')">
+                                                            <ng-container *ngIf="!selectedImageForLogo">
+                                                                <i class="fas fa-plus text-primary"></i>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="selectedImageForLogo">
+                                                                <img [src]="selectedImageForLogo.startsWith('data:') ? selectedImageForLogo :commonService.rootData.uploadsUrl + this.selectedImageForLogo"
+                                                                    alt="Selected Common Logo" />
+                                                                <button type="button" class="cancel-btn"
+                                                                    (click)="removeImage($event, 'commonLogo')">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="displayEuCookieLawWarning">{{getLabelValue('admin.generalsettings.common.displayEuCookieLawWarning.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.displayEuCookieLawWarning.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="displayEuCookieLawWarning"
+                                                        formControlName="displayEuCookieLawWarning" type="checkbox" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 "
+                                                            for="storeClosed">{{getLabelValue('admin.generalsettings.common.storeClosed.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.storeClosed.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="storeClosed" formControlName="storeClosed"
+                                                        type="checkbox" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="contactUsPageSubjectFiled">{{getLabelValue('admin.generalsettings.common.contactUsPageSubjectFiled.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.contactUsPageSubjectFiled.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="contactUsPageSubjectFiled"
+                                                        formControlName="contactUsSubjectField" type="checkbox" />
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="contactUsPageSystemEmail">{{getLabelValue('admin.generalsettings.common.contactUsPageSystemEmail.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.contactUsPageSystemEmail.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="contactUsPageSystemEmail"
+                                                        formControlName="contactUsUseSystemEmail" type="checkbox" />
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="popupWindowsForTermsOfService">{{getLabelValue('admin.generalsettings.common.popupWindowsForTermsOfService.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.popupWindowsForTermsOfService.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <input id="popupWindowsForTermsOfService"
+                                                        formControlName="popupWindowForTermsService" type="checkbox" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="favIconLogo">{{getLabelValue('admin.generalsettings.common.favIconLogo.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.favIconLogo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="image-container">
+                                                        <input type="file" id="favIcon"
+                                                            (change)="onFileSelected($event, 'favIcon')"
+                                                            accept="image/*" hidden />
+                                                        <div class="image-box" (click)="triggerFileInput('favIcon')">
+                                                            <ng-container *ngIf="!selectedImageForfavIcon">
+                                                                <i class="fas fa-plus text-primary"></i>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="selectedImageForfavIcon">
+                                                                <img [src]="selectedImageForfavIcon.startsWith('data:') ? selectedImageForfavIcon :commonService.rootData.uploadsUrl + this.selectedImageForfavIcon"
+                                                                    alt="Selected PDF Logo" />
+                                                                <button type="button" class="cancel-btn"
+                                                                    (click)="removeImage($event, 'favIcon')">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="description">{{getLabelValue('admin.generalsettings.common.description.value')}}
+                                                            <!-- <span
+                                                                class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.description.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="description" formControlName="description"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="contact">{{getLabelValue('admin.generalsettings.common.contact.value')}}
+                                                            <!-- <span
+                                                                class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.contact.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="contact" formControlName="contact"
+                                                            class="form-control" maxlength="10" (input)="limitContactLength($event)" type="number">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="address">{{getLabelValue('admin.generalsettings.common.address.value')}}
+                                                            <!-- <span
+                                                                class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.address.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="address" formControlName="address"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="email">{{getLabelValue('admin.generalsettings.common.email.value')}}
+                                                            <!-- <span
+                                                                class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.email.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="email" formControlName="email"
+                                                            class="form-control" type="email">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1 align-items-center">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="footerLogo">{{getLabelValue('admin.generalsettings.common.footerLogo.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.common.footerLogo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="image-container">
+                                                        <input type="file" id="footerLogo"
+                                                            (change)="onFileSelected($event, 'footerLogo')"
+                                                            accept="image/*" hidden />
+                                                        <div class="image-box" (click)="triggerFileInput('footerLogo')">
+                                                            <ng-container *ngIf="!selectedImageForfooterLogo">
+                                                                <i class="fas fa-plus text-primary"></i>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="selectedImageForfooterLogo">
+                                                                <img [src]="selectedImageForfooterLogo.startsWith('data:') ? selectedImageForfooterLogo :commonService.rootData.uploadsUrl + this.selectedImageForfooterLogo"
+                                                                    alt="Selected PDF Logo" />
+                                                                <button type="button" class="cancel-btn"
+                                                                    (click)="removeImage($event, 'footerLogo')">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- </form> -->
+                                        </c-card-body>
+                                    </c-card>
+
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(1)">
+                                            <strong><i class="fa fa-share-square me-3 fw-bold"></i>Social
+                                                media</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                            <!-- <form [formGroup]="generalSettingsForm"> -->
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="facebookPageUrl">{{getLabelValue('admin.generalsettings.socialMedia.facebookPageUrl.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.socialMedia.facebookPageUrl.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="facebookPageUrl" formControlName="facebookUrl"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('facebookUrl')?.invalid" class="text-danger">
+                                  {{getLabelValue('admin.generalsettings.common.facebookPageUrl.error')}}
+                                </div> -->
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="twitterPageUrl">{{getLabelValue('admin.generalsettings.socialMedia.twitterPageUrl.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.socialMedia.twitterPageUrl.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="twitterPageUrl" formControlName="twitterUrl"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('twitterUrl')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.common.twitterPageUrl.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="youTubeChannelUrl">{{getLabelValue('admin.generalsettings.socialMedia.youTubeChannelUrl.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.socialMedia.youTubeChannelUrl.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="youTubeChannelUrl" formControlName="youtubeUrl"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center  justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="instagramUrl">{{getLabelValue('admin.generalsettings.socialMedia.instagramUrl.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.socialMedia.instagramUrl.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="instagramUrl" formControlName="instagramUrl"
+                                                            class="form-control" type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('instagramUrl')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.common.instagramUrl.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+                                            <!-- </form> -->
+                                        </c-card-body>
+                                    </c-card>
+
+
+                                    <!-- <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(2)">
+                                                <strong><i class="far fa-images me-3 fw-bold"></i>Favicon and app
+                                                    icons</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[2] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[2] ? 'open' : 'closed'">
+                                                
+                                            </c-card-body>
+                                        </c-card> -->
+
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(2)">
+                                            <strong><i class="fas fa-search-plus me-3 fw-bold"></i>SEO</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[2] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[2] ? 'open' : 'closed'">
+                                            <!-- <form [formGroup]="generalSettingsForm"> -->
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="pageTitleSeoAdjusment">{{getLabelValue('admin.generalsettings.SEO.pageTitleSEOAdjustmenu.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.pageTitleSEOAdjustmenu.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="pageTitleSeoAdjusment"
+                                                            formControlName="pageTitleSeoAdjusment" [items]="pageTitle"
+                                                            bindLabel="label" bindValue="value" [searchable]="true"
+                                                            class="form-control" style="padding: 0 !important;"
+                                                            [clearable]="false" appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="pageTitleSeparator">{{getLabelValue('admin.generalsettings.SEO.pageTitleSeparator.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.pageTitleSeparator.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="pageTitleSeparator"
+                                                            formControlName="pageTitleSeparator" class="form-control"
+                                                            type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('twitterUrl')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.common.twitterPageUrl.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="generateProductMetaDescription">{{getLabelValue('admin.generalsettings.SEO.generateProductMetaDescription.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.generateProductMetaDescription.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex ">
+                                                    <input id="generateProductMetaDescription"
+                                                        formControlName="generateProductMetaDescription"
+                                                        type="checkbox" />
+                                                </div>
+                                                <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="wwwPrefixRequirement">{{getLabelValue('admin.generalsettings.SEO.wwwPrefixRequirement.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.wwwPrefixRequirement.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="wwwPrefixRequirement"
+                                                            formControlName="wwwPrefixRequirement" [items]="prefixes"
+                                                            bindLabel="label" bindValue="value" [searchable]="true"
+                                                            class="form-control" style="padding: 0 !important;"
+                                                            [clearable]="false" appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="convertNonWesternChars">{{getLabelValue('admin.generalsettings.SEO.convertNonWesternChars.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.convertNonWesternChars.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex">
+                                                    <input id="convertNonWesternChars"
+                                                        formControlName="convertNonWesternChars" type="checkbox" />
+                                                </div>
+                                                <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="enableCanonicalUrls">{{getLabelValue('admin.generalsettings.SEO.enableCanonicalUrls.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.enableCanonicalUrls.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex">
+                                                    <input id="enableCanonicalUrls"
+                                                        formControlName="enableCanonicalUrls" type="checkbox" />
+                                                    <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="twitterMetaTags">{{getLabelValue('admin.generalsettings.SEO.twitterMetaTags.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.twitterMetaTags.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex">
+                                                    <input id="twitterMetaTags" formControlName="twitterMetaTags"
+                                                        type="checkbox" />
+                                                    <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="opemGraphMetaTags">{{getLabelValue('admin.generalsettings.SEO.opemGraphMetaTags.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.opemGraphMetaTags.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex">
+                                                    <input id="opemGraphMetaTags" formControlName="opemGraphMetaTags"
+                                                        type="checkbox" />
+                                                    <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="microdataTags">{{getLabelValue('admin.generalsettings.SEO.microdataTags.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.microdataTags.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex">
+                                                    <input id="microdataTags" formControlName="microdataTags"
+                                                        type="checkbox" />
+                                                </div>
+                                                <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.common.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="customHeadTag">{{getLabelValue('admin.generalsettings.SEO.customHeadTag.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.SEO.customHeadTag.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <!-- <input id="customHeadTag" formControlName="customHeadTag"
+                                                                class="form-control" type="text"> -->
+                                                        <textarea cFormControl id="customHeadTag" class="form-control"
+                                                            formControlName="customHeadTag" rows="3"></textarea>
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('twitterUrl')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.common.twitterPageUrl.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+
+                                            <!-- </form> -->
+                                        </c-card-body>
+                                    </c-card>
+
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(3)">
+                                            <strong><i class="far fa-file-pdf me-3 fw-bold"></i>Pdf</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[3] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[3] ? 'open' : 'closed'">
+                                            <!-- <form [formGroup]="generalSettingsForm"> -->
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="pdfLogo">{{getLabelValue('admin.generalsettings.pdf.pdfLogo.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.pdf.pdfLogo.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-md-9">
+                                                        <div class="image-container">
+                                                            <input type="file" id="logo" (change)="onFileSelected($event)" accept="image/*" hidden />
+                                                            <div class="image-box" (click)="triggerFileInput()">
+                                                                <ng-container *ngIf="!selectedImage">
+                                                                    <i class="fas fa-plus text-primary"></i>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="selectedImage">
+                                                                    <img [src]="selectedImage" alt="Selected Image" />
+                                                                    <button type="button" class="cancel-btn" (click)="removeImage($event)">
+                                                                        <i class="fas fa-times"></i>
+                                                                    </button>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                <div class="col-md-9">
+                                                    <div class="image-container">
+                                                        <input type="file" id="pdfLogo"
+                                                            (change)="onFileSelected($event, 'pdfLogo')"
+                                                            accept="image/*" hidden />
+                                                        <div class="image-box" (click)="triggerFileInput('pdfLogo')">
+                                                            <ng-container *ngIf="!selectedImageForPdfLogo">
+                                                                <i class="fas fa-plus text-primary"></i>
+                                                            </ng-container>
+                                                            <ng-container *ngIf="selectedImageForPdfLogo">
+                                                                <img [src]="selectedImageForPdfLogo.startsWith('data:') ? selectedImageForPdfLogo :commonService.rootData.uploadsUrl + this.selectedImageForPdfLogo"
+                                                                    alt="Selected PDF Logo" />
+                                                                <button type="button" class="cancel-btn"
+                                                                    (click)="removeImage($event, 'pdfLogo')">
+                                                                    <i class="fas fa-times"></i>
+                                                                </button>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="invoiceFooterTextLeftColumn">{{getLabelValue('admin.generalsettings.pdf.invoiceFooterTextLeftColumn.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.pdf.invoiceFooterTextLeftColumn.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex justify-content-center">
+                                                    <div class="input-group input-group-required">
+
+                                                        <textarea cFormControl id="invoiceFooterTextLeftColumn"
+                                                            class="form-control"
+                                                            formControlName="invoiceFooterTextLeftColumn"
+                                                            rows="3"></textarea>
+
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('invoiceFooterTextLeftColumn')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.pdf.invoiceFooterTextLeftColumn.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="invoiceFooterTextRightColumn">{{getLabelValue('admin.generalsettings.pdf.invoiceFooterTextRightColumn.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.pdf.invoiceFooterTextRightColumn.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 ">
+                                                    <div class="input-group input-group-required">
+                                                        <textarea cFormControl id="invoiceFooterTextRightColumn"
+                                                            class="form-control"
+                                                            formControlName="invoiceFooterTextRightColumn"
+                                                            rows="3"></textarea>
+
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('youtubeUrl')?.invalid" class="text-danger">
+                                        {{getLabelValue('admin.generalsettings.pdf.youTubeChannelUrl.error')}}
+                                    </div> -->
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="useLetterPageSize">{{getLabelValue('admin.generalsettings.pdf.useLetterPageSize.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.pdf.useLetterPageSize.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex justify-content-center">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="useLetterPageSize"
+                                                            formControlName="useLetterPageSize" type="checkbox" />
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('useLetterPageSize')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.pdf.useLetterPageSize.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3 text-end"
+                                                            for="disablePdfInvoicesForPendingOrders">{{getLabelValue('admin.generalsettings.pdf.disablePdfInvoicesForPendingOrders.value')}}
+
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.generalsettings.pdf.disablePdfInvoicesForPendingOrders.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9 d-flex justify-content-center">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="disablePdfInvoicesForPendingOrders"
+                                                            formControlName="disablePdfInvoicesForPendingOrders"
+                                                            type="checkbox" />
+                                                    </div>
+                                                    <!-- <div *ngIf="resourceForm.get('useLetterPageSize')?.invalid" class="text-danger">
+                                    {{getLabelValue('admin.generalsettings.pdf.useLetterPageSize.error')}}
+                                  </div> -->
+                                                </div>
+                                            </div>
+                                            <!-- </form> -->
+                                        </c-card-body>
+                                    </c-card>
+                                </form>
+                            </c-card-body>
+                        </c-card>
+                    </c-col>
+                </c-row>
+
+
+
+            </div>
+        </div>
+    </div>
+</section>

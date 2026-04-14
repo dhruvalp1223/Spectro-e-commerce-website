@@ -1,0 +1,266 @@
+<div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card>
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditUser ? 'Edit':'Add' }} User Wise Menu
+                                        <!-- <a class="btn btn-sm text-primary" (click)="backToLanguageList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.userwise.header.backTorolewisButton.value')}}
+                                        </a> -->
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white"
+                                            [title]="getLabelValue('admin.userwise.header.saveButton.hint')"
+                                            (click)="saveData(true)" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userwise.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" (click)="saveData(false)"
+                                            [title]="getLabelValue('admin.userwise.header.saveAndEditButton.hint')"
+                                           data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userwise.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <!-- <a class="btn btn-danger btn-sm text-white"
+                                            [title]="getLabelValue('admin.userwise.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.userwise.header.deleteButton.value')}}
+                                        </a> -->
+                                    </div>
+                                </c-card-header>
+                                 <c-card-body>
+                                    <c-card class="mb-4">
+
+                                        <c-card-body>
+                                            <div class="row" style="padding: 10px;">
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="Name">{{getLabelValue('admin.userwise.body.roleName.value')}}<span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.userwise.body.roleName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <ng-select id="Role" [items]="rolelist" bindLabel="roleName"
+                                                                bindValue="_id" [searchable]="true" class="form-control" placeholder="select role"
+                                                                style="padding: 0 !important;" [clearable]="true" [(ngModel)]="selectedRoleId"
+                                                                appendTo="body" (change)="onRoleChange($event)">
+                                                                <ng-template ng-option-tmp let-item="item">
+                                                                    {{ item.roleName }}
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        </div>
+                                                        <!-- <div *ngIf="resourceForm.get('role')?.invalid"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.userwise.body.roleName.error')}}
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div *ngIf="selectedRoleId" class="row" style="padding: 10px;">
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="Name">{{getLabelValue('admin.userwise.body.userName.value')}}<span
+                                                                    class="text-danger fw-bold position-absolute">*</span></label>
+                                                            <div [title]="getLabelValue('admin.userwise.body.userName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <ng-select id="user" [items]="userlist" bindLabel="userName" placeholder="select user"
+                                                                bindValue="_id" [searchable]="true" class="form-control"
+                                                                style="padding: 0 !important;" [clearable]="true" [(ngModel)]="selectedUserId"
+                                                                appendTo="body" (change)="onUserChange($event)">
+                                                                <ng-template ng-option-tmp let-item="item">
+                                                                    {{ item.userName }}
+                                                                </ng-template>
+                                                            </ng-select>
+                                                        </div>
+                                                        <!-- <div *ngIf="resourceForm.get('user')?.invalid"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.userwise.body.userName.error')}}
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                    <c-card *ngIf="selectedUserId && selectedRoleId" class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center">
+                                            <strong>USer Wise MenuList</strong>
+                                        </c-card-header>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th>Menu Name</th>
+                                                        <th>
+                                                            <c-form-check>
+                                                              <input cFormCheckInput id="checkCreate" type="checkbox"
+                                                                     [checked]="isAllChecked('canCreate')" 
+                                                                     (change)="toggleAllCreate($event)" />
+                                                            </c-form-check>
+                                                            Create
+                                                          </th>
+                                                          <th>
+                                                            <c-form-check>
+                                                              <input cFormCheckInput id="checkEdit" type="checkbox"
+                                                                     [checked]="isAllChecked('canEdit')" 
+                                                                     (change)="toggleAllEdit($event)" />
+                                                            </c-form-check>
+                                                            Edit
+                                                          </th>
+                                                          <th>
+                                                            <c-form-check>
+                                                              <input cFormCheckInput id="checkView" type="checkbox"
+                                                                     [checked]="isAllChecked('canView')" 
+                                                                     (change)="toggleAllView($event)" />
+                                                            </c-form-check>
+                                                            View
+                                                          </th>
+                                                          <th>
+                                                            <c-form-check>
+                                                              <input cFormCheckInput id="checkDelete" type="checkbox"
+                                                                     [checked]="isAllChecked('canDelete')" 
+                                                                     (change)="toggleAllDelete($event)" />
+                                                            </c-form-check>
+                                                            Delete
+                                                          </th>
+                                                          
+                                                    </tr>
+                                                </thead>
+                                                <tbody *ngFor="let menu of userMenuList">
+                                                    <tr>
+                                                        <td> <i class="fas" *ngIf="menu.subMenus.length > 0"
+                                                                [ngClass]="{'fa-plus': !menu.isExpanded, 'fa-minus': menu.isExpanded}"
+                                                                (click)="toggleSubmenu(menu)">
+                                                            </i>
+                                                        </td>
+                                                        <td>{{ menu.name}}</td>
+                                                        <td><c-form-check>
+                                                                <input cFormCheckInput id="checkOne" type="checkbox"
+                                                                    [(ngModel)]="menu.canCreate"
+                                                                    (change)="toggleParentCreate($event, menu)" />
+                                                            </c-form-check></td>
+                                                        <td><c-form-check>
+                                                                <input cFormCheckInput id="checkOne" type="checkbox"
+                                                                    [(ngModel)]="menu.canEdit"
+                                                                    (change)="toggleParentEdit($event, menu)" />
+
+                                                            </c-form-check></td>
+                                                        <td><c-form-check>
+                                                                <input cFormCheckInput id="checkOne" type="checkbox"
+                                                                    [(ngModel)]="menu.canView"
+                                                                    (change)="toggleParentView($event, menu)" />
+                                                            </c-form-check></td>
+                                                        <td><c-form-check>
+                                                                <input cFormCheckInput id="checkOne" type="checkbox"
+                                                                    [(ngModel)]="menu.canDelete"
+                                                                    (change)="toggleParentDelete($event, menu)" />
+                                                            </c-form-check></td>
+                                                    </tr>
+                                                    <ng-container *ngIf="menu.isExpanded">
+                                                        <ng-container *ngFor="let submenu of menu.subMenus">
+                                                            <tr>
+                                                                <td>
+                                                                    <i class="fas" *ngIf="submenu.subMenus.length > 0"
+                                                                        [ngClass]="{'fa-plus': !submenu.isSubExpanded, 'fa-minus': submenu.isSubExpanded}"
+                                                                        (click)="toggleSubSubmenu(submenu)">
+                                                                    </i>
+                                                                </td>
+                                                                <td  class="submenu-row">{{ submenu.name }}</td>
+                                                                <td><c-form-check><input cFormCheckInput
+                                                                            id="checkCreate" type="checkbox"
+                                                                            (change)="toggleSubParentCreate($event, submenu)"
+                                                                            [(ngModel)]="submenu.canCreate"
+                                                                            (change)="handleSubmenuCreateChange(submenu, menu)" /></c-form-check>
+                                                                </td>
+                                                                <td><c-form-check><input cFormCheckInput id="checkEdit"
+                                                                            type="checkbox"
+                                                                            (change)="toggleSubParentEdit($event, submenu)"
+                                                                            [(ngModel)]="submenu.canEdit"
+                                                                            (change)="handleSubmenuEditChange(submenu, menu)" /></c-form-check>
+                                                                </td>
+                                                                <td><c-form-check><input cFormCheckInput id="checkView"
+                                                                            type="checkbox"
+                                                                            (change)="toggleSubParentView($event, submenu)"
+                                                                            [(ngModel)]="submenu.canView"
+                                                                            (change)="handleSubmenuViewChange(submenu, menu)" /></c-form-check>
+                                                                </td>
+                                                                <td><c-form-check><input cFormCheckInput
+                                                                            id="checkDelete" type="checkbox"
+                                                                            (change)="toggleSubParentDelete($event, submenu)"
+                                                                            [(ngModel)]="submenu.canDelete"
+                                                                            (change)="handleSubmenuDeleteChange(submenu, menu)" /></c-form-check>
+                                                                </td>
+                                                            </tr>
+                                                            <ng-container *ngIf="submenu.isSubExpanded">
+                                                                <ng-container
+                                                                    *ngIf="submenu.subMenus && submenu.subMenus.length > 0">
+                                                                    <tr *ngFor="let SubSubmenu of submenu.subMenus">
+                                                                        <td></td>
+                                                                        <td class="subsubmenu-row">{{ SubSubmenu.name }}</td>
+                                                                        <td><c-form-check><input cFormCheckInput
+                                                                                    id="checkCreate" type="checkbox"
+                                                                                    (change)="handleSubSubmenuCreateChange(SubSubmenu, submenu)"
+                                                                                    [(ngModel)]="SubSubmenu.canCreate" /></c-form-check>
+                                                                        </td>
+                                                                        <td><c-form-check><input cFormCheckInput
+                                                                                    id="checkEdit" type="checkbox"
+                                                                                    (change)="handleSubSubmenuEditChange(SubSubmenu, submenu)"
+                                                                                    [(ngModel)]="SubSubmenu.canEdit" /></c-form-check>
+                                                                        </td>
+                                                                        <td><c-form-check><input cFormCheckInput
+                                                                                    id="checkView" type="checkbox"
+                                                                                    (change)="handleSubSubmenuViewChange(SubSubmenu, submenu)"
+                                                                                    [(ngModel)]="SubSubmenu.canView" /></c-form-check>
+                                                                        </td>
+                                                                        <td><c-form-check><input cFormCheckInput
+                                                                                    id="checkDelete" type="checkbox"
+                                                                                    (change)="handleSubSubmenuDeleteChange(SubSubmenu, submenu)"
+                                                                                    [(ngModel)]="SubSubmenu.canDelete" /></c-form-check>
+                                                                        </td>
+                                                                    </tr>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

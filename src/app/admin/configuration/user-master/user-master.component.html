@@ -1,0 +1,681 @@
+<div *ngIf="!isAddUser">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>User Master</strong>
+                                    <div *ngIf="this.canCreate == true">
+                                        <a class="btn btn-primary btn-sm" [routerLink]="['/admin/UserMaster/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.usermaster.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Employee Number</th>
+                                                    <th scope="col">Email Id</th>
+                                                    <th scope="col">Role</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr *ngIf="loading">
+                                                    <td colspan="6">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let user of allUsersList; let langIndex = index">
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true"
+                                                                class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/UserMaster/Edit',user._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+                                                                <a class="btn btn-sm btn-danger text-white"
+                                                                    *ngIf="user.isDeleted === false"
+                                                                    [cModalToggle]="deActiveModal.id"
+                                                                    (click)="setUser(user)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </a>
+                                                                <a class="btn btn-sm btn-success text-white"
+                                                                    *ngIf="user.isDeleted === true"
+                                                                    [cModalToggle]="activeModal.id"
+                                                                    (click)="setUser(user)">
+                                                                    <i class="fas fa-check"></i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{user.firstName}} {{user.lastName}}</td>
+                                                    <td>{{user.employeeNumber}}</td>
+                                                    <td>{{user.email}}</td>
+                                                    <td>{{user.roleName}}</td>
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !user.isDeleted, 'btn-danger': user.isDeleted}">
+                                                            {{ user.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="!allUsersList || allUsersList.length === 0">
+                                                    <td colspan="6" class="text-center "><b> No data found</b>
+                                                    </td>
+                                                </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <!-- Previous Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <!-- Page Numbers -->
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <!-- Next Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === totalPages">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="allUsersList && allUsersList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+                                        <div  *ngIf="!allUsersList || allUsersList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.usermaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.usermaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.usermaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteUser(user)">{{getLabelValue('admin.usermaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.usermaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.usermaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.usermaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveUser(user)">{{getLabelValue('admin.usermaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+<div *ngIf="isAddUser">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="users-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditUser ? 'Edit user details -':'Add a new user' }} {{ isEditUser ?
+                                        userName:'' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToUserList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.backToUserButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditUser"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.saveButton.hint')"
+                                            (click)="createNewUser(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditUser"
+                                            (click)="createNewUser(false)"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditUser"
+                                            (click)="updateUser(true)"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditUser"
+                                            (click)="updateUser(false)"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditUser && !userData?.isDeleted"
+                                            [cModalToggle]="deactiveUserEditModal.id"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditUser && userData?.isDeleted"
+                                            [cModalToggle]="activeUserEditModal.id"
+                                            [title]="getLabelValue('admin.userMaster.addUser.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.userMaster.addUser.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="userInfoForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="employeeImage">{{getLabelValue('admin.userMaster.addUser.employeeImage.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.employeeImage.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="image-container">
+                                                    <input type="file" id="userImage"
+                                                        (change)="onFileSelected($event, 'userImage')" accept="image/*"
+                                                        hidden />
+                                                    <div class="image-box" (click)="triggerFileInput('userImage')">
+                                                        <ng-container *ngIf="!selectedUserImage">
+                                                            <i class="fas fa-plus text-primary"></i>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="selectedUserImage">
+                                                            <img [src]="selectedUserImage.startsWith('data:') ? selectedUserImage : commonService.rootData.uploadsUrl + this.selectedUserImage"
+                                                                alt="Selected user image" />
+                                                            <button type="button" class="cancel-btn"
+                                                                (click)="removeImage($event, 'userImage')">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="employeeNumber">{{getLabelValue('admin.userMaster.addUser.employeeNumber.value')}}
+                                                        <!-- <span
+                                                            class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.employeeNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="employeeNumber" formControlName="employeeNumber"
+                                                        class="form-control" type="number">
+                                                </div>
+                                                <!-- <div *ngIf="userInfoForm.get('employeeNumber')?.invalid  && userInfoForm.get('employeeNumber')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.employeeNumber.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="firstName">{{getLabelValue('admin.userMaster.addUser.firstName.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.firstName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="firstName" formControlName="firstName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('firstName')?.invalid  && userInfoForm.get('firstName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.firstName.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="middleName">{{getLabelValue('admin.userMaster.addUser.middleName.value')}}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.middleName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="middleName" formControlName="middleName"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('middleName')?.invalid && userInfoForm.get('middleName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.middleName.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="lastName">{{getLabelValue('admin.userMaster.addUser.lastName.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.lastName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="lastName" formControlName="lastName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('lastName')?.invalid  && userInfoForm.get('lastName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.lastName.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="email">{{getLabelValue('admin.userMaster.addUser.email.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.email.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="email" formControlName="email" class="form-control"
+                                                        type="email">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('email')?.touched">
+                                                    <div *ngIf="userInfoForm.get('email')?.errors?.['required']"
+                                                        class="text-danger">
+                                                        {{ getLabelValue('admin.userMaster.addUser.email.error') }}
+                                                    </div>
+                                                    <div *ngIf="userInfoForm.get('email')?.errors?.['email']"
+                                                        class="text-danger">
+                                                        {{ getLabelValue('admin.userMaster.addUser.email.invalidFormat')
+                                                        }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1" *ngIf="isEditUser">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="password">{{getLabelValue('admin.userMaster.addUser.password.value')}}
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.password.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input aria-describedby="button-addon2" id="password"
+                                                        formControlName="pwd" cFormControl type="password"
+                                                        class="form-control"  />
+
+                                                    <a cButton class="btn-secondary" (click)="changePassword()">
+                                                        {{ getLabelValue('admin.userMaster.addUser.changePasswordButton.value')}}
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="gender">{{getLabelValue('admin.userMaster.addUser.gender.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.gender.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div
+                                                    class="input-group input-group-required d-flex align-items-center gap-3 mt-2">
+                                                    <!-- Bind radio buttons to the "gender" form control -->
+                                                    <c-form-check>
+                                                        <input cFormCheckInput id="male" formControlName="gender"
+                                                            type="radio" value="Male" />
+                                                        <label cFormCheckLabel
+                                                            for="male">{{getLabelValue('admin.userMaster.addUser.gender.male.value')}}</label>
+                                                    </c-form-check>
+                                                    <c-form-check>
+                                                        <input cFormCheckInput id="female" formControlName="gender"
+                                                            type="radio" value="Female" />
+                                                        <label cFormCheckLabel
+                                                            for="female">{{getLabelValue('admin.userMaster.addUser.gender.female.value')}}</label>
+                                                    </c-form-check>
+                                                    <c-form-check>
+                                                        <input cFormCheckInput id="other" formControlName="gender"
+                                                            type="radio" value="Other" />
+                                                        <label cFormCheckLabel
+                                                            for="other">{{getLabelValue('admin.userMaster.addUser.gender.other.value')}}</label>
+                                                    </c-form-check>
+                                                </div>
+                                                <!-- Validation Error -->
+                                                <div *ngIf="userInfoForm.get('gender')?.invalid && userInfoForm.get('gender')?.touched"
+                                                    class="text-danger">
+                                                    {{ getLabelValue('admin.userMaster.addUser.gender.error') }}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="contact">{{getLabelValue('admin.userMaster.addUser.contactNumber.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.contactNumber.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required"> 
+                                                    <input id="contact" formControlName="contact" class="form-control" maxlength="10" (input)="limitContactLength($event)"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('contact')?.invalid  && userInfoForm.get('contact')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.contactNumber.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="dateOfBirth">{{getLabelValue('admin.userMaster.addUser.dateOfBirth.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.dateOfBirth.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="dob" formControlName="dob" class="form-control"    [max]="todayDate"
+                                                        type="date">
+                                                </div>
+                                                <div *ngIf="userInfoForm.get('dob')?.invalid  && userInfoForm.get('dob')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.dateOfBirth.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="bloodGroup">{{getLabelValue('admin.userMaster.addUser.bloodGroup.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.bloodGroup.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="bloodGroup" formControlName="bloodGroup"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <!-- <div *ngIf="userInfoForm.get('bloodGroup')?.invalid  && userInfoForm.get('bloodGroup')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.bloodGroup.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="permanentAddress">{{getLabelValue('admin.userMaster.addUser.permanentAddress.value')}}
+                                                        <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.permanentAddress.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <textarea cFormControl id="permanentAddress" class="form-control"
+                                                        formControlName="permanentAddress" rows="3"></textarea>
+                                                </div>
+                                                <!-- <div *ngIf="userInfoForm.get('permanentAddress')?.invalid  && userInfoForm.get('permanentAddress')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.permanentAddress.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="currentAddress">{{getLabelValue('admin.userMaster.addUser.currentAddress.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.currentAddress.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <textarea cFormControl id="currentAddress" class="form-control"
+                                                        formControlName="currentAddress" rows="3"></textarea>
+                                                </div>
+                                                <!-- <div *ngIf="userInfoForm.get('currentAddress')?.invalid"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.userMaster.addUser.currentAddress.error')}}
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class="d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3" for="role">
+                                                        {{ getLabelValue('admin.userMaster.addUser.role.value') }}
+                                                        <span class="text-danger fw-bold position-absolute">*</span>
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.userMaster.addUser.role.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <!-- Bind ng-select to the form control -->
+                                                    <ng-select id="Role" [items]="rolelist" bindLabel="roleName"
+                                                        bindValue="_id" [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="false"
+                                                        appendTo="body" formControlName="roleId">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.roleName }}
+                                                        </ng-template>
+                                                    </ng-select>
+                                                </div>
+                                                <!-- Validation Error -->
+                                                <div *ngIf="userInfoForm.get('roleId')?.invalid && userInfoForm.get('roleId')?.touched"
+                                                    class="text-danger">
+                                                    {{ getLabelValue('admin.userMaster.addUser.role.error') }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <c-modal #deactiveUserEditModal alignment="center" id="deactiveUserEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.usermaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveUserEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.usermaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveUserEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.usermaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveUserEditModal.id"
+                (click)="deactiveUser()">{{getLabelValue('admin.usermaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeUserEditModal alignment="center" id="activeUserEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.usermaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeUserEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.usermaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeUserEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.usermaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeUserEditModal.id"
+                (click)="activeUser()">{{getLabelValue('admin.usermaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

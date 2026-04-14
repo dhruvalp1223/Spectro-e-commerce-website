@@ -1,0 +1,36 @@
+::ng-deep ng-select .ng-select-container {
+    border: none !important;  
+}
+
+::ng-deep ng-select .ng-dropdown-panel {
+    z-index: 1000 !important;
+}
+
+::ng-deep ng-select .ng-dropdown-panel .ng-option :hover {
+    // margin: 0.6vh !important;
+    background-color: grey;
+  }
+
+  .readonly-input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
+  td{
+    min-width: max-content;
+  }
+  .center-buttons {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    gap: 5px; /* Add spacing between buttons */
+  }
+  
+  @media (max-width: 768px) {
+    .btn-container {
+        flex-direction: column !important;
+        gap: 8px; /* Adds spacing between buttons */
+    }
+  }
+  

@@ -1,0 +1,147 @@
+<!-- <!DOCTYPE html> -->
+<!--
+* CoreUI - Angular 19 Free Admin Template
+* @version v5.3.2
+* @link https://coreui.io/angular/
+* Copyright (c) 2017-2024 creativeLabs Łukasz Holeczek
+* License: MIT
+-->
+<html lang="en">
+
+<head>
+
+
+  <meta charset="utf-8">
+  <base href="/">
+
+  <title>Build Your XRF – Custom XRF Analyzer Solutions</title>
+
+  <!-- Meta Description -->
+  <meta name="description"
+    content="Customize your own XRF analyzer with Build Your XRF. Select features, components, and configurations to fit your industry needs. Discover our advanced X-ray fluorescence solutions now!">
+
+  <!-- Meta Keywords -->
+  <meta name="keywords"
+    content="XRF analyzer, custom XRF, X-ray fluorescence, XRF spectrometer, elemental analysis, portable XRF, industrial XRF, laboratory XRF, XRF machine, XRF technology">
+
+  <!-- Meta Author -->
+  <meta name="author" content="Build Your XRF">
+
+  <!-- Meta Robots -->
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:title" content="Build Your XRF – Custom XRF Analyzer Solutions">
+  <meta property="og:description"
+    content="Design and build your own XRF analyzer with customizable features and components. Get the best X-ray fluorescence technology for your industry.">
+  <meta property="og:image" content="https://www.buildyourxrf.com/og-image.jpg"> <!-- Replace with actual image URL -->
+  <meta property="og:url" content="https://www.buildyourxrf.com">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Build Your XRF – Custom XRF Analyzer Solutions">
+  <meta name="twitter:description"
+    content="Customize your XRF analyzer with advanced features for your industry. Explore our X-ray fluorescence solutions now!">
+  <meta name="twitter:image" content="https://www.buildyourxrf.com/twitter-image.jpg">
+  <!-- Replace with actual image URL -->
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://www.buildyourxrf.com">
+
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" />
+  <!-- <link href="http://api.buildyourxrf.com/uploads/faviconIcon/Favicon.png" rel="icon" type="image/x-icon"> -->
+  <!-- <link href="http://localhost:5000/uploads/faviconIcon/Ametek-removebg-preview.png" rel="icon" type="image/x-icon"> -->
+  <!-- <link href="http://122.170.0.3:5000/uploads/faviconIcon/Ametek-removebg-preview.png" rel="icon" type="image/x-icon"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;display=swap">
+  <!-- <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/font-awesome.css"> -->
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/remixicon.css">
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/slick.css">
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/animate.css">
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/themify-icons.css">
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/vendors/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="./assets/userAssets/css/style.css">
+  <style>
+    .loading {
+      width: 60px;
+      aspect-ratio: 1;
+      --c: no-repeat linear-gradient(#046D8B 0 0);
+      background: var(--c), var(--c), var(--c), var(--c);
+      animation:
+        l9-1 1.5s infinite,
+        l9-2 1.5s infinite;
+    }
+
+    @keyframes l9-1 {
+      0% {
+        background-size: 0 4px, 4px 0
+      }
+
+      25% {
+        background-size: 40px 4px, 4px 0
+      }
+
+      45%,
+      55% {
+        background-size: 40px 4px, 4px 42px
+      }
+
+      75% {
+        background-size: 0 4px, 4px 42px
+      }
+
+      100% {
+        background-size: 0 4px, 4px 0
+      }
+    }
+
+    @keyframes l9-2 {
+
+      0%,
+      49.9% {
+        background-position: 0 38px, 18px 18px, 100% 18px, right 18px bottom 18px
+      }
+
+      50%,
+      100% {
+        background-position: right 20px bottom 18px, 18px 100%, 20px 18px, right 18px top 0
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <app-root>
+    <!-- <div class="fade show" style="text-align: center; padding-top: calc(100vh / 2); height: 100vh">
+      <i class="spinner-grow spinner-grow-sm"></i>
+      <span class="m-1">Loading...</span>
+    </div> -->
+    <div *ngIf="loading" style="text-align: center;  height: 100vh;  display: flex;
+    justify-content: center;
+    align-items: center;">
+      <div class="loading"></div>
+    </div>
+  </app-root>
+
+
+  <!-- <script src="./assets/userAssets/js/jquery-3.3.1.min.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/jquery-ui.min.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/jquery.exitintent.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/exit.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/slick.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/menu.js"></script> -->
+  <script src="./assets/userAssets/js/lazysizes.min.js"></script>
+  <!-- <script src="./assets/userAssets/js/bootstrap.bundle.min.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/bootstrap-notify.min.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/fly-cart.js"></script> -->
+  <!-- <script src="./assets/userAssets/js/theme-setting.js"></script> -->
+  <script src="./assets/userAssets/js/script.js"></script>
+</body>
+
+</html>

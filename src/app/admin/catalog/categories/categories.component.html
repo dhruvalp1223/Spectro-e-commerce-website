@@ -1,0 +1,1219 @@
+<div *ngIf="!isAddCategories  ">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Categories</strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                            [routerLink]="['/admin/Category/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.addnewbutton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm " *ngIf="canDelete && isAnyRowSelected()"
+                                            [cModalToggle]="deActiveSelectedCategoryModal.id">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.deleteSelectedButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse1(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="categoryname">
+                                                            {{getLabelValue('admin.categories.search.categoryname.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.categoryname.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line" data-val="true"
+                                                            data-val-length-min="0" [(ngModel)]="categoryName"
+                                                            data-val-required="Please provide a name." id="Name"
+                                                            name="Name" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="Name">
+                                                            {{getLabelValue('admin.categories.search.published.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.categories.search.published.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="published" [(ngModel)]="published"
+                                                            [items]="publishes" bindLabel="label" bindValue="value"
+                                                            [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="false"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="row mt-3 col-md-12">
+                                                <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                                <div class="col-md-9 ps-3">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllCategoryList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{getLabelValue('admin.categories.search.searchButton.value')}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+
+                                    <br>
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>
+                                                                <c-form-check>
+                                                                    <input cFormCheckInput id="selectAll"
+                                                                        type="checkbox" [(ngModel)]="selectAllChecked"
+                                                                        (change)="toggleSelectAll()" />
+                                                                </c-form-check>
+                                                            </th>
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">Name</th>
+                                                            <th scope="col">Published</th>
+                                                            <th scope="col">Display Order</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="6">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                            <tr
+                                                                *ngFor="let categories of allCategoryList; let langIndex = index">
+                                                                <td>
+                                                                    <c-form-check>
+                                                                        <input cFormCheckInput type="checkbox"
+                                                                            [(ngModel)]="categories.isChecked"
+                                                                            (change)="updateSelectAllCategory()" />
+                                                                    </c-form-check>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <div class="center-buttons">
+                                                                        <a *ngIf="this.canEdit == true"
+                                                                            class="btn btn-sm btn-secondary"
+                                                                            [routerLink]="['/admin/Category/Edit',categories._id]">
+                                                                            <i class="fas fa-pencil"></i>
+                                                                        </a>
+                                                                        <div *ngIf="this.canDelete == true">
+                                                                            <a class="btn btn-sm btn-danger text-white"
+                                                                                *ngIf="categories.isDeleted === false"
+                                                                                [cModalToggle]="deActiveModal.id"
+                                                                                (click)="setCategory(categories)">
+                                                                                <i class="fas fa-trash"></i>
+                                                                            </a>
+                                                                            <a class="btn btn-sm btn-success text-white"
+                                                                                *ngIf="categories.isDeleted === true"
+                                                                                [cModalToggle]="activeModal.id"
+                                                                                (click)="setCategory(categories)">
+                                                                                <i class="fas fa-check"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>{{categories.path}} </td>
+                                                                <td
+                                                                    style="display: flex; align-items: center; justify-content: center;">
+                                                                    <i
+                                                                        [class]="categories.published ? 'fas fa-check text-success':'fas fa-times text-danger'"></i>
+                                                                </td>
+
+                                                                <td>{{categories.order}}</td>
+                                                                <td class="text-center">
+                                                                    <a class="btn btn-sm text-white"
+                                                                        [ngClass]="{'btn-success': !categories.isDeleted, 'btn-danger': categories.isDeleted}">
+                                                                        {{ categories.isDeleted ? 'Deactive' : 'Active'
+                                                                        }}
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr
+                                                                *ngIf="!allCategoryList || allCategoryList.length === 0">
+                                                                <td colspan="6" class="text-center "><b> No data
+                                                                        found</b>
+                                                                </td>
+                                                            </tr>
+                                                        </ng-container>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <li class="page-item"
+                                                                [class.disabled]="currentPage >= totalPages || totalPages ===0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="allCategoryList && allCategoryList.length !== 0"
+                                                    class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="!allCategoryList || allCategoryList.length === 0"
+                                                    class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deActiveSelectedCategoryModal alignment="center" id="deActiveSelectedCategoryModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.catalog.categories.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveSelectedCategoryModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveSelectedCategoryModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveSelectedCategoryModal.id"
+                (click)="deleteSelectedCategory()">{{getLabelValue('admin.catalog.categories.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.catalog.categories.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteCategory(categories)">{{getLabelValue('admin.catalog.categories.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.catalog.categories.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveCategory(categories)">{{getLabelValue('admin.catalog.categories.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>
+
+
+<div *ngIf="isAddCategories">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="categories-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditCategories ? 'Edit category details -':'Add a new category' }}
+                                        {{ isEditCategories ? categoryNameHeading : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToCategoryList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.backToCategoryListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCategories"
+                                            [title]="getLabelValue('admin.catalog.categories.header.saveButton.hint')"
+                                            (click)="createNewCategory(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditCategories"
+                                            [title]="getLabelValue('admin.catalog.categories.header.saveAndEditButton.hint')"
+                                            (click)="createNewCategory(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCategories"
+                                            (click)="updatecategory(true)"
+                                            [title]="getLabelValue('admin.catalog.categories.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditCategories"
+                                            [title]="getLabelValue('admin.catalog.categories.header.saveAndEditButton.hint')"
+                                            (click)="updatecategory(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditCategories && !catagoryData?.isDeleted"
+                                            [cModalToggle]="deactiveCategoryEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.categories.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditCategories && catagoryData?.isDeleted"
+                                            [cModalToggle]="activecategoryEditModal.id"
+                                            [title]="getLabelValue('admin.catalog.categories.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.catalog.categories.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="categoriesForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Category
+                                                    info</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="categoriesForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="name">{{getLabelValue('admin.catalog.categories.categoryInfo.name.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.categoryInfo.name.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="name" formControlName="categoryName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="categoriesForm.get('categoryName')?.invalid  && categoriesForm.get('categoryName')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.catalog.categories.categoryInfo.name.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="description">{{getLabelValue('admin.catalog.categories.categoryInfo.description.value')}}
+                                                                <!-- <span
+                                                    class="text-danger fw-bold position-absolute">*</span> -->
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.categoryInfo.description.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <!-- <div class="input-group input-group-required">
+                                                            <input id="description" formControlName="description"
+                                                                class="form-control" type="text">
+                                                        </div> -->
+                                                        <angular-editor id="description" formControlName="description"
+                                                            [config]="editorConfig">
+                                                        </angular-editor>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="Name">{{getLabelValue('admin.catalog.categories.categoryInfo.parentCategory.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.categoryInfo.parentCategory.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group ">
+                                                            <ng-select id="parentMenu" [items]="ParentCategoryList"
+                                                                bindLabel="path" bindValue="_id" [searchable]="true"
+                                                                class="form-control" style="padding: 0 !important;"
+                                                                [clearable]="true" appendTo="body"
+                                                                formControlName="parentCategory">
+                                                                <ng-template ng-option-tmp let-item="item">
+                                                                    {{ item.path }}
+                                                                </ng-template>
+                                                            </ng-select>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="picture">{{getLabelValue('admin.catalog.categories.categoryInfo.picture.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.categoryInfo.picture.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="image-container">
+                                                            <div class="image-container">
+                                                                <input type="file" id="categoryImage"
+                                                                    (change)="onFileSelected($event, 'categoryImage')"
+                                                                    accept="image/*" hidden />
+                                                                <div class="image-box"
+                                                                    (click)="triggerFileInput('categoryImage')">
+                                                                    <ng-container *ngIf="!selectedCategoryImage">
+                                                                        <i class="fas fa-plus text-primary"></i>
+                                                                    </ng-container>
+                                                                    <ng-container *ngIf="selectedCategoryImage">
+                                                                        <img [src]="selectedCategoryImage.startsWith('data:') ? selectedCategoryImage :commonService.rootData.uploadsUrl + this.selectedCategoryImage"
+                                                                            alt="Selected user image" />
+                                                                        <button type="button" class="cancel-btn"
+                                                                            (click)="removeImage($event, 'categoryImage')">
+                                                                            <i class="fas fa-times"></i>
+                                                                        </button>
+                                                                    </ng-container>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(1)">
+                                                <strong><i class="fa fa-tv me-3 fw-bold"></i>Display</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                                <div class="form-group row mb-1 align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center  justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="published">{{getLabelValue('admin.catalog.categories.display.published.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.display.published.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input id="published" formControlName="published"
+                                                            type="checkbox" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1 align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center  justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="showOnHomePage">{{getLabelValue('admin.catalog.categories.display.showOnHomePage.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.display.showOnHomePage.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input id="showOnHomePage" formControlName="showOnHomePage"
+                                                            type="checkbox" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1 align-items-center">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center  justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="includeInTopMenu">{{getLabelValue('admin.catalog.categories.display.includeInTopMenu.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.display.includeInTopMenu.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <input id="includeInTopMenu" formControlName="includeInTopMenu"
+                                                            type="checkbox" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1 ">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end" for="order">
+                                                                {{getLabelValue('admin.catalog.categories.display.displayOrder.value')}}
+                                                                <span class="text-danger fw-bold">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.display.displayOrder.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="order" formControlName="order"
+                                                                class="form-control" type="number">
+                                                        </div>
+                                                        <div class="text-danger"
+                                                            *ngIf="categoriesForm.get('order')?.invalid && categoriesForm.get('order')?.touched">
+                                                            {{getLabelValue('admin.catalog.categories.display.displayOrder.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </c-card-body>
+                                        </c-card>
+
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(2)">
+                                                <strong><i class="fas fa-search-plus me-3 fw-bold"></i>SEO</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[2] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[2] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="categoriesForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="searchEngineFriendlyPageName">{{getLabelValue('admin.catalog.categories.seo.searchEngineFriendlyPageName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.seo.searchEngineFriendlyPageName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="searchEngineFriendlyPageName"
+                                                                formControlName="searchEngineFriendlyPageName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaTitle">{{getLabelValue('admin.catalog.categories.seo.metaTitle.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.seo.metaTitle.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaTitle" formControlName="metaTitle"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaKeywords">{{getLabelValue('admin.catalog.categories.seo.metaKeywords.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.seo.metaKeywords.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaKeywords" formControlName="metaKeywords"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaDescription">{{getLabelValue('admin.catalog.categories.seo.metaDescription.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.catalog.categories.seo.metaDescription.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <!-- <input id="metaDescription"
+                                                                formControlName="metaDescription" class="form-control"
+                                                                type="text"> -->
+
+
+                                                            <textarea cFormControl id="metaDescription"
+                                                                class="form-control" formControlName="metaDescription"
+                                                                rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+
+                                    <c-card class="mb-4">
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(3)">
+                                            <strong><i class="far fa-list me-3 fw-bold"></i>Products</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[3] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[3] ? 'open' : 'closed'">
+                                            <c-card-body *ngIf="isEditCategories">
+                                                <div style="overflow-x: auto;">
+                                                    <table class="table table-bordered">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col">
+                                                                    Actions</th>
+                                                                <th scope="col">Product</th>
+                                                                <!-- <th scope="col">Is featured product?</th> -->
+                                                                <th scope="col">Display order</th>
+                                                                <th scope="col">View</th>
+                                                                <th scope="col">Status</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr
+                                                                *ngFor="let categoryProduct of categoryProductList; let categoryIndex = index">
+                                                                <td class="text-center">
+                                                                    <div class="center-buttons">
+                                                                        <button class="btn btn-sm btn-secondary"
+                                                                            (click)="toggleEditMode(categoryIndex)"
+                                                                            *ngIf="!editMode[categoryIndex]">
+                                                                            <i class="fas fa-pencil"></i>
+                                                                        </button>
+                                                                        <div class="center-buttons"
+                                                                            *ngIf="editMode[categoryIndex]"
+                                                                            (click)="updateCategoryProduct(categoryIndex)">
+                                                                            <button class="btn btn-sm btn-secondary">
+                                                                                <i class="fas fa-check"></i>
+                                                                            </button>
+                                                                            <button
+                                                                                class="btn btn-sm btn-danger text-white"
+                                                                                (click)="editMode[categoryIndex] = !editMode[categoryIndex]">
+                                                                                <i class="fas fa-times"></i>
+                                                                            </button>
+                                                                        </div>
+
+                                                                        <a class="btn btn-sm btn-danger text-white"
+                                                                            (click)="setCategoryProduct(categoryProduct)"
+                                                                            *ngIf="categoryProduct.isDeleted === false && !editMode[categoryIndex]"
+                                                                            [cModalToggle]="deActiveProductCategoryModal.id">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-sm btn-success text-white"
+                                                                            (click)="setCategoryProduct(categoryProduct)"
+                                                                            *ngIf="categoryProduct.isDeleted === true && !editMode[categoryIndex]"
+                                                                            [cModalToggle]="activeProductCategoryModal.id">
+                                                                            <i class="fas fa-check"></i>
+                                                                        </a>
+                                                                    </div>
+
+                                                                    <!-- <div>
+                                                                        <a class="btn btn-sm btn-secondary"
+                                                                            [routerLink]="['/admin/catalog/products/view',categoryProduct._id]">
+                                                                            <i class="fas fa-pencil"></i>
+                                                                        </a>
+                                                                        <a class="btn btn-sm btn-danger text-white"
+                                                                            *ngIf="categoryProduct.isDeleted === false"
+                                                                            [cModalToggle]="deActiveProductMultimediaModal.id"
+                                                                            (click)="setProduct(categoryProduct)">
+                                                                            <i class="fas fa-trash"></i>
+                                                                        </a>
+                                                                    </div> -->
+                                                                </td>
+                                                                <td style="width: 70%;">
+                                                                    {{categoryProduct.productName}}
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text"
+                                                                        [readonly]="!editMode[categoryIndex]"
+                                                                        [ngClass]="{'readonly-input': !editMode[categoryIndex]}"
+                                                                        [disabled]="!editMode[categoryIndex]"
+                                                                        [(ngModel)]="categoryProduct.order"
+                                                                        class="form-control" />
+                                                                </td>
+                                                                <!-- <td>
+                                                                    {{categoryProduct.order}}
+                                                                </td> -->
+                                                                <td>
+                                                                    <a class="btn btn-sm btn-secondary"
+                                                                        [routerLink]="['/admin/Product/Edit',categoryProduct.productId]">
+                                                                        <i class="fas fa-eye"></i>
+                                                                    </a>
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <a class="btn btn-sm text-white"
+                                                                        [ngClass]="{'btn-success': !categoryProduct.isDeleted, 'btn-danger': categoryProduct.isDeleted}">
+                                                                        {{
+                                                                        categoryProduct.isDeleted ?
+                                                                        'Deactive' :
+                                                                        'Active' }}
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                            <tr
+                                                                *ngIf="!categoryProductList || categoryProductList.length === 0">
+                                                                <td colspan="5" class="text-center "><b> No data
+                                                                        found</b></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="row mt-4 align-items-center">
+                                                    <div class="col-lg-4 col-md-6 mb-2">
+                                                        <div class="dataTables_paginate paging_simple_numbers">
+                                                            <ul class="pagination">
+                                                                <li class="page-item"
+                                                                    [class.disabled]="currentProductListByCategoryPage === 1">
+                                                                    <a class="page-link"
+                                                                        (click)="changeProductListCategoryPage(currentProductListByCategoryPage - 1)"
+                                                                        tabindex="-1">Previous</a>
+                                                                </li>
+
+                                                                <li class="page-item"
+                                                                    *ngFor="let page of getProductListCategoryPagination()"
+                                                                    [class.active]="page === currentProductListByCategoryPage"
+                                                                    [class.disabled]="page === '...'">
+                                                                    <a class="page-link"
+                                                                        *ngIf="page !== '...'; else ProductListByCategoryTemplate"
+                                                                        (click)="changeProductListCategoryPage(page)">
+                                                                        {{ page }}
+                                                                    </a>
+                                                                    <ng-template #ProductListByCategoryTemplate>
+                                                                        <span class="page-link">...</span>
+                                                                    </ng-template>
+                                                                </li>
+
+                                                                <li class="page-item"
+                                                                    [class.disabled]="currentProductListByCategoryPage >= totalProductListByCategoryPages || totalProductListByCategoryPages===0">
+                                                                    <a class="page-link"
+                                                                        (click)="changeProductListCategoryPage(currentProductListByCategoryPage + 1)">Next</a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                        <div class="dataTables_length">
+                                                            <label>
+                                                                Show
+                                                                <select
+                                                                    class="form-control form-control-sm d-inline-block w-auto"
+                                                                    [(ngModel)]="pageProductListByCategorySize"
+                                                                    (change)="updateProductListCategoryPageSize()">
+                                                                    <option value="10">10
+                                                                    </option>
+                                                                    <option value="25">25
+                                                                    </option>
+                                                                    <option value="50">50
+                                                                    </option>
+                                                                    <option value="100">100
+                                                                    </option>
+                                                                </select>
+                                                                items
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="categoryProductList && categoryProductList.length !== 0"
+                                                        class="col-lg-4 col-md-6 mb-2 text-end">
+                                                        <div class="dataTables_info">
+                                                            {{ (currentProductListByCategoryPage - 1) *
+                                                            pageProductListByCategorySize + 1
+                                                            }}-
+                                                            {{ Math.min(currentProductListByCategoryPage *
+                                                            pageProductListByCategorySize,
+                                                            totalProductListByCategoryRecords) }}
+                                                            of {{
+                                                            totalProductListByCategoryRecords
+                                                            }} items
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="!categoryProductList || categoryProductList.length === 0"
+                                                        class="col-lg-4 col-md-6 mb-2 text-end">
+                                                        No record found
+                                                    </div>
+                                                </div>
+
+                                                <a class="btn btn-primary btn-sm" [cModalToggle]="addNewProductModal.id"
+                                                    (click)="addProductmodal()">
+                                                    {{getLabelValue('admin.catalog.categories.edit.products.addNewProductbutton.value')}}
+                                                </a>
+                                            </c-card-body>
+                                            <div *ngIf="!isEditCategories">
+                                                {{getLabelValue('admin.catalog.categories.addNew.products.text')}}
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveCategoryEditModal alignment="center" id="deactiveCategoryEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.catalog.categories.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveCategoryEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveCategoryEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveCategoryEditModal.id"
+                (click)="deactiveCategory()">{{getLabelValue('admin.catalog.categories.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activecategoryEditModal alignment="center" id="activecategoryEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.catalog.categories.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activecategoryEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activecategoryEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activecategoryEditModal.id"
+                (click)="activeCategory()">{{getLabelValue('admin.catalog.categories.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #deActiveProductCategoryModal alignment="center" id="deActiveProductCategoryModal">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.categories.edit.products.removeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="deActiveProductCategoryModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.edit.products.removeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveProductCategoryModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.edit.products.removeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveProductCategoryModal.id"
+                (click)="deleteProduct(categoryProduct)">{{getLabelValue('admin.catalog.categories.edit.products.removeModal.remove.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeProductCategoryModal alignment="center" id="activeProductCategoryModal">
+        <c-modal-header>
+            <h5 cModalTitle>
+                {{getLabelValue('admin.catalog.categories.edit.products.activeModal.title.value')}}
+            </h5>
+            <button [cModalToggle]="activeProductCategoryModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.catalog.categories.edit.products.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeProductCategoryModal.id" cButton color="secondary">
+                {{getLabelValue('admin.catalog.categories.edit.products.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeProductCategoryModal.id"
+                (click)="reActiveProductCategory(categoryProduct)">{{getLabelValue('admin.catalog.categories.edit.products.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+
+<c-modal size="lg" #addNewProductModal alignment="center" id="addNewProductModal" [visible]="visible"
+    (visibleChange)="handleLiveChange($event)">
+    <section class="content p-2">
+
+        <c-card>
+            <c-card-header>
+                <div class="d-flex  justify-content-end">
+                    <a [cModalToggle]="addNewProductModal.id" class="btn btn-secondary btn-sm text-white">
+                        {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.header.closeButton.value')}}
+                    </a>
+                </div>
+            </c-card-header>
+            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                <div class="form-group row mb-1">
+                    <div class="col-md-2">
+                        <div class=" d-flex align-items-center  justify-content-end">
+                            <label class="col-form-label me-2" for="productName">
+                                {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.productName.value')}}
+                            </label>
+                            <div [title]="getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.productName.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <input class="form-control text-box single-line" data-val="true" data-val-length-min="0"
+                                [(ngModel)]="productName" data-val-required="Please provide a name." id="Name"
+                                name="Name" type="text">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <div class=" d-flex align-items-center justify-content-end">
+                            <label class="col-form-label me-2" for="category">
+                                {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.category.value')}}
+                            </label>
+                            <div [title]="getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.category.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <ng-select id="category" [(ngModel)]="categoriesId" [items]="categoriesList"
+                                bindLabel="path" bindValue="_id" [searchable]="true" class="form-control"
+                                [placeholder]="'Select Category'" style="padding: 0 !important;"
+                                [clearable]="!!categoriesId" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{ item.path }}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row mb-1">
+                    <div class="col-md-2">
+                        <div class=" d-flex align-items-center justify-content-end">
+                            <label class="col-form-label me-2" for="productType">
+                                {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.productType.value')}}
+                            </label>
+                            <div [title]="getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.productType.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <ng-select id="productType" [(ngModel)]="productType" [items]="attributeValueList"
+                                bindLabel="label" bindValue="value" [searchable]="true" class="form-control"
+                                style="padding: 0 !important;" [clearable]="!!productType" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{ item.label }}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class=" d-flex align-items-center justify-content-end">
+                            <label class="col-form-label me-2" for="manufacturer">
+                                {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.manufacturer.value')}}
+                            </label>
+                            <div [title]="getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.manufacturer.hint')"
+                                data-toggle="tooltip" class="ico-help">
+                                <i class="fas fa-question-circle text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group input-group-required">
+                            <ng-select id="manufacturer" [(ngModel)]="manufacturerId" [items]="manufacturersList"
+                                bindLabel="manufacturerName" bindValue="_id" [searchable]="true" class="form-control"
+                                style="padding: 0 !important;" [clearable]="!!manufacturerId" appendTo="body">
+                                <ng-template ng-option-tmp let-item="item">
+                                    {{ item.manufacturerName }}
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row mt-3 col-md-12">
+                    <div class="col-md-12 ps-3  d-flex justify-content-center">
+                        <a class="btn btn-primary text-white" (click)="getAllProductList()">
+                            <i class="fas fa-search me-1"></i>
+                            {{getLabelValue('admin.catalog.categories.edit.products.addNewProductButton.searchButton.value')}}
+                        </a>
+                    </div>
+                </div>
+
+            </c-card-body>
+        </c-card>
+        <br>
+        <c-card>
+            <c-card-body>
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>
+                                <c-form-check>
+                                    <input cFormCheckInput id="selectAll" type="checkbox" [(ngModel)]="selectAllChecked"
+                                        (change)="toggleSelectAllProduct()" />
+                                </c-form-check>
+                            </th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Published</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of allProductList; let langIndex = index">
+                            <td>
+                                <c-form-check>
+                                    <input cFormCheckInput type="checkbox" [(ngModel)]="product.isChecked"
+                                        (change)="updateSelectedProducts(product)" />
+                                </c-form-check>
+                            </td>
+                            <td>{{ product.productName }}</td>
+                            <td>
+                                <i
+                                    [class]="product.published ? 'fas fa-check text-success' : 'fas fa-times text-danger'"></i>
+                            </td>
+                        </tr>
+                        <tr *ngIf="!allProductList || allProductList.length === 0">
+                            <td colspan="3" class="text-center "><b> No data found</b></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row mt-4 align-items-center">
+                    <div class="col-lg-4 col-md-6 mb-2">
+                        <div class="dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                <li class="page-item" [class.disabled]="currentProductListPage === 1">
+                                    <a class="page-link" (click)="changeProductListPage(currentPage - 1)"
+                                        tabindex="-1">Previous</a>
+                                </li>
+
+                                <li class="page-item" *ngFor="let page of getProductListPagination()"
+                                    [class.active]="page === currentProductListPage" [class.disabled]="page === '...'">
+                                    <a class="page-link" *ngIf="page !== '...'; else ProductListTemplate"
+                                        (click)="changeProductListPage(page)">
+                                        {{ page }}
+                                    </a>
+                                    <ng-template #ProductListTemplate>
+                                        <span class="page-link">...</span>
+                                    </ng-template>
+                                </li>
+
+                                <li class="page-item"
+                                    [class.disabled]="currentProductListPage >= totalProductListPages || totalProductListPages===0">
+                                    <a class="page-link"
+                                        (click)="changeProductListPage(currentProductListPage + 1)">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6 mb-2 text-center">
+                        <div class="dataTables_length">
+                            <label>
+                                Show
+                                <select class="form-control form-control-sm d-inline-block w-auto"
+                                    [(ngModel)]="pageProductListSize" (change)="updateProductListPageSize()">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                items
+                            </label>
+                        </div>
+                    </div>
+
+                    <div *ngIf="allProductList && allProductList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                        <div class="dataTables_info">
+                            {{ (currentProductListPage - 1) * pageProductListSize + 1 }}-
+                            {{ Math.min(currentProductListPage * pageProductListSize, totalProductListRecords) }} of {{
+                            totalProductListRecords
+                            }} items
+                        </div>
+                    </div>
+
+                    <div *ngIf="!allProductList || allProductList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                        No record found
+                    </div>
+                </div>
+                <a class="btn btn-primary btn-sm" (click)="addProduct()">
+                    {{getLabelValue('admin.catalog.categories.edit.products.addNewProductbutton.save.value')}}
+                </a>
+            </c-card-body>
+        </c-card>
+    </section>
+</c-modal>

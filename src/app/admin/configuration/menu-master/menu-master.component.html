@@ -1,0 +1,490 @@
+<div *ngIf="!isAddMenu">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Menu Master</strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm" [routerLink]="['/admin/MenuMaster/Create']">
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.addnewbutton.value')}} </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+
+                                <c-card>
+                                    <c-card-header class="d-flex justify-content-between align-items-center"
+                                        (click)="toggleCollapse1(0)">
+                                        <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                        <div>
+                                            <a class="btn btn-sm">
+                                                <i class="fas me-1" [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                            </a>
+                                        </div>
+                                    </c-card-header>
+                                    <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-2" for="categoryname">
+                                                        {{getLabelValue('admin.menumaster.search.menuName.value')}}
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.menumaster.search.menuName.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input class="form-control text-box single-line" data-val="true"
+                                                        data-val-length-min="0" [(ngModel)]="menuName"
+                                                        data-val-required="Please provide a name." id="Name" name="Name"
+                                                        type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3 col-md-12">
+                                            <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                            <div class="col-md-9 ps-3">
+                                                <a class="btn btn-primary text-white" (click)="getAllMenuList()">
+                                                    <i class="fas fa-search me-1"></i>
+                                                    {{getLabelValue('admin.menumaster.search.searchButton.value')}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </c-card-body>
+                                </c-card>
+                                <br>
+                                <c-card>
+                                <c-card-body>
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Parent Name</th>
+                                                    <th scope="col">Order</th>
+                                                    <th scope="col">Url</th>
+                                                    <th scope="col">Icon</th>
+                                                    <th scope="col">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngIf="loading">
+                                                    <td colspan="7">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let menu of allMenuList; let roleIndex = index">
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/MenuMaster/Edit',menu._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+                                                            <a class="btn btn-sm btn-danger text-white"
+                                                                *ngIf="menu.isDeleted === false"
+                                                                [cModalToggle]="deActiveModal.id"
+                                                                (click)="setMenu(menu)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-success text-white"
+                                                                *ngIf="menu.isDeleted === true"
+                                                                [cModalToggle]="activeModal.id" (click)="setMenu(menu)">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">{{ menu.name }}</td>
+                                                    <td>{{ menu.parentMenuName }}</td>
+                                                    <td>{{menu.order}}</td>
+                                                    <td>{{menu.url}}</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="menu.icon === 'nav-icon-bullet'; else otherIcon">
+                                                            <span class="{{menu.icon}}"></span>
+                                                        </ng-container>
+                                                        <ng-template #otherIcon>
+                                                            <i class="{{menu.icon}}"></i>
+                                                        </ng-template>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !menu.isDeleted, 'btn-danger': menu.isDeleted}">
+                                                            {{ menu.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="!allMenuList || allMenuList.length === 0">
+                                                    <td colspan="7" class="text-center "><b> No data found</b>
+                                                    </td>
+                                                </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <!-- Previous Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <!-- Page Numbers -->
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <!-- Next Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage >= totalPages || totalPages === 0">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="allMenuList && allMenuList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+                                        <div  *ngIf="!allMenuList || allMenuList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+                                </c-card-body>
+                            </c-card>
+                        </c-card-body>
+
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.menumaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.menumaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.menumaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteMenu(menu)">{{getLabelValue('admin.menumaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.menumaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.menumaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.menumaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveMenu(menu)">{{getLabelValue('admin.menumaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+
+</div>
+
+
+
+
+<div *ngIf="isAddMenu">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditMenu ? 'Edit menu details':'Add a new menu' }} {{ isEditMenu ?
+                                        allLanguagesList.languageName : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToRoleList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.backToRoleButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditMenu"
+                                            [title]="getLabelValue('admin.menumaster.header.saveButton.hint')"
+                                            (click)="saveMenu(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditMenu"
+                                            [title]="getLabelValue('admin.menumaster.header.saveAndEditButton.hint')"
+                                            (click)="saveMenu(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditMenu"
+                                            [title]="getLabelValue('admin.menumaster.header.updateButton.hint')"
+                                            (click)="updateMenu(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.updateButton.value')}}
+                                        </a>
+
+
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditMenu"
+                                            [title]="getLabelValue('admin.menumaster.header.saveAndEditButton.hint')"
+                                            (click)="updateMenu(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white"
+                                            *ngIf="isEditMenu && !menuData?.isDeleted"
+                                            [cModalToggle]="deactiveMenuEditModal.id"
+                                            [title]="getLabelValue('admin.menumaster.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.deleteButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-success btn-sm text-white"
+                                            *ngIf="isEditMenu && menuData?.isDeleted"
+                                            [cModalToggle]="activeMenuEditModal.id"
+                                            [title]="getLabelValue('admin.menumaster.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.menumaster.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+
+                               
+                                    <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                        <form [formGroup]="menuForm">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.menumaster.addmenu.name.value')}}<span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.menumaster.addmenu.name.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="Name" formControlName="name" class="form-control"
+                                                            type="text">
+                                                    </div>
+                                                    <div *ngIf="menuForm.get('name')?.invalid && menuForm.get('name')?.touched"
+                                                        class="text-danger">
+                                                        {{getLabelValue('admin.menumaster.addmenu.name.error')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.menumaster.addmenu.url.value')}}
+                                                            <!-- <span class="text-danger fw-bold position-absolute">*</span> -->
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.menumasteraddmenu.url.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="url" formControlName="url" class="form-control"
+                                                            type="text">
+                                                    </div>
+                                                    <!-- <div *ngIf="menuForm.get('url')?.invalid" class="text-danger">
+                                                    {{getLabelValue('admin.menumaster.addmenu.url.error')}}
+                                                </div> -->
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.menumaster.addmenu.icon.value')}}<span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.menumaster.addmenu.icon.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="icon" formControlName="icon" class="form-control"
+                                                            type="text">
+                                                    </div>
+                                                    <div *ngIf="menuForm.get('icon')?.invalid  && menuForm.get('icon')?.touched"
+                                                        class="text-danger">
+                                                        {{getLabelValue('admin.menumaster.addmenu.icon.error')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.menumaster.addmenu.order.value')}}<span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.menumaster.addmenu.order.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input id="order" formControlName="order" class="form-control"
+                                                            type="text">
+                                                    </div>
+                                                    <div *ngIf="menuForm.get('order')?.invalid && menuForm.get('order')?.touched"
+                                                        class="text-danger">
+                                                        {{getLabelValue('admin.menumaster.addmenu.order.error')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.menumaster.addmenu.parentmenu.value')}}</label>
+                                                        <div [title]="getLabelValue('admin.menumaster.addmenu.parentmenu.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group ">
+                                                        <ng-select id="parentMenu" formControlName="parentMenu"
+                                                            [items]="ParentList" bindLabel="name" bindValue="_id"
+                                                            [searchable]="true" class="form-control"
+                                                            style="padding: 0 !important;" [clearable]="true"
+                                                            appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.orderName }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveMenuEditModal alignment="center" id="deactiveMenuEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.menumaster.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveMenuEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.menumaster.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveMenuEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.menumaster.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveMenuEditModal.id"
+                (click)="deactiveMenu()">{{getLabelValue('admin.menumaster.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeMenuEditModal alignment="center" id="activeMenuEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.menumaster.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeMenuEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.menumaster.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeMenuEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.menumaster.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeMenuEditModal.id"
+                (click)="activeMenu()">{{getLabelValue('admin.menumaster.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>

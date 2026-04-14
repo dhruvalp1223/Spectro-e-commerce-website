@@ -1,0 +1,1568 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <h2>My Account</h2>
+        <nav class="theme-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a [routerLink]="['/home']">Home</a>
+                </li>
+                <li class="breadcrumb-item active">MY ACCOUNT</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+
+<!--  dashboard section start -->
+<section class="dashboard-section section-b-space user-dashboard-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="dashboard-sidebar">
+                    <button class="btn back-btn">
+                        <i class="ri-close-line"></i><span>Close</span>
+                    </button>
+                    <div class="profile-top">
+                        <div class="profile-top-box">
+                            <div class="profile-image">
+                                <div class="position-relative">
+                                    <div class="user-round">
+                                        <h4>{{userData?.firstName.charAt(0) }}</h4>
+                                    </div>
+                                    <!-- <div class="user-icon"><input type="file" accept="image/*"><i
+                                                class="ri-image-edit-line d-lg-block d-none"></i><i
+                                                class="ri-pencil-fill edit-icon d-lg-none"></i></div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <h5>{{userData?.firstName}} {{userData?.lastName}}</h5>
+                            <h6>{{userData?.email}}</h6>
+                        </div>
+                    </div>
+                    <div class="faq-tab">
+                        <ul id="pills-tab" role="tablist" class="nav nav-tabs">
+                            <li role="presentation" class="nav-item">
+                                <button class="nav-link active" id="info-tab" data-bs-toggle="tab"
+                                    data-bs-target="#info-tab-pane" type="button" role="tab">
+                                    <i class="ri-home-line"></i> dashboard
+                                </button>
+                            </li>
+                            <!-- <li role="presentation" class="nav-item">
+                                    <button class="nav-link" id="notification-tab" data-bs-toggle="tab"
+                                        data-bs-target="#notification-tab-pane" type="button" role="tab">
+                                        <i class="ri-notification-line"></i>
+                                        Notifications
+                                    </button>
+                                </li> -->
+                            <!-- <li role="presentation" class="nav-item">
+                                    <button class="nav-link" id="bank-details-tab" data-bs-toggle="tab"
+                                        data-bs-target="#bank-details-tab-pane" type="button" role="tab">
+                                        <i class="ri-bank-line"></i> Bank Details
+                                    </button>
+                                </li> -->
+                            <!-- <li role="presentation" class="nav-item">
+                                    <button class="nav-link" id="wallet-tab" data-bs-toggle="tab"
+                                        data-bs-target="#wallet-tab-pane" type="button" role="tab">
+                                        <i class="ri-wallet-line"></i> My Wallet
+                                    </button>
+                                </li>
+                                <li role="presentation" class="nav-item">
+                                    <button class="nav-link" id="earning" data-bs-toggle="tab"
+                                        data-bs-target="#earning-tab-pane" type="button" role="tab">
+                                        <i class="ri-coin-line"></i> Earning Points
+                                    </button>
+                                </li> -->
+                            <li role="presentation" class="nav-item">
+                                <button class="nav-link" id="order-tab" data-bs-toggle="tab"
+                                    data-bs-target="#order-tab-pane" type="button" role="tab">
+                                    <i class="ri-file-text-line"></i>My Orders
+                                </button>
+                            </li>
+
+                            <!-- <li role="presentation" class="nav-item">
+                                    <button class="nav-link" id="refund-tab" data-bs-toggle="tab"
+                                        data-bs-target="#refund-tab-pane" type="button" role="tab">
+                                        <i class="ri-money-dollar-circle-line"></i> Refund History </button>
+                                </li> -->
+                            <li role="presentation" class="nav-item">
+                                <button class="nav-link" id="address" data-bs-toggle="tab"
+                                    data-bs-target="#address-tab-pane" type="button" role="tab">
+                                    <i class="ri-map-pin-line"></i> Saved Address
+                                </button>
+                            </li>
+                            <li role="presentation" class="nav-item logout-cls">
+                                <a href="#logout" data-bs-toggle="modal" class="btn loagout-btn">
+                                    <i class="ri-logout-box-r-line"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-lg-9">
+                <button onclick="openShowMenu()" class="show-btn btn d-lg-none d-block">Show Menu</button>
+                <div class="faq-content tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="info-tab-pane" role="tabpanel">
+                        <div class="counter-section">
+                            <div class="welcome-msg">
+                                <h4>Hello, {{userData?.firstName}} {{userData?.lastName}} !</h4>
+                                <!-- <p>From your My Account Dashboard you have the ability to view a snapshot of your
+                                        recent account activity and update your account information. Select a link below
+                                        to view or edit information.</p> -->
+                            </div>
+                            <!-- <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="counter-box">
+                                            <img src="../assets/images/dashboard/balance.png" alt="" class="img-fluid">
+                                            <div>
+                                                <h3>$12.46</h3>
+                                                <h5>Total Order</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="counter-box">
+                                            <img src="../assets/images/dashboard/points.png" alt="" class="img-fluid">
+                                            <div>
+                                                <h3>2530</h3>
+                                                <h5>Total Points</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="counter-box">
+                                            <img src="../assets/images/dashboard/order.png" alt="" class="img-fluid">
+                                            <div>
+                                                <h3>15</h3>
+                                                <h5>Total Orders</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            <div class="box-account box-info">
+                                <div class="box-head">
+                                    <h4>Account Information</h4>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="box">
+                                            <ul class="box-content">
+                                                <li class="w-100">
+                                                    <h6>Full Name: {{userData?.firstName}} {{userData?.lastName}}
+                                                    </h6>
+                                                </li>
+                                                <li class="w-100">
+                                                    <h6>Phone: {{userData?.contact}}</h6>
+                                                </li>
+                                                <li class="w-100">
+                                                    <h6>Date of Birth:
+                                                        {{userData?.dob.split('T')[0] | date:'dd MMM yy' }}</h6>
+                                                </li>
+                                                <li class="w-100">
+                                                    <h6>Gender: {{userData?.gender}}</h6>
+                                                </li>
+
+                                                <!-- <li class="w-100">
+                                                        <h6>Address: 26, Starts Hollow
+                                                            Colony Denver, Colorado, United States 80014</h6>
+                                                    </li> -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="box mt-3">
+                                    <div class="box-head">
+                                        <h4>Login Details</h4>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h6>Email : {{userData?.email}}</h6><a href="#edit-profile"
+                                                (click)="openEditModal()" data-bs-toggle="modal">Edit</a>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <h6>Password : ●●●●●●</h6><a href="#edit-password"
+                                                (click)="openPasswordModal()" data-bs-toggle="modal">Edit</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="notification-tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-0 mt-0 mb-0">
+                                    <div class="card-body">
+                                        <div class="top-sec">
+                                            <h3>Notifications</h3>
+                                        </div>
+                                        <ul class="notification-list">
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1013. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 24 Jun 2024
+                                                    02:29:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your Refund request status has been rejected</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    05:42:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1012. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    05:18:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1011. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    05:18:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1010. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    04:29:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1009. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:57:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1008 has been updated and
+                                                    current order
+                                                    status is in delivered. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:49:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1008 has been updated and
+                                                    current order
+                                                    status is in pending. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:49:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1007 has been updated and
+                                                    current order
+                                                    status is in delivered. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:49:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1006. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:48:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1005. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:45:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1000 has been updated and
+                                                    current order
+                                                    status is in delivered. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1003 has been updated and
+                                                    current order
+                                                    status is in cancelled. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1004 has been updated and
+                                                    current order
+                                                    status is in delivered. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1004 has been updated and
+                                                    current order
+                                                    status is in out_for_delivery. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1004 has been updated and
+                                                    current order
+                                                    status is in shipped. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Order Update: Your order #1004 has been updated and
+                                                    current order
+                                                    status is in processing. Thank you for your patience!</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:34:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1004. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:14:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1003. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:10:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1002. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:07:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1001. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:02:PM</h5>
+                                            </li>
+                                            <li>
+                                                <h4>Your order has been successfully placed. Order ID:
+                                                    #1000. Thank you for
+                                                    choosing us.</h4>
+                                                <h5><i class="ri-time-line"></i> 21 Jun 2024
+                                                    03:00:PM</h5>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="bank-details-tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-0 mt-0">
+                                    <div class="card-body">
+                                        <div class="top-sec">
+                                            <h3>Bank Details</h3>
+                                        </div>
+                                        <form class="themeform-auth">
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="bank_account_no"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">Bank Account
+                                                    Number</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9">
+                                                    <input type="text" id="bank_account_no" class="form-control"
+                                                        placeholder="Enter Bank Account Number">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="bank_name"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">Bank
+                                                    Name</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9"><input type="text"
+                                                        id="bank_name" class="form-control"
+                                                        placeholder="Enter Bank Name">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="bank_holder_name"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">Holder
+                                                    Name</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9"><input type="text"
+                                                        id="bank_holder_name" class="form-control"
+                                                        placeholder="Enter Bank Holder Name">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="swift"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">Swift</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9">
+                                                    <input type="text" id="swift" class="form-control"
+                                                        placeholder="Enter Swift Code">
+                                                </div>
+                                            </div>
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="ifsc"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">IFSC</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9">
+                                                    <input type="text" id="ifsc" class="form-control"
+                                                        placeholder="Enter IFSC Code">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="mb-3 top-sec top-sec-2">
+                                            <h3>Payment Details</h3>
+                                        </div>
+                                        <form class="themeform-auth">
+                                            <div class="row mb-3 align-items-center">
+                                                <label for="paypal_email"
+                                                    class="form-label col-xxl-2 col-lg-12 col-md-3">Paypal
+                                                    Email</label>
+                                                <div class="col-xxl-10 col-lg-12 col-md-9">
+                                                    <input type="email" id="paypal_email" class="form-control "
+                                                        placeholder="Enter Paypal Email">
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <button class="btn btn-solid" id="payout_btn" type="submit"> Save
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="wallet-tab-pane" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="total-contain wallet-bg">
+                                    <div class="wallet-point-box">
+                                        <div class="total-image">
+                                            <!-- <img src="../assets/images/dashboard/balance.png" alt="" class="img-fluid"> -->
+                                        </div>
+                                        <div class="total-detail">
+                                            <div class="total-box">
+                                                <h5>Wallet Balance</h5>
+                                                <h3>$8.46</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="card mb-0 dashboard-table mt-0">
+                                    <div class="card-body">
+                                        <div class="total-box mt-0">
+                                            <div class="wallet-table">
+                                                <div class="table-responsive">
+                                                    <table class="table cart-table order-table">
+                                                        <thead>
+                                                            <tr class="table-head">
+                                                                <th>Date</th>
+                                                                <th>Amount</th>
+                                                                <th>Remark</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>06 Jul 2024
+                                                                    03:15:PM</td>
+                                                                <td>$39.40</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1017</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>25 Jun 2024
+                                                                    06:34:PM</td>
+                                                                <td>$375.00</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1015</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>24 Jun 2024
+                                                                    02:29:PM</td>
+                                                                <td>$34.44</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1013</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    04:29:PM</td>
+                                                                <td>$75.21</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1010</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:57:PM</td>
+                                                                <td>$30.52</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1009</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:48:PM</td>
+                                                                <td>$109.97</td>
+                                                                <td>Wallet amount
+                                                                    successfully debited for Order #1006</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:42:PM</td>
+                                                                <td>$323.00</td>
+                                                                <td>Admin has credited
+                                                                    the balance.</td>
+                                                                <td>
+                                                                    <div class="badge bg-credit custom-badge rounded-0">
+                                                                        <span>Credit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:41:PM</td>
+                                                                <td>$250.00</td>
+                                                                <td>Admin has debited
+                                                                    the balance.</td>
+                                                                <td>
+                                                                    <div class="badge bg-debit custom-badge rounded-0">
+                                                                        <span>Debit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:41:PM</td>
+                                                                <td>$500.00</td>
+                                                                <td>Admin has credited
+                                                                    the balance.</td>
+                                                                <td>
+                                                                    <div class="badge bg-credit custom-badge rounded-0">
+                                                                        <span>Credit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>21 Jun 2024
+                                                                    03:41:PM</td>
+                                                                <td>$100.00</td>
+                                                                <td>Admin has credited
+                                                                    the balance.</td>
+                                                                <td>
+                                                                    <div class="badge bg-credit custom-badge rounded-0">
+                                                                        <span>Credit</span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="product-pagination">
+                                                <div class="theme-paggination-block">
+                                                    <nav>
+                                                        <ul class="pagination">
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!" aria-label="Previous">
+                                                                    <span>
+                                                                        <i class="ri-arrow-left-s-line"></i>
+                                                                    </span>
+                                                                    <span class="sr-only">Previous</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="page-item active">
+                                                                <a class="page-link" href="#!">1</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!">2</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!">3</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!" aria-label="Next">
+                                                                    <span>
+                                                                        <i class="ri-arrow-right-s-line"></i>
+                                                                    </span>
+                                                                    <span class="sr-only">Next</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="earning-tab-pane" role="tabpanel">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="total-contain wallet-bg">
+                                    <div class="wallet-point-box">
+                                        <div class="total-image">
+                                            <!-- <img src="../assets/images/dashboard/points.png" alt="" class="img-fluid"> -->
+                                        </div>
+                                        <div class="total-detail">
+                                            <div class="total-box">
+                                                <h5>Total Points</h5>
+                                                <h3>1970</h3>
+                                            </div>
+                                            <div class="point-ratio">
+                                                <h3 class="counter"><i class="ri-information-line"></i>
+                                                    1 Points =
+                                                    $0.03 Balance </h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="dashboard-table">
+                                    <div class="wallet-table">
+                                        <div class="table-responsive">
+                                            <table class="table cart-table order-table">
+                                                <thead>
+                                                    <tr class="table-head">
+                                                        <th>Date</th>
+                                                        <th>Points</th>
+                                                        <th>Remark</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="">
+                                                        <td>06 Jul 2024 03:15:PM</td>
+                                                        <td>$39.40</td>
+                                                        <td>Wallet amount successfully debited for Order #1017</td>
+                                                        <td>
+                                                            <div class="badge bg-debit custom-badge rounded-0">
+                                                                <span>Debit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>25 Jun 2024 06:34:PM</td>
+                                                        <td>$375.00</td>
+                                                        <td>Wallet amount successfully debited for Order #1015</td>
+                                                        <td>
+                                                            <div class="badge bg-debit custom-badge rounded-0">
+                                                                <span>Debit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>24 Jun 2024 02:29:PM</td>
+                                                        <td>$34.44</td>
+                                                        <td>Wallet amount successfully debited for Order #1013</td>
+                                                        <td>
+                                                            <div class="badge bg-debit custom-badge rounded-0">
+                                                                <span>Debit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>21 Jun 2024 04:29:PM</td>
+                                                        <td>$75.21</td>
+                                                        <td>Wallet amount successfully debited for Order #1010</td>
+                                                        <td>
+                                                            <div class="badge bg-debit custom-badge rounded-0">
+                                                                <span>Debit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>21 Jun 2024 03:57:PM</td>
+                                                        <td>$30.52</td>
+                                                        <td>Wallet amount successfully debited for Order #1009</td>
+                                                        <td>
+                                                            <div class="badge bg-debit custom-badge rounded-0">
+                                                                <span>Debit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>21 Jun 2024 03:41:PM</td>
+                                                        <td>$500.00</td>
+                                                        <td>Admin has credited the balance.</td>
+                                                        <td>
+                                                            <div class="badge bg-credit custom-badge rounded-0">
+                                                                <span>Credit</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="product-pagination">
+                                    <div class="theme-paggination-block">
+                                        <nav>
+                                            <ul class="pagination">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#!" aria-label="Previous">
+                                                        <span>
+                                                            <i class="ri-arrow-left-s-line"></i>
+                                                        </span>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+                                                <li class="page-item active">
+                                                    <a class="page-link" href="#!">1</a>
+                                                </li>
+
+                                                <li class="page-item">
+                                                    <a class="page-link" href="#!" aria-label="Next">
+                                                        <span>
+                                                            <i class="ri-arrow-right-s-line"></i>
+                                                        </span>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="order-tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="card mb-0 dashboard-table mt-0">
+                                <div class="card-body">
+                                    <div class="top-sec">
+                                        <h3>My Orders</h3>
+                                    </div>
+                                    <div class="total-box mt-0">
+                                        <div class="wallet-table mt-0">
+                                            <div class="table-responsive">
+                                                <table class="table cart-table order-table">
+                                                    <thead>
+                                                        <tr class="table-head">
+                                                            <th>Order Number</th>
+                                                            <th>Product Image</th>
+                                                            <th>Product Name</th>
+                                                            <th>Date</th>
+                                                            <th>Amount</th>
+                                                            <th>Product Attributes</th>
+                                                            <th>Order Status</th>
+                                                            <th>Download Invoice</th>
+                                                            <th>Cancel Order</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let order of paginatedOrders">
+                                                            <td>{{ order.orderNumber }}</td>
+                                                            <td>
+                                                                <img *ngIf="order.product?.productImage"
+                                                                    [src]="commonService.rootData.uploadsUrl + order.product.productImage"
+                                                                    alt="{{ order.product.productName }}">
+                                                            </td>
+                                                            <td> <a href="product-details/{{ order.product?._id }}">{{
+                                                                    order.product?.productName }}</a></td>
+                                                            <td>{{ order.createdAt | date:'dd MMM yyyy hh:mm a' }}</td>
+                                                            <td>{{ order.totalPrice }}</td>
+                                                            <td>
+                                                                <span
+                                                                    *ngFor="let attr of order.selectedProductAttributes">
+                                                                    <strong>{{ attr.productAttributeName }}:</strong> {{
+                                                                    attr.productAttributeMappingValueName }}
+                                                                </span>
+                                                            </td>
+                                                            <td>
+                                                                <a *ngIf="order.orderStatus===1"
+                                                                    class="bottom_btn bg-secondary text-white px-2 py-1 rounded">
+                                                                    Pending
+                                                                </a>
+                                                                <a *ngIf="order.orderStatus===2"
+                                                                    class="bottom_btn bg-primary text-white px-2 py-1 rounded">
+                                                                    Shipped
+                                                                </a>
+                                                                <a *ngIf="order.orderStatus===3"
+                                                                    class="bottom_btn bg-success text-white px-2 py-1 rounded">
+                                                                    Delivered
+                                                                </a>
+                                                                <a *ngIf="order.orderStatus===4"
+                                                                    class="bottom_btn bg-danger text-white px-2 py-1 rounded">
+                                                                    Cancelled
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a [href]="rootUrl + 'order/generateInvoicePDF/' + order._id"
+                                                                    class="btn btn-secondary text-white">
+                                                                    <i class="fas fa-download"></i> Download
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a *ngIf="order.orderStatus===1" href="#cancle-order"
+                                                                    data-bs-toggle="modal" class="bottom_btn"
+                                                                    (click)="setSelectedOrder(order._id)">
+                                                                    <i class="fa fa-times text-danger"
+                                                                        aria-hidden="true"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr *ngIf="!orderData || orderData.length === 0">
+                                                            <td colspan="7" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Pagination Controls -->
+                                        <div class="product-pagination">
+                                            <div class="theme-paggination-block">
+                                                <nav>
+                                                    <ul class="pagination">
+                                                        <li class="page-item" [class.disabled]="currentPage === 1">
+                                                            <a class="page-link" (click)="setPage(currentPage - 1)">
+                                                                <span><i class="ri-arrow-left-s-line"></i></span>
+                                                                <span class="sr-only">Previous</span>
+                                                            </a>
+                                                        </li>
+                                                        <li *ngFor="let page of [].constructor(totalPages()); let i = index"
+                                                            class="page-item" [class.active]="currentPage === (i + 1)">
+                                                            <a class="page-link" (click)="setPage(i + 1)">{{ i + 1
+                                                                }}</a>
+                                                        </li>
+                                                        <li class="page-item"
+                                                            [class.disabled]="currentPage === totalPages() || orderData.length === 0">
+                                                            <a class="page-link" (click)="setPage(currentPage + 1)">
+                                                                <span><i class="ri-arrow-right-s-line"></i></span>
+                                                                <span class="sr-only">Next</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="refund-tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-0 dashboard-table mt-0">
+                                    <div class="card-body">
+                                        <div class="top-sec">
+                                            <h3>Refund</h3>
+                                        </div>
+                                        <div class="total-box mt-0">
+                                            <div class="wallet-table mt-0">
+                                                <div class="table-responsive">
+                                                    <table class="table cart-table order-table">
+                                                        <thead>
+                                                            <tr class="table-head">
+                                                                <th>Order</th>
+                                                                <th>Status</th>
+                                                                <th class="reason-table">Reason</th>
+                                                                <th>Created At</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><span class="fw-bolder">#1000</span></td>
+                                                                <td>
+                                                                    <div class="status-rejected">
+                                                                        <span>Rejected</span>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="reason-table">Item was damaged .
+                                                                    alsofabric was not good as expected
+                                                                </td>
+                                                                <td>21 Jun 2024</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="product-pagination">
+                                                <div class="theme-paggination-block">
+                                                    <nav>
+                                                        <ul class="pagination">
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!" aria-label="Previous">
+                                                                    <span>
+                                                                        <i class="ri-arrow-left-s-line"></i>
+                                                                    </span>
+                                                                    <span class="sr-only">Previous</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="page-item active">
+                                                                <a class="page-link" href="#!">1</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!">2</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!">3</a>
+                                                            </li>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#!" aria-label="Next">
+                                                                    <span>
+                                                                        <i class="ri-arrow-right-s-line"></i>
+                                                                    </span>
+                                                                    <span class="sr-only">Next</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="address-tab-pane" role="tabpanel">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card mb-0 mt-0">
+                                    <div class="card-body">
+                                        <div class="top-sec">
+                                            <h3>Address Book</h3>
+                                            <a href="#add-address" data-bs-toggle="modal" class="btn btn-sm btn-solid"
+                                                (click)="addNewAddress()">+ Add New</a>
+                                        </div>
+                                        <div class="address-book-section">
+                                            <div class="row g-4">
+                                                <!-- Loop through the list of addresses -->
+                                                <div class="select-box active col-xl-4 col-md-6"
+                                                    *ngFor="let address of addressList">
+                                                    <div class="address-box">
+                                                        <div class="top">
+                                                            <!-- Display name and address type -->
+                                                            <h6>{{ address.firstName }} {{ address.lastName }}
+                                                                <!-- <span>{{ address.addressType || 'New Home' }}</span> -->
+                                                            </h6>
+                                                        </div>
+                                                        <div class="middle">
+                                                            <!-- Display full address details -->
+                                                            <div class="address">
+                                                                <p>{{ address.address1 }}</p>
+                                                                <!-- <p>{{ address.city }}, {{ address.stateName }}, {{ address.countryName }}</p> -->
+                                                                <p>{{ address.zipCode }}</p>
+                                                            </div>
+                                                            <div class="number">
+                                                                <!-- Display phone number -->
+                                                                <p>Phone: <span>{{ address.phoneNumber }}</span></p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="bottom">
+                                                            <!-- Edit and Delete buttons -->
+                                                            <a href="#add-address" data-bs-toggle="modal"
+                                                                class="bottom_btn"
+                                                                (click)="onEditAddress(address._id)">Edit</a>
+                                                            <a href="#delate-address" data-bs-toggle="modal"
+                                                                class="bottom_btn"
+                                                                (click)="onDeleteAddress(address._id)">Remove</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Repeat the above block for each address -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<!--  dashboard section end -->
+
+
+<!-- edit profile starts -->
+<div class="modal fade theme-modal-2" id="edit-profile" #editProfileModal tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="fw-semibold">Edit Profile</h3>
+                <button class="btn btn-close" type="submit" data-bs-dismiss="modal">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editProfileForm">
+
+                    <div class="row g-3">
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="name" class="form-label">Full Name<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="name" type="text" formControlName="fullName" class="form-control"
+                                    placeholder="Enter Name">
+                                <div *ngIf="editProfileForm.get('fullName')?.touched && editProfileForm.get('fullName')?.invalid"
+                                    class="text-danger small">
+                                    fullName is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="email" class="form-label">Email<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="email" type="email" formControlName="email" class="form-control"
+                                    placeholder="Enter Email">
+
+                                <div *ngIf="editProfileForm.get('email')?.touched && editProfileForm.get('email')?.invalid"
+                                    class="text-danger small">
+                                    <div *ngIf="editProfileForm.get('email')?.errors?.['required']">
+                                        Email is required.
+                                    </div>
+                                    <div *ngIf="editProfileForm.get('email')?.errors?.['email']">
+                                        Please enter a valid email address.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="name2" class="form-label">Phone Number<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="name2" type="number" formControlName="contact" class="form-control" (input)="limitContactLength($event)"
+                                    placeholder="Enter Phone Number">
+                                <div *ngIf="editProfileForm.get('contact')?.touched && editProfileForm.get('contact')?.invalid"
+                                    class="text-danger small">
+                                    contact is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="dob" class="form-label">Date of Birth<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="dob" type="date" formControlName="dob" class="form-control" [max]="todayDate"
+                                    placeholder="Enter date of birth">
+                                <div *ngIf="editProfileForm.get('dob')?.touched && editProfileForm.get('dob')?.invalid"
+                                    class="text-danger small">
+                                    date of Birth is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box ">
+                                <label for="name2" class="form-label">Gender<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <div class="d-flex align-items-center">
+                                    <div class="form-check me-3">
+                                        <input type="radio" class="form-check-input" id="genderMale" value="male"
+                                            formControlName="gender">
+                                        <label for="genderMale" class="form-check-label">Male</label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="genderFemale" value="female"
+                                            formControlName="gender">
+                                        <label for="genderFemale" class="form-check-label">Female</label>
+                                    </div>
+                                </div>
+                                <div *ngIf="editProfileForm.get('gender')?.touched && editProfileForm.get('gender')?.invalid"
+                                    class="text-danger small">
+                                    gender is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 d-flex align-items-center justify-content-end gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" type="button" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button class="btn btn-solid" type="button" (click)="saveProfile()">
+                            Submit
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit profile end -->
+
+<!-- edit password starts -->
+<div class="modal fade theme-modal-2" id="edit-password" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="fw-semibold">Edit Password</h3>
+                <button class="btn btn-close" type="submit" data-bs-dismiss="modal">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="editPasswordForm">
+                    <div class="row g-2">
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="current" class="form-label">Current Password<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="current" type="password" class="form-control"
+                                    formControlName="currentPassword" placeholder="Enter Current Password">
+                            </div>
+
+                            <div *ngIf="editPasswordForm.get('currentPassword')?.touched && editPasswordForm.get('currentPassword')?.invalid"
+                                class="text-danger small">
+                                Current Password is required.
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="New" class="form-label">New Password<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="New" type="password" formControlName="newPassword" class="form-control"
+                                    placeholder="Enter New Password">
+                            </div>
+                            <div *ngIf="editPasswordForm.get('newPassword')?.touched && editPasswordForm.get('newPassword')?.invalid"
+                                class="text-danger small">
+                                New Password is required.
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="Confirm" class="form-label">Confirm Password
+                                    <span class="text-danger fw-bold position-absolute">*</span>
+                                </label>
+                                <input id="Confirm" type="password" class="form-control"
+                                    formControlName="confirmNewPassword" placeholder="Enter Confirm Password">
+                            </div>
+                            <div *ngIf="editPasswordForm.get('confirmNewPassword')?.touched && editPasswordForm.get('confirmNewPassword')?.hasError('required')"
+                                class="text-danger small">
+                                Confirm Password is required.
+                            </div>
+                            <div *ngIf="editPasswordForm.get('confirmNewPassword')?.touched && editPasswordForm.get('confirmNewPassword')?.hasError('mismatch')"
+                                class="text-danger small">
+                                New Password and Confirm Password do not match.
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    <div class="mt-3 d-flex align-items-center justify-content-end gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" type="button" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button class="btn btn-solid" id="submit_profile_btn1" type="submit" (click)="updatePassword()">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit password end -->
+
+<!-- add address starts -->
+<div class="modal fade theme-modal-2" id="add-address" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="fw-semibold">Edit Profile</h3>
+                <button class="btn btn-close" type="submit" data-bs-dismiss="modal">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="saveAddressForm">
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="firstname" class="form-label">First Name<span
+                                        class="text-danger fw-bold position-absolute">*</span> </label>
+                                <input id="firstname" type="text" formControlName="firstName" class="form-control"
+                                    placeholder="Enter firstname">
+                                <div *ngIf="saveAddressForm.get('firstName')?.touched && saveAddressForm.get('firstName')?.invalid"
+                                    class="text-danger small">
+                                    firstName is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="lastName" class="form-label">Last Name<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="lastName" type="text" formControlName="lastName" class="form-control"
+                                    placeholder="Enter lastName">
+                                <div *ngIf="saveAddressForm.get('lastName')?.touched && saveAddressForm.get('lastName')?.invalid"
+                                    class="text-danger small">
+                                    lastName is required.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="email1" class="form-label">Email<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="email1" type="email" formControlName="email" class="form-control"
+                                    placeholder="Enter Email">
+
+                                <div *ngIf="saveAddressForm.get('email')?.touched && saveAddressForm.get('email')?.invalid"
+                                    class="text-danger small">
+                                    <div *ngIf="saveAddressForm.get('email')?.errors?.['required']">
+                                        Email is required.
+                                    </div>
+                                    <div *ngIf="saveAddressForm.get('email')?.errors?.['email']">
+                                        Please enter a valid email address.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="address" class="form-label">Address<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="address" type="text" class="form-control" formControlName="address1"
+                                    placeholder="Enter Address">
+                                <div *ngIf="saveAddressForm.get('address1')?.touched && saveAddressForm.get('address1')?.invalid"
+                                    class="text-danger small">
+                                    address is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="phoneNumber" class="form-label">Phone Number<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="phoneNumber" type="number" formControlName="phoneNumber" class="form-control" (input)="limitContactLength($event)"
+                                    placeholder="Enter Phone Number">
+                                <div *ngIf="saveAddressForm.get('phoneNumber')?.touched && saveAddressForm.get('phoneNumber')?.invalid"
+                                    class="text-danger small">
+                                    phoneNumber is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="name" class="form-label">Country</label>
+                                <select class="form-select quantity-variant select-dropdown"
+                                    id="input-state-02" formControlName="countryId"   (change)="onCountryChange($event)">
+                                    <option value="">Select Country</option>
+                                    <option *ngFor="let country of countriesList" [value]="country._id">{{
+                                        country.countryName }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label class="form-label">State</label>
+                                <select class="form-control form-select quantity-variant select-dropdown"
+                                    id="input-state-04" formControlName="stateId">
+                                    <option value="">Select State</option>
+                                    <option *ngFor="let state of stateList" [value]="state._id">{{ state.stateName
+                                        }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="City" class="form-label">City<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="City" type="text" class="form-control" formControlName="city"
+                                    placeholder="Enter City">
+                                <div *ngIf="saveAddressForm.get('city')?.touched && saveAddressForm.get('city')?.invalid"
+                                    class="text-danger small">
+                                    city is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="pincode" class="form-label">Pin Code<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="pincode" type="number" class="form-control" formControlName="zipCode"
+                                    placeholder="Enter Pin Code">
+                                <div *ngIf="saveAddressForm.get('zipCode')?.touched && saveAddressForm.get('zipCode')?.invalid"
+                                    class="text-danger small">
+                                    zipCode is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex align-items-center justify-content-end gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" type="button"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-solid" type="submit" *ngIf="!isEditAddress"
+                            (click)="saveAddress()">Save</button>
+                        <button class="btn btn-solid" type="btn" *ngIf="isEditAddress"
+                            (click)="updateAddress()">Update</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- add address end -->
+
+<!-- edit address starts -->
+<!-- <div class="modal fade theme-modal-2" id="edit-address" tabindex="-1">
+        <div class=" modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="fw-semibold">Edit Profile</h3>
+                    <button class="btn btn-close" data-bs-dismiss="modal">
+                        <i class="ri-close-line"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-xxl-12">
+                            <div class="form-box">
+                                <label for="title" class="form-label"> title</label>
+                                <input id="title2" type="text" value="Home" class="form-control"
+                                    placeholder="Enter title">
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box">
+                                <label for="name6" class="form-label">Address</label>
+                                <input id="name6" type="text" value="26, Starts Hollow Colony" class="form-control"
+                                    placeholder="Enter Address">
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box">
+                                <label for="name5" class="form-label">Phone Number</label>
+                                <input id="name5" type="tel" value="(+1) 65558845" class="form-control"
+                                    placeholder="Enter Phone Number">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box">
+                                <label class="form-label">Country</label>
+                                <select class="form-control form-select quantity-variant select-dropdown"
+                                    id="input-state-06">
+                                    <option disabled>Select Country </option>
+                                    <option selected="" value="0" class=""> United States </option>
+                                    <option value="1" class=""> United Kingdom </option>
+                                    <option value="2" class=""> India </option>
+                                    <option value="3" class=""> Canada </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box">
+                                <label class="form-label">State</label>
+                                <select class="form-control form-select quantity-variant select-dropdown"
+                                    id="input-state-0">
+                                    <option disabled>Select Country </option>
+                                    <option selected="" value="0" class=""> New York </option>
+                                    <option value="1" class=""> London </option>
+                                    <option value="2" class=""> Delhi </option>
+                                    <option value="3" class=""> Ottawa </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box">
+                                <label for="city2" class="form-label">City</label>
+                                <input id="city2" type="text" class="form-control" value="Albany"
+                                    placeholder="Enter City">
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box">
+                                <label for="pincode2" class="form-label">Pin Code</label>
+                                <input id="pincode2" type="number" class="form-control" value="12204"
+                                    placeholder="Enter Pin Code">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 d-flex align-items-center justify-content-end gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-solid" data-bs-dismiss="modal">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+<!-- add address end -->
+
+<!-- delate address starts -->
+<div class="modal fade theme-modal-2" id="delate-address" data-bs-backdrop="static" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+                <div class="trash-box text-center">
+                    <i class="ri-delete-bin-line icon-box"></i>
+                    <h5 class="modal-title">Delete Item?</h5>
+                    <p>This Item Will Be Deleted Permanently. You Can't Undo This Action.
+                    </p>
+                    <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" data-bs-dismiss="modal">No</button>
+                        <button class="btn btn-solid" data-bs-dismiss="modal" (click)="removeAddress()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delate address end -->
+
+
+<!-- cancle  order starts -->
+<div class="modal fade theme-modal-2" id="cancle-order" data-bs-backdrop="static" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+                <div class="trash-box text-center">
+                    <i class="ri-delete-bin-line icon-box"></i>
+                    <h5 class="modal-title">Cancle Order?</h5>
+                    <p>This Order Will Be cancelled Permanently.
+                    </p>
+                    <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" data-bs-dismiss="modal">No</button>
+                        <button class="btn btn-solid" data-bs-dismiss="modal" (click)="cancleOrder()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- cancle  order end -->
+
+<!-- logout starts -->
+<div class="modal fade theme-modal-2 exit-modal" id="logout" data-bs-backdrop="static" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+                <i class="ri-question-line icon-box"></i>
+                <h5 class="modal-title">Confirmation</h5>
+                <p>Are You Sure You Want To Processed?</p>
+                <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                    <button class="btn btn-md btn-outline fw-bold" data-bs-dismiss="modal">No</button>
+                    <a class="btn btn-solid" (click)="logout()">Yes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- logout end -->
+
+
+<div id="showmenu" class="sidenav">
+    <a class="sidebar-overlay" onclick="closeShowMenu()"></a>
+    <nav>
+        <div onclick="closeShowMenu()">
+            <div class="sidebar-back text-start"><i class="fa fa-angle-left pe-2"></i>
+                Back</div>
+        </div>
+
+        <div class="dashboard-sidebar">
+            <div class="profile-top">
+                <div class="profile-row">
+                    <!-- Profile Image -->
+                    <div class="profile-image">
+                        <div class="position-relative">
+                            <div class="user-round justify-content-center">
+                                <h3 style="margin: 0;">{{ userData?.firstName.charAt(0) }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Profile Details -->
+                    <div class="profile-detail">
+                        <h5>{{ userData?.firstName }} {{ userData?.lastName }}</h5>
+                        <h6>{{ userData?.email }}</h6>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="faq-tab">
+                <ul id="pills-tab" role="tablist" class="nav nav-tabs">
+                    <li role="presentation" class="nav-item">
+                        <button class="nav-link active" id="info-tab" data-bs-toggle="tab"
+                            data-bs-target="#info-tab-pane" type="button" role="tab" onclick="closeShowMenu()">
+                            <i class="ri-home-line"></i> dashboard
+                        </button>
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <button class="nav-link" id="order-tab" data-bs-toggle="tab" data-bs-target="#order-tab-pane"
+                            type="button" role="tab" onclick="closeShowMenu()">
+                            <i class="ri-file-text-line"></i>My Orders
+                        </button>
+                    </li>
+
+                    <!-- <li role="presentation" class="nav-item">
+                            <button class="nav-link" id="refund-tab" data-bs-toggle="tab"
+                                data-bs-target="#refund-tab-pane" type="button" role="tab">
+                                <i class="ri-money-dollar-circle-line"></i> Refund History </button>
+                        </li> -->
+                    <li role="presentation" class="nav-item">
+                        <button class="nav-link" id="address" data-bs-toggle="tab" data-bs-target="#address-tab-pane"
+                            type="button" role="tab" onclick="closeShowMenu()">
+                            <i class="ri-map-pin-line"></i> Saved Address
+                        </button>
+                    </li>
+                    <li role="presentation" class="nav-item logout-cls">
+                        <a href="#logout" data-bs-toggle="modal" class="btn loagout-btn" onclick="closeShowMenu()">
+                            <i class="ri-logout-box-r-line"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </nav>
+</div>

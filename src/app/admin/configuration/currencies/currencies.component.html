@@ -1,0 +1,629 @@
+<div *ngIf="!isAddCurrency">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="currencies-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>Currencies</strong>
+                                        <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                            <a class="btn btn-primary btn-sm">
+                                                <i class="fas fa-save me-1"></i>
+                                                {{getLabelValue('admin.currencies.header.savebutton.value')}} </a>
+                                            <!-- <a class="btn btn-success btn-sm">
+                                                <i class="fas fa-list me-1"></i>
+                                                {{getLabelValue('admin.currencies.header.getliveratesbutton.value')}}
+                                            </a>  -->
+                                            <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"
+                                                [routerLink]="['/admin/Currency/Create']">
+                                                <i class="fas fa-plus me-1"></i>
+                                                {{getLabelValue('admin.currencies.header.addnewbutton.value')}} </a>
+                                        </div>
+                                </c-card-header>
+                                <c-card-body>
+
+                                    <c-card>
+                                        <!-- <c-card-header></c-card-header> -->
+                                        <c-card-body>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-4">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="currentexchange">{{getLabelValue('admin.currencies.body.currentexchange.value')}}
+                                                            <span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.currencies.body.currentexchange.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="input-group input-group-required">
+                                                        <ng-select id="currentexchange" [items]="exchagies"
+                                                            bindLabel="label" bindValue="value" [searchable]="true"
+                                                            class="form-control" style="padding: 0 !important;"
+                                                            [clearable]="false" appendTo="body">
+                                                            <ng-template ng-option-tmp let-item="item">
+                                                                {{ item.label }}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                    </div>
+                                                    <div *ngIf="resourceForm.get('currentexchange')?.invalid"
+                                                        class="text-danger">
+                                                        {{getLabelValue('admin.currencies.body.currentexchange.error')}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-4">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-3"
+                                                            for="Name">{{getLabelValue('admin.currencies.body.autoupdate.value')}}
+                                                            <span
+                                                                class="text-danger fw-bold position-absolute">*</span></label>
+                                                        <div [title]="getLabelValue('admin.currencies.body.autoupdate.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input style="margin-top: 12px;" id="autoupdate" type="checkbox" />
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                    <br>
+                                    <!-- <c-card> -->
+                                    <div style="overflow-x: auto;">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col" style="width: 8%;">Actions</th>
+                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Currency code</th>
+                                                    <th scope="col">Rate</th>
+                                                    <th scope="col">Is primary exchange rate currency</th>
+                                                    <th scope="col">Mark as primary exchange rate currency</th>
+                                                    <th scope="col">Is primary store currency</th>
+                                                    <th scope="col">Mark as primary store currency</th>
+                                                    <th scope="col">Display order</th>
+                                                    <th scope="col">Published</th>
+                                                    <th scope="col">Status</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                                <tr *ngIf="loading">
+                                                    <td colspan="11">
+                                                        <div class="d-flex justify-content-center">
+                                                            <div class="spinner-border text-primary"></div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <ng-container *ngIf="!loading">
+
+                                                <tr *ngFor="let currencies of allCurrencyList">
+                                                    <td class="text-center">
+                                                        <div class="center-buttons">
+                                                            <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                [routerLink]="['/admin/Currency/Edit',currencies._id]">
+                                                                <i class="fas fa-pencil"></i>
+                                                            </a>
+                                                            <div *ngIf="this.canDelete == true">
+                                                            <a class="btn btn-sm btn-danger text-white"
+                                                                *ngIf="currencies.isDeleted === false"
+                                                                [cModalToggle]="deActiveModal.id"
+                                                                (click)="setcurrencies(currencies)">
+                                                                <i class="fas fa-trash"></i>
+                                                            </a>
+                                                            <a class="btn btn-sm btn-success text-white"
+                                                                *ngIf="currencies.isDeleted === true"
+                                                                [cModalToggle]="activeModal.id"
+                                                                (click)="setcurrencies(currencies)">
+                                                                <i class="fas fa-check"></i>
+                                                            </a>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>{{currencies.currencyName}}</td>
+                                                    <td>{{currencies.currencyCode}}</td>
+                                                    <td>{{currencies.rate}}</td>
+                                                    <td class=" d-flex justify-content-center">
+                                                        <i [ngClass]="currencies.primaryExchangeRateCurrency ? 'fas fa-check text-success' : 'fas fa-times text-danger'"
+                                                            [style.fontSize.px]="20">
+                                                        </i>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-success btn-sm"
+                                                            [cModalToggle]="verticallyIsPrimary.id"
+                                                            (click)="setCurrencyPrimaryId(currencies._id)">
+                                                            {{getLabelValue('admin.currencies.body.td.markasprimaryexchange.value')}}
+                                                        </button>
+                                                    </td>
+                                                    <td class=" d-flex justify-content-center">
+                                                        <i [ngClass]="currencies.primaryStoreCurrency ? 'fas fa-check text-success' : 'fas fa-times text-danger'"
+                                                            [style.fontSize.px]="20">
+                                                        </i>
+                                                    </td>
+                                                    <td><button type="button" class="btn btn-success btn-sm"
+                                                            (click)="setCurrencyStoreId(currencies._id)"
+                                                            [cModalToggle]="verticallyIsPrimaryStore.id">{{getLabelValue('admin.currencies.body.td.markasprimarystore.value')}}</button>
+                                                    </td>
+                                                    <td>{{currencies.order}}</td>
+                                                    <td class="d-flex justify-content-center align-items-center">
+                                                        <i [ngClass]="currencies.published ? 'fas fa-check text-success' : 'fas fa-times text-danger'"
+                                                            [style.fontSize.px]="20">
+                                                        </i>
+                                                    </td>
+
+                                                    <td class="text-center">
+                                                        <a class="btn btn-sm text-white"
+                                                            [ngClass]="{'btn-success': !currencies.isDeleted, 'btn-danger': currencies.isDeleted}">
+                                                            {{ currencies.isDeleted ? 'Deactive' : 'Active' }}
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr *ngIf="!allCurrencyList || allCurrencyList.length === 0">
+                                                    <td colspan="11" class="text-center "><b> No data found</b></td>
+                                                  </tr>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- </c-card> -->
+                                    <div class="row mt-4 align-items-center">
+                                        <div class="col-lg-4 col-md-6 mb-2">
+                                            <div class="dataTables_paginate paging_simple_numbers">
+                                                <ul class="pagination">
+                                                    <!-- Previous Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage === 1">
+                                                        <a class="page-link" (click)="changePage(currentPage - 1)"
+                                                            tabindex="-1">Previous</a>
+                                                    </li>
+
+                                                    <!-- Page Numbers -->
+                                                    <li class="page-item" *ngFor="let page of getPagination()"
+                                                        [class.active]="page === currentPage"
+                                                        [class.disabled]="page === '...'">
+                                                        <a class="page-link" *ngIf="page !== '...'; else dotsTemplate"
+                                                            (click)="changePage(page)">
+                                                            {{ page }}
+                                                        </a>
+                                                        <ng-template #dotsTemplate>
+                                                            <span class="page-link">...</span>
+                                                        </ng-template>
+                                                    </li>
+
+                                                    <!-- Next Button -->
+                                                    <li class="page-item" [class.disabled]="currentPage >= totalPages || totalPages === 0">
+                                                        <a class="page-link"
+                                                            (click)="changePage(currentPage + 1)">Next</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                            <div class="dataTables_length">
+                                                <label>
+                                                    Show
+                                                    <select class="form-control form-control-sm d-inline-block w-auto"
+                                                        [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                        <option value="10">10</option>
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                    items
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div *ngIf="allCurrencyList && allCurrencyList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            <div class="dataTables_info">
+                                                {{ (currentPage - 1) * pageSize + 1 }}-
+                                                {{ Math.min(currentPage * pageSize, totalRecords) }} of {{ totalRecords
+                                                }} items
+                                            </div>
+                                        </div>
+
+                                        <div  *ngIf="!allCurrencyList || allCurrencyList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                            No record found
+                                        </div>
+                                    </div>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.currencies.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.currencies.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.currencies.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deletecurrencies(currencies)">{{getLabelValue('admin.currencies.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.currencies.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.currencies.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.currencies.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActivecurrencies(currencies)">{{getLabelValue('admin.currencies.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #verticallyIsPrimary alignment="center" id="verticallyIsPrimary">
+        <c-modal-header>
+            <h5 cModalTitle>
+                <label class="col-form-label me-3" for="currentexchange">
+                    {{getLabelValue('admin.currencies.body.markasprimarymodal.title.value')}}
+                </label>
+            </h5>
+            <button [cModalToggle]="verticallyIsPrimary.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <label class="col-form-label me-3">
+                {{getLabelValue('admin.currencies.body.markasprimarymodal.body.text1.value')}}
+            </label>
+            <label class="col-form-label me-3">
+                1.{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text2.value')}}
+            </label>
+            <label class="col-form-label me-3">
+                2.{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text3.value')}}
+            </label>
+            <label class="col-form-label me-3">
+                {{getLabelValue('admin.currencies.body.markasprimarymodal.body.text4.value')}}
+            </label>
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="verticallyIsPrimary.id" cButton color="secondary">
+                Close
+            </button>
+            <button cButton class="text-white" color="primary" [cModalToggle]="verticallyIsPrimary.id"
+                (click)="markAsPrimaryExchange()">
+                {{getLabelValue('admin.currencies.body.markasprimarymodal.yesbutton.value')}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+
+
+
+    <c-modal #verticallyIsPrimaryStore alignment="center" id="verticallyIsPrimaryStore">
+        <c-modal-header>
+            <h5 cModalTitle>
+                <label class="col-form-label me-3"
+                    for="currentexchange">{{getLabelValue('admin.currencies.body.markasprimarymodal.title.value')}}
+                </label>
+            </h5>
+            <button [cModalToggle]="verticallyIsPrimaryStore.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            <label
+                class="col-form-label me-3">{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text1.value')}}
+            </label>
+            <label
+                class="col-form-label me-3">1.{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text2.value')}}
+            </label><label
+                class="col-form-label me-3">2.{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text3.value')}}
+            </label>
+            <label
+                class="col-form-label me-3">{{getLabelValue('admin.currencies.body.markasprimarymodal.body.text4.value')}}
+            </label>
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="verticallyIsPrimaryStore.id" cButton color="secondary">
+                {{getLabelValue('admin.currencies.body.markasprimarymodal.closebutton.value')}}
+            </button>
+            <button cButton class="text-white" color="primary" [cModalToggle]="verticallyIsPrimaryStore.id"
+                (click)="markAsPrimaryStore()">
+                {{getLabelValue('admin.currencies.body.markasprimarymodal.yesbutton.value')}}
+            </button>
+        </c-modal-footer>
+    </c-modal>
+</div>
+
+
+
+
+<div *ngIf="isAddCurrency">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="currencies-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>{{ isEditCurrency ? 'Edit currency details -':'Add a new currency ' }} {{
+                                        isEditCurrency ?
+                                        currencyName : '' }}
+                                        <a (click)="backToCurrenciesList()" class="btn btn-sm text-primary">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.backToRoleButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" (click)="saveCurrencies(true)"
+                                            *ngIf="!isEditCurrency"
+                                            [title]="getLabelValue('admin.currencies.header.saveButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.saveButton.value')}}
+                                        </a>
+
+                                        <a class="btn btn-primary btn-sm text-white" (click)="saveCurrencies(false)"
+                                            *ngIf="!isEditCurrency"
+                                            [title]="getLabelValue('admin.currencies.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" (click)="updateCurreny(true)"
+                                            *ngIf="isEditCurrency"
+                                            [title]="getLabelValue('admin.currencies.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white" (click)="updateCurreny(false)"
+                                            *ngIf="isEditCurrency"
+                                            [title]="getLabelValue('admin.currencies.header.saveAndEditButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white" *ngIf="isEditCurrency && !currencyData?.isDeleted" 
+                                        [cModalToggle]="deactiveCurrencyEditModal.id"
+                                            [title]="getLabelValue('admin.currencies.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.currencies.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"  *ngIf="isEditCurrency && currencyData?.isDeleted" 
+                                        [cModalToggle]="activeCurrencyEditModal.id"
+                                        [title]="getLabelValue('admin.currencies.header.activeButton.hint')"
+                                        data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                        <i class="fas fa-check me-1"></i>
+                                        {{getLabelValue('admin.currencies.header.activeButton.value')}}
+                                    </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                    <form [formGroup]="currencyForm">
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="Name">{{getLabelValue('admin.currencies.addnew.name.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.name.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="name" formControlName="currencyName" class="form-control"
+                                                        type="text">
+                                                </div>
+                                                <div *ngIf="currencyForm.get('currencyName')?.invalid && currencyForm.get('currencyName')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.currencies.addnew.name.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="currencycode">{{getLabelValue('admin.currencies.addnew.currencycode.value')}}<span
+                                                            class="text-danger fw-bold position-absolute">*</span></label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.currencycode.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="currencycode" formControlName="currencyCode"
+                                                        class="form-control" type="text">
+                                                </div>
+                                                <div *ngIf="currencyForm.get('currencyCode')?.invalid  && currencyForm.get('currencyCode')?.touched"
+                                                    class="text-danger">
+                                                    {{getLabelValue('admin.currencies.addnew.currencycode.error')}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="rate">{{getLabelValue('admin.currencies.addnew.rate.value')}}
+                                                    </label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.rate.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group ">
+                                                    <input id="rate" formControlName="rate" class="form-control"
+                                                        type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="displaylocale">{{getLabelValue('admin.currencies.addnew.displaylocale.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.displaylocale.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="displaylocale" formControlName="displayLocale"
+                                                        [items]="displayLocale" bindLabel="label" bindValue="label"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="!!currencyForm.get('displayLocale')?.value"
+                                                        appendTo="body">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.label }}
+                                                        </ng-template>
+
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="roundingtype">{{getLabelValue('admin.currencies.addnew.roundingtype.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.roundingtype.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <ng-select id="roundingtype" formControlName="roundingType"
+                                                        [items]="rounding" bindLabel="label" bindValue="label"
+                                                        [searchable]="true" class="form-control"
+                                                        style="padding: 0 !important;" [clearable]="!!currencyForm.get('roundingType')?.value"
+                                                        appendTo="body">
+                                                        <ng-template ng-option-tmp let-item="item">
+                                                            {{ item.label }}
+                                                        </ng-template>
+
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-1 align-items-center">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="published">{{getLabelValue('admin.currencies.addnew.published.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.published.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input id="checkOne" type="checkbox" value=""
+                                                    formControlName="published" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row mb-1">
+                                            <div class="col-md-3">
+                                                <div class=" d-flex align-items-center justify-content-end">
+                                                    <label class="col-form-label me-3"
+                                                        for="order">{{getLabelValue('admin.currencies.addnew.displayOrder.value')}}</label>
+                                                    <div [title]="getLabelValue('admin.currencies.addnew.displayOrder.hint')"
+                                                        data-toggle="tooltip" class="ico-help">
+                                                        <i class="fas fa-question-circle text-primary"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="input-group input-group-required">
+                                                    <input id="order" formControlName="order" class="form-control"
+                                                        type="number">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+
+
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveCurrencyEditModal alignment="center" id="deactiveCurrencyEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.currencies.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveCurrencyEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.currencies.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveCurrencyEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.currencies.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveCurrencyEditModal.id"
+                (click)="deactivecurrencies()">{{getLabelValue('admin.currencies.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeCurrencyEditModal alignment="center" id="activeCurrencyEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.currencies.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeCurrencyEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.currencies.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeCurrencyEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.currencies.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeCurrencyEditModal.id"
+                (click)="activecurrencies()">{{getLabelValue('admin.currencies.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>

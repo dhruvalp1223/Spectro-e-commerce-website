@@ -1,0 +1,325 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <h2>checkout</h2>
+        <nav class="theme-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a [routerLink]="['/home']">Home</a>
+                </li>
+                <li class="breadcrumb-item active">checkout</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+
+<!-- section start -->
+<section class="section-b-space checkout-section-2">
+    <div class="container">
+        <div class="checkout-page">
+            <div class="checkout-form">
+                <div class="row g-sm-4 g-3">
+                    <div class="col-lg-7">
+                        <div class="left-sidebar-checkout">
+                            <div class="checkout-detail-box">
+                                <ul>
+                                    <li>
+                                        <div class="checkout-box">
+                                            <div class="checkout-title">
+                                                <h4>Address Details</h4>
+                                                <button data-bs-toggle="modal" data-bs-target="#addShippingAddress"
+                                                    class="d-flex align-items-center btn" (click)="addNewAddress()">
+                                                    <i class="ri-add-line me-1"></i> Add New
+                                                </button>
+                                            </div>
+                                            <div class="checkout-detail">
+                                                <div class="row g-3">
+                                                    <div class="col-xxl-6 col-lg-12 col-md-6"
+                                                        *ngFor="let address of addressList">
+                                                        <div class="delivery-address-box">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="shippingAddress" [id]="address.id"
+                                                                [(ngModel)]="selectedShippingAddress"
+                                                                [value]="address._id">
+                                                            <label class="form-check-label" [for]="address.id">
+                                                                <strong>{{ address.firstName }} {{ address.lastName
+                                                                    }}</strong>
+                                                                <span class="address text-content">{{ address.address1
+                                                                    }}</span>
+                                                                <span class="address text-content">
+                                                                    <span class="text-title">Phone :</span> {{
+                                                                    address.phoneNumber }}
+                                                                </span>
+
+                                                                <div class="bottom">
+                                                                    <a href="#addShippingAddress" data-bs-toggle="modal"
+                                                                        class="bottom_btn edit-btn"
+                                                                        (click)="onEditAddress(address._id)">Edit</a>
+                                                                    <a href="#delete-address" data-bs-toggle="modal"
+                                                                        class="bottom_btn delete-btn"
+                                                                        (click)="onDeleteAddress(address._id)">Remove</a>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="checkout-box">
+                                            <div class="checkout-title">
+                                                <h4>Billing Address</h4>
+                                                <button data-bs-toggle="modal" data-bs-target="#addShippingAddress"
+                                                    class="d-flex align-items-center btn" (click)="addNewAddress()">
+                                                    <i class="ri-add-line me-1"></i> Add New
+                                                </button>
+                                            </div>
+                                            <div class="checkout-detail">
+                                                <div class="row g-3">
+                                                    <div class="col-xxl-6 col-lg-12 col-md-6"
+                                                        *ngFor="let address of addressList">
+                                                        <div class="delivery-address-box">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="billingAddress" [id]="address.id"
+                                                                [(ngModel)]="selectedBillingAddress"
+                                                                [value]="address._id">
+                                                            <label class="form-check-label" [for]="address.id">
+                                                                <strong>{{ address.firstName }} {{ address.lastName
+                                                                    }}</strong>
+                                                                <span class="address text-content">{{ address.address1
+                                                                    }}</span>
+                                                                <span class="address text-content"><span
+                                                                        class="text-title">Phone :</span> {{
+                                                                    address.phoneNumber }}</span>
+                                                                <div class="bottom">
+                                                                    <a href="#addShippingAddress" data-bs-toggle="modal"
+                                                                        class="bottom_btn edit-btn"
+                                                                        (click)="onEditAddress(address._id)">Edit</a>
+                                                                    <a href="#delete-address" data-bs-toggle="modal"
+                                                                        class="bottom_btn delete-btn"
+                                                                        (click)="onDeleteAddress(address._id)">Remove</a>
+                                                                </div>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="checkout-right-box">
+                            <div class="checkout-details">
+                                <div class="order-box">
+                                    <div class="title-box">
+                                        <h4>Summary Order</h4>
+                                        <p>For a better experience, verify your goods and choose your shipping option.
+                                        </p>
+                                    </div>
+                                    <ul class="qty">
+                                        <li>
+                                            <div class="cart-image">
+                                                <img [src]="commonService.rootData.uploadsUrl + checkoutData.productImage"
+                                                    class="img-fluid" alt="Product Image">
+                                            </div>
+                                            <div class="cart-content">
+                                                <div>
+                                                    <h4>{{ checkoutData.productName }}</h4>
+                                                    <ul>
+                                                        <li
+                                                            *ngFor="let attr of checkoutData?.selectedAttributes | keyvalue">
+                                                            {{ attr.value }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <span class="text-theme">₹{{ checkoutData.productPrice }}</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn order-btn" (click)="saveOrder()">Place Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- section end -->
+
+
+<!-- Add shipping address modal start -->
+<div class="modal fade theme-modal-2" id="addShippingAddress">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fw-semibold">Address</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    <i class="ri-close-line"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="saveAddressForm">
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="firstname" class="form-label">First Name<span
+                                        class="text-danger fw-bold position-absolute">*</span> </label>
+                                <input id="firstname" type="text" formControlName="firstName" class="form-control"
+                                    placeholder="Enter firstname">
+                                <div *ngIf="saveAddressForm.get('firstName')?.touched && saveAddressForm.get('firstName')?.invalid"
+                                    class="text-danger">
+                                    firstName is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="lastName" class="form-label">Last Name<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="lastName" type="text" formControlName="lastName" class="form-control"
+                                    placeholder="Enter lastName">
+                                <div *ngIf="saveAddressForm.get('lastName')?.touched && saveAddressForm.get('lastName')?.invalid"
+                                    class="text-danger">
+                                    lastName is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="name1" class="form-label">Email<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="name1" type="email" formControlName="email" class="form-control"
+                                    placeholder="Enter Email">
+
+                                <div *ngIf="saveAddressForm.get('email')?.touched && saveAddressForm.get('email')?.invalid"
+                                    class="text-danger">
+                                    <div *ngIf="saveAddressForm.get('email')?.errors?.['required']">
+                                        Email is required.
+                                    </div>
+                                    <div *ngIf="saveAddressForm.get('email')?.errors?.['email']">
+                                        Please enter a valid email address.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="address" class="form-label">Address<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="address" type="text" class="form-control" formControlName="address1"
+                                    placeholder="Enter Address">
+                                <div *ngIf="saveAddressForm.get('address1')?.touched && saveAddressForm.get('address1')?.invalid"
+                                    class="text-danger">
+                                    address is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xxl-12">
+                            <div class="form-box input_feild">
+                                <label for="phoneNumber" class="form-label">Phone Number<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="phoneNumber" type="number" formControlName="phoneNumber" class="form-control"
+                                    placeholder="Enter Phone Number">
+                                <div *ngIf="saveAddressForm.get('phoneNumber')?.touched && saveAddressForm.get('phoneNumber')?.invalid"
+                                    class="text-danger">
+                                    phoneNumber is required.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="name" class="form-label">Country</label>
+                                <select class="form-control form-select quantity-variant select-dropdown"
+                                    id="input-state-02" formControlName="countryId" (change)="onCountryChange($event)">
+                                    <option selected value="">Select Country</option>
+                                    <option *ngFor="let country of countriesList" [value]="country._id">{{
+                                        country.countryName }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label class="form-label">State</label>
+                                <select class="form-control form-select quantity-variant select-dropdown"
+                                    id="input-state-04" formControlName="stateId">
+                                    <option selected value="">Select State</option>
+                                    <option *ngFor="let state of stateList" [value]="state._id">{{ state.stateName
+                                        }}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="City" class="form-label">City<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="City" type="text" class="form-control" formControlName="city"
+                                    placeholder="Enter City">
+                                <div *ngIf="saveAddressForm.get('city')?.touched && saveAddressForm.get('city')?.invalid"
+                                    class="text-danger">
+                                    city is required.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-box input_feild">
+                                <label for="pincode" class="form-label">Pin Code<span
+                                        class="text-danger fw-bold position-absolute">*</span></label>
+                                <input id="pincode" type="number" class="form-control" formControlName="zipCode"
+                                    placeholder="Enter Pin Code">
+                                <div *ngIf="saveAddressForm.get('zipCode')?.touched && saveAddressForm.get('zipCode')?.invalid"
+                                    class="text-danger">
+                                    zipCode is required.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 d-flex align-items-center justify-content-end gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" type="button"
+                            data-bs-dismiss="modal">Cancel</button>
+                        <button class="btn btn-solid" type="submit" *ngIf="!isEditAddress"
+                            (click)="saveAddress()">Save</button>
+                        <button class="btn btn-solid" type="btn" *ngIf="isEditAddress"
+                            (click)="updateAddress()">Update</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add shipping address modal End -->
+
+<!-- delate address starts -->
+<div class="modal fade theme-modal-2" id="delete-address" data-bs-backdrop="static" tabindex="-1">
+    <div class=" modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-3">
+                <div class="trash-box text-center">
+                    <i class="ri-delete-bin-line icon-box"></i>
+                    <h5 class="modal-title">Delete Item?</h5>
+                    <p>This Item Will Be Deleted Permanently. You Can't Undo This Action.
+                    </p>
+                    <div class="mt-3 d-flex align-items-center justify-content-center gap-2">
+                        <button class="btn btn-md btn-outline fw-bold" data-bs-dismiss="modal">No</button>
+                        <button class="btn btn-solid" data-bs-dismiss="modal" (click)="removeAddress()">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- delate address end -->

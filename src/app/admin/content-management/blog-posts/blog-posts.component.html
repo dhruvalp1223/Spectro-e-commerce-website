@@ -1,0 +1,656 @@
+<div *ngIf="!isAddBlog">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="languages-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center">
+                                    <strong>Blog Posts
+                                    </strong>
+                                    <div>
+                                        <a *ngIf="this.canCreate == true" class="btn btn-primary btn-sm"  [routerLink]="['/admin/Blog/BlogPostCreate']" >
+                                            <i class="fas fa-plus me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.header.addnewbutton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+
+                                    <c-card>
+                                        <c-card-header class="d-flex justify-content-between align-items-center"
+                                            (click)="toggleCollapse(0)">
+                                            <strong><i class="fas fa-search me-3 fw-bold"></i>Search</strong>
+                                            <div>
+                                                <a class="btn btn-sm">
+                                                    <i class="fas me-1"
+                                                        [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                </a>
+                                            </div>
+                                        </c-card-header>
+                                        <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                            <div class="form-group row mb-1">
+                                                <div class="col-md-3">
+                                                    <div class=" d-flex align-items-center justify-content-end">
+                                                        <label class="col-form-label me-2" for="title">
+                                                            {{getLabelValue('admin.blogPosts.search.title.value')}}
+                                                        </label>
+                                                        <div [title]="getLabelValue('admin.blogPosts.search.title.hint')"
+                                                            data-toggle="tooltip" class="ico-help">
+                                                            <i class="fas fa-question-circle text-primary"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="input-group input-group-required">
+                                                        <input class="form-control text-box single-line"
+                                                            [(ngModel)]="title" data-val="true" data-val-length-min="0"
+                                                            data-val-required="Please provide a name." id="title"
+                                                            name="title" type="text">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-3 col-md-12">
+                                                <div class="col-md-3">&nbsp;</div> <!-- Blank space -->
+                                                <div class="col-md-9 ps-3">
+                                                    <a class="btn btn-primary text-white"
+                                                        (click)="getAllBlogPostList()">
+                                                        <i class="fas fa-search me-1"></i>
+                                                        {{getLabelValue('admin.blogPosts.search.searchButton.value')}}
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </c-card-body>
+                                    </c-card>
+                                    <br>
+
+                                    <c-card>
+                                        <c-card-body>
+                                            <div style="overflow-x: auto;">
+                                                <table class="table table-bordered">
+                                                    <thead class="thead-light">
+                                                        <tr>
+
+                                                            <th scope="col" style="width: 10%;">Actions</th>
+                                                            <th scope="col">Title</th>
+                                                            <th scope="col">View comments</th>
+                                                            <th scope="col">Start date</th>
+                                                            <th scope="col">End date</th>
+                                                            <th scope="col">Created on</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngIf="loading">
+                                                            <td colspan="7">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <div class="spinner-border text-primary"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <ng-container *ngIf="!loading">
+
+                                                        <tr
+                                                            *ngFor="let blogs of allBlogPostList; let langIndex = index">
+
+                                                            <td class="text-center">
+                                                                <div class="center-buttons">
+                                                                    <a *ngIf="this.canEdit == true" class="btn btn-sm btn-secondary"
+                                                                    [routerLink]="['/admin/Blog/BlogPostEdit',blogs._id]">
+                                                                        <i class="fas fa-pencil"></i>
+                                                                    </a>
+                                                                    <div *ngIf="this.canDelete == true">
+                                                                    <a class="btn btn-sm btn-danger text-white"
+                                                                        *ngIf="blogs.isDeleted === false"
+                                                                        [cModalToggle]="deActiveModal.id"
+                                                                        (click)="setBlog(blogs)">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </a>
+                                                                    <a class="btn btn-sm btn-success text-white"
+                                                                        *ngIf="blogs.isDeleted === true"
+                                                                        [cModalToggle]="activeModal.id"
+                                                                        (click)="setBlog(blogs)">
+                                                                        <i class="fas fa-check"></i>
+                                                                    </a>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td>{{blogs.title}}</td>
+                                                            <td></td>
+                                                            <td>{{blogs.startDate?.split('T')[0] || ''}}</td>
+                                                            <td>{{blogs.endDate?.split('T')[0] || ''}}</td>
+                                                            <td>{{blogs.createdAt?.split('T')[0] || ''}}</td>
+                                                            <td class="text-center">
+                                                                <a class="btn btn-sm text-white"
+                                                                    [ngClass]="{'btn-success': !blogs.isDeleted, 'btn-danger': blogs.isDeleted}">
+                                                                    {{ blogs.isDeleted ? 'Deactive' : 'Active' }}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr *ngIf="!allBlogPostList || allBlogPostList.length === 0">
+                                                            <td colspan="7" class="text-center "><b> No data found</b>
+                                                            </td>
+                                                        </tr>
+                                                        </ng-container>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="row mt-4 align-items-center">
+                                                <div class="col-lg-4 col-md-6 mb-2">
+                                                    <div class="dataTables_paginate paging_simple_numbers">
+                                                        <ul class="pagination">
+                                                            <!-- Previous Button -->
+                                                            <li class="page-item" [class.disabled]="currentPage === 1">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage - 1)"
+                                                                    tabindex="-1">Previous</a>
+                                                            </li>
+
+                                                            <!-- Page Numbers -->
+                                                            <li class="page-item" *ngFor="let page of getPagination()"
+                                                                [class.active]="page === currentPage"
+                                                                [class.disabled]="page === '...'">
+                                                                <a class="page-link"
+                                                                    *ngIf="page !== '...'; else dotsTemplate"
+                                                                    (click)="changePage(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                                <ng-template #dotsTemplate>
+                                                                    <span class="page-link">...</span>
+                                                                </ng-template>
+                                                            </li>
+
+                                                            <!-- Next Button -->
+                                                            <li class="page-item"
+                                                                [class.disabled]="currentPage >= totalPages || totalPages === 0">
+                                                                <a class="page-link"
+                                                                    (click)="changePage(currentPage + 1)">Next</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-lg-4 col-md-6 mb-2 text-center">
+                                                    <div class="dataTables_length">
+                                                        <label>
+                                                            Show
+                                                            <select
+                                                                class="form-control form-control-sm d-inline-block w-auto"
+                                                                [(ngModel)]="pageSize" (change)="updatePageSize()">
+                                                                <option value="10">10</option>
+                                                                <option value="25">25</option>
+                                                                <option value="50">50</option>
+                                                                <option value="100">100</option>
+                                                            </select>
+                                                            items
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="allBlogPostList && allBlogPostList.length !== 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    <div class="dataTables_info">
+                                                        {{ (currentPage - 1) * pageSize + 1 }}-
+                                                        {{ Math.min(currentPage * pageSize, totalRecords) }} of {{
+                                                        totalRecords
+                                                        }} items
+                                                    </div>
+                                                </div>
+
+                                                <div  *ngIf="!allBlogPostList || allBlogPostList.length === 0" class="col-lg-4 col-md-6 mb-2 text-end">
+                                                    No record found
+                                                </div>
+                                            </div>
+                                        </c-card-body>
+                                    </c-card>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <c-modal #deActiveModal alignment="center" id="deActiveModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.blogPosts.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deActiveModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.blogPosts.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deActiveModal.id" cButton color="secondary">
+                {{getLabelValue('admin.blogPosts.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deActiveModal.id"
+                (click)="deleteBlogPost(blogs)">{{getLabelValue('admin.blogPosts.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeModal alignment="center" id="activeModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.blogPosts.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.blogPosts.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeModal.id" cButton color="secondary">
+                {{getLabelValue('admin.blogPosts.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeModal.id"
+                (click)="reActiveBlogPost(blogs)">{{getLabelValue('admin.blogPosts.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+</div>
+
+<div *ngIf="isAddBlog">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div id="manufacturer-grid_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                    <c-row ngPreserveWhitespaces>
+                        <c-col>
+                            <c-card class="mb-4">
+                                <c-card-header class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <strong>
+                                        {{ isEditBlog ? 'Edit blog post details ':'Add a new blog post' }}
+                                        {{ isEditBlog ? allBlogPostList.title : '' }}
+                                        <a class="btn btn-sm text-primary" (click)="backToBlogList()">
+                                            <i class="fas fa-arrow-circle-left me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.backToTopicListButton.value')}}
+                                        </a>
+                                    </strong>
+                                    <div class="btn-container d-md-flex flex-md-row d-flex flex-column gap-2">
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="!isEditBlog"
+                                            [title]="getLabelValue('admin.blogPosts.addNew.header.saveButton.hint')"
+                                            (click)="createNewBlogPosts(true)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.saveButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white"  *ngIf="!isEditBlog"
+                                        [title]="getLabelValue('admin.blogPosts.addNew.header.saveAndEditButton.hint')"
+                                        (click)="createNewBlogPosts(false)" data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom">
+                                        <i class="fas fa-save me-1"></i>
+                                        {{getLabelValue('admin.blogPosts.addNew.header.saveAndEditButton.value')}}
+                                    </a>
+                                        <a class="btn btn-primary btn-sm text-white" *ngIf="isEditBlog"
+                                            (click)="updateBlogPost(true)"
+                                            [title]="getLabelValue('admin.blogPosts.addNew.header.updateButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.updateButton.value')}}
+                                        </a>
+                                        <a class="btn btn-primary btn-sm text-white"  *ngIf="isEditBlog"
+                                            [title]="getLabelValue('admin.blogPosts.addNew.header.saveAndEditButton.hint')"
+                                            (click)="updateBlogPost(false)" data-bs-toggle="tooltip"
+                                            data-bs-placement="bottom">
+                                            <i class="fas fa-save me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.saveAndEditButton.value')}}
+                                        </a>
+                                        <a class="btn btn-danger btn-sm text-white" *ngIf="isEditBlog && !blogPostData?.isDeleted" 
+                                        [cModalToggle]="deactiveBlogEditModal.id"
+                                            [title]="getLabelValue('admin.blogPosts.addNew.header.deleteButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-trash me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.deleteButton.value')}}
+                                        </a>
+                                        <a class="btn btn-success btn-sm text-white"
+                                        *ngIf="isEditBlog && blogPostData?.isDeleted" 
+                                        [cModalToggle]="activeBlogEditModal.id"
+                                            [title]="getLabelValue('admin.blogPosts.addNew.header.activeButton.hint')"
+                                            data-bs-toggle="tooltip" data-bs-placement="bottom">
+                                            <i class="fas fa-check me-1"></i>
+                                            {{getLabelValue('admin.blogPosts.addNew.header.activeButton.value')}}
+                                        </a>
+                                    </div>
+                                </c-card-header>
+                                <c-card-body>
+                                    <form [formGroup]="blogForm">
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(0)">
+                                                <strong><i class="fa fa-circle-info me-3 fw-bold"></i>Info</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[0] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[0] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="blogForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="title">{{getLabelValue('admin.blogPosts.addNew.info.title.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.title.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="title" formControlName="title"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                        <div *ngIf="blogForm.get('title')?.invalid  && blogForm.get('title')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.blogPosts.addNew.info.title.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="body">{{getLabelValue('admin.blogPosts.addNew.info.body.value')}}
+                                                                <span
+                                                                    class="text-danger fw-bold position-absolute">*</span>
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.body.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <!-- <div class="input-group input-group-required"> -->
+                                                        <!-- <textarea cFormControl id="body" class="form-control"
+                                                                formControlName="body" rows="3"></textarea> -->
+                                                        <angular-editor id="body" formControlName="body"
+                                                            [config]="editorConfig">
+                                                        </angular-editor>
+                                                        <!-- </div> -->
+                                                        <div *ngIf="blogForm.get('body')?.invalid  && blogForm.get('body')?.touched"
+                                                            class="text-danger">
+                                                            {{getLabelValue('admin.blogPosts.addNew.info.body.error')}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="bodyOverview">{{getLabelValue('admin.blogPosts.addNew.info.bodyOverview.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.bodyOverview.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="bodyOverview"
+                                                                class="form-control" formControlName="bodyOverview"
+                                                                rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="tags">{{getLabelValue('admin.blogPosts.addNew.info.tags.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.tags.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <tag-input formControlName="tags" class="form-control"
+                                                            [placeholder]="''" secondaryPlaceholder="Enter tags"
+                                                            [onAdding]="onAdding"></tag-input>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="allowComments">{{getLabelValue('admin.blogPosts.addNew.info.allowComments.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.allowComments.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="allowComments" formControlName="allowComments"
+                                                                type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="includeInSitemap">{{getLabelValue('admin.blogPosts.addNew.info.includeInSitemap.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.includeInSitemap.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9 d-flex">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="includeInSitemap"
+                                                                formControlName="includeInSitemap" type="checkbox">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="startDate">{{getLabelValue('admin.blogPosts.addNew.info.startDate.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.startDate.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="startDate" formControlName="startDate"
+                                                                class="form-control" type="date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3"
+                                                                for="endDate">{{getLabelValue('admin.blogPosts.addNew.info.endDate.value')}}
+
+                                                            </label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.info.endDate.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="endDate" formControlName="endDate"
+                                                                class="form-control" type="date">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+
+
+
+                                        <c-card class="mb-4">
+                                            <c-card-header class="d-flex justify-content-between align-items-center"
+                                                (click)="toggleCollapse(1)">
+                                                <strong><i class="fas fa-search-plus me-3 fw-bold"></i>SEO</strong>
+                                                <div>
+                                                    <a class="btn btn-sm">
+                                                        <i class="fas me-1"
+                                                            [ngClass]="collapses[1] ? 'fa-minus':'fa-plus'"></i>
+                                                    </a>
+                                                </div>
+                                            </c-card-header>
+                                            <c-card-body [@collapse]="collapses[1] ? 'open' : 'closed'">
+                                                <!-- <form [formGroup]="blogForm"> -->
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="searchEngineFriendlyPageName">{{getLabelValue('admin.blogPosts.addNew.seo.searchEngineFriendlyPageName.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.seo.searchEngineFriendlyPageName.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="searchEngineFriendlyPageName"
+                                                                formControlName="searchEngineFriendlyPageName"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaTitle">{{getLabelValue('admin.blogPosts.addNew.seo.metaTitle.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.seo.metaTitle.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaTitle" formControlName="metaTitle"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaKeywords">{{getLabelValue('admin.blogPosts.addNew.seo.metaKeywords.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.seo.metaKeywords.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <input id="metaKeywords" formControlName="metaKeywords"
+                                                                class="form-control" type="text">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group row mb-1">
+                                                    <div class="col-md-3">
+                                                        <div class=" d-flex align-items-center justify-content-end">
+                                                            <label class="col-form-label me-3 text-end"
+                                                                for="metaDescription">{{getLabelValue('admin.blogPosts.addNew.seo.metaDescription.value')}}</label>
+                                                            <div [title]="getLabelValue('admin.blogPosts.addNew.seo.metaDescription.hint')"
+                                                                data-toggle="tooltip" class="ico-help">
+                                                                <i class="fas fa-question-circle text-primary"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-9">
+                                                        <div class="input-group input-group-required">
+                                                            <textarea cFormControl id="metaDescription"
+                                                                class="form-control" formControlName="metaDescription"
+                                                                rows="3"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c-card-body>
+                                        </c-card>
+                                    </form>
+                                </c-card-body>
+                            </c-card>
+                        </c-col>
+                    </c-row>
+
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <c-modal #deactiveBlogEditModal alignment="center" id="deactiveBlogEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.blogPosts.body.deActiveModal.title.value')}}</h5>
+            <button [cModalToggle]="deactiveBlogEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.blogPosts.body.deActiveModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="deactiveBlogEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.blogPosts.body.deActiveModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="deactiveBlogEditModal.id"
+                (click)="deactiveBlogPost()">{{getLabelValue('admin.blogPosts.body.deActiveModal.deactiveButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+
+    <c-modal #activeBlogEditModal alignment="center" id="activeBlogEditModal">
+        <c-modal-header>
+            <h5 cModalTitle>{{getLabelValue('admin.blogPosts.body.activeModal.title.value')}} </h5>
+            <button [cModalToggle]="activeBlogEditModal.id" cButtonClose></button>
+        </c-modal-header>
+        <c-modal-body>
+            {{getLabelValue('admin.blogPosts.body.activeModal.body.text.value')}}
+        </c-modal-body>
+        <c-modal-footer>
+            <button [cModalToggle]="activeBlogEditModal.id" cButton color="secondary">
+                {{getLabelValue('admin.blogPosts.body.activeModal.closeButton.value')}}
+            </button>
+            <button cButton class="text-white" color="danger" [cModalToggle]="activeBlogEditModal.id"
+                (click)="activeBlogPost()">{{getLabelValue('admin.blogPosts.body.activeModal.activeButton.value')}}</button>
+        </c-modal-footer>
+    </c-modal>
+</div>

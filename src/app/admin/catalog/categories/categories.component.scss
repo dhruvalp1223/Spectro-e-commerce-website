@@ -1,0 +1,88 @@
+.image-container {
+    position: relative;
+  }
+  
+  .image-box {
+    width: 100px;
+    height: 100px;
+    border: 2px dashed #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    cursor: pointer;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .image-box i {
+    font-size: 24px;
+  }
+  
+  .image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit:fill;
+    }
+  
+  .cancel-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  .cancel-btn i {
+    font-size: 12px;
+    color: #ff0000;
+  }
+  
+  .cancel-btn:hover {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  
+
+
+  ::ng-deep .ae-picker-label {
+    height: 27px !important;
+    line-height: 50px;
+}
+
+::ng-deep .angular-editor-toolbar button {
+    padding: 0 12px;
+    font-size: 14px;
+}
+  
+
+td{
+  min-width: max-content;
+}
+
+.readonly-input {
+  border: none;
+  outline: none;
+  background-color: transparent;
+}
+
+.center-buttons {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  gap: 5px; /* Add spacing between buttons */
+}
+
+@media (max-width: 768px) {
+  .btn-container {
+      flex-direction: column !important;
+      gap: 8px; /* Adds spacing between buttons */
+  }
+}

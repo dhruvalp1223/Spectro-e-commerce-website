@@ -1,0 +1,173 @@
+import { INavData } from '@coreui/angular';
+
+export const navItems: INavData[] = [
+  {
+    name: 'Dashboard',
+    url: '/dashboard',
+    iconComponent: { name: 'cil-speedometer' },
+  },
+  {
+    name: 'Catalog',
+    url: '/catalog',
+    iconComponent: { name: 'cil-list' },
+    children: [
+      {
+        name: 'Products',
+        url: '/catalog/products',
+        icon: 'nav-icon-bullet',
+      },
+      {
+        name: 'Categories',
+        url: '/catalog/categories',
+        icon: 'nav-icon-bullet',
+      },
+      {
+        name: 'Manufacturers',
+        url: '/catalog/manufacturers',
+        icon: 'nav-icon-bullet',
+      },
+      {
+        name: 'Product Reviews',
+        url: '/catalog/product-reviews',
+        icon: 'nav-icon-bullet',
+      },
+      {
+        name: 'Product Tags',
+        url: '/catalog/product-tags',
+        icon: 'nav-icon-bullet',
+      },
+      {
+        name: 'Attributes',
+        url: '/catalog/attributes',
+        icon: 'nav-icon-bullet',
+        children: [
+          {
+            name: 'Product Attributes',
+            url: '/catalog/attributes/product-attributes',
+            icon: 'nav-icon-circle',
+          },
+          {
+            name: 'Specification Attributes',
+            url: '/catalog/attributes/specification-attributes',
+            icon: 'nav-icon-circle',
+          },
+          {
+            name: 'Checkout Attributes',
+            url: '/catalog/attributes/checkout-attributes',
+            icon: 'nav-icon-circle',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Sales',
+    url: '/sales',
+    iconComponent: { name: 'cil-basket' },
+    children: [
+      { name: 'Orders', url: '/sales/orders', icon: 'nav-icon-bullet' },
+      { name: 'Shipments', url: '/sales/shipments', icon: 'nav-icon-bullet' },
+      { name: 'Return Requests', url: '/sales/return-requests', icon: 'nav-icon-bullet' },
+      { name: 'Recurring Payments', url: '/sales/recurring-payments', icon: 'nav-icon-bullet' },
+      { name: 'Gift Cards', url: '/sales/gift-cards', icon: 'nav-icon-bullet' },
+      { name: 'Shopping Carts and Wishlists', url: '/sales/shopping-carts', icon: 'nav-icon-bullet' },
+    ],
+  },
+  {
+    name: 'Content Management',
+    url: '/contentManagement',
+    iconComponent: { name: 'cil-grid' },
+    children: [
+      { name: 'Topics', url: '/contentManagement/topics', icon: 'nav-icon-bullet' },
+      { name: 'Blog Posts', url: '/contentManagement/blog-posts', icon: 'nav-icon-bullet' },
+      { name: 'News Items', url: '/contentManagement/news-items', icon: 'nav-icon-bullet' },
+
+    ],
+  },
+  {
+    name: 'Promotions',
+    url: '/promotions',
+    iconComponent: { name: 'cil-tags' },
+    children: [
+      { name: 'Discounts', url: '/promotions/discounts', icon: 'nav-icon-bullet' },
+      { name: 'Affiliates', url: '/promotions/affiliates', icon: 'nav-icon-bullet' },
+      { name: 'Newsletter Subscribers', url: '/promotions/newsletter', icon: 'nav-icon-bullet' },
+      { name: 'Campaigns', url: '/promotions/campaigns', icon: 'nav-icon-bullet' },
+    ],
+  },
+  {
+    name: 'Customers',
+    url: '/customers',
+    iconComponent: { name: 'cil-people' },
+    children: [
+      { name: 'Customers', url: '/customers/list', icon: 'nav-icon-bullet' },
+      { name: 'Customer Roles', url: '/customers/roles', icon: 'nav-icon-bullet' },
+      { name: 'Online Customers', url: '/customers/online', icon: 'nav-icon-bullet' },
+      { name: 'Vendors', url: '/customers/vendors', icon: 'nav-icon-bullet' },
+      { name: 'Activity Log', url: '/customers/activity-log', icon: 'nav-icon-bullet' },
+      { name: 'Activity Types', url: '/customers/activity-types', icon: 'nav-icon-bullet' },
+      { name: 'GDPR Requests (Log)', url: '/customers/gdpr-requests', icon: 'nav-icon-bullet' },
+    ],
+  },
+  {
+    name: 'Configuration',
+    url: '/configuration',
+    iconComponent: { name: 'cil-settings' },
+    children: [
+      // {
+      //   name: 'Settings',
+      //   url: '/configuration/settings',
+      //   icon: 'nav-icon-bullet',
+      //   children: [
+      //     { name: 'General Settings', url: '/configuration/settings/general', icon: 'nav-icon-circle' },
+      //     { name: 'Customer Settings', url: '/configuration/settings/customer', icon: 'nav-icon-circle' },
+      //     { name: 'Order Settings', url: '/configuration/settings/order', icon: 'nav-icon-circle' },
+      //     { name: 'Shipping Settings', url: '/configuration/settings/shipping', icon: 'nav-icon-circle' },
+      //     { name: 'Tax Settings', url: '/configuration/settings/tax', icon: 'nav-icon-circle' },
+      //     { name: 'Catalog Settings', url: '/configuration/settings/catalog', icon: 'nav-icon-circle' },
+      //     { name: 'Shopping Cart Settings', url: '/configuration/settings/cart', icon: 'nav-icon-circle' },
+      //     { name: 'Reward Points', url: '/configuration/settings/reward-points', icon: 'nav-icon-circle' },
+      //     { name: 'GDPR Settings', url: '/configuration/settings/gdpr', icon: 'nav-icon-circle' },
+      //     { name: 'Vendor Settings', url: '/configuration/settings/vendor', icon: 'nav-icon-circle' },
+      //     { name: 'Blog Settings', url: '/configuration/settings/blog', icon: 'nav-icon-circle' },
+      //     { name: 'News Settings', url: '/configuration/settings/news', icon: 'nav-icon-circle' },
+      //     { name: 'Forum Settings', url: '/configuration/settings/forum', icon: 'nav-icon-circle' },
+      //     { name: 'Media Settings', url: '/configuration/settings/media', icon: 'nav-icon-circle' },
+      //     { name: 'All Settings (Advanced)', url: '/configuration/settings/advanced', icon: 'nav-icon-circle' },
+      //   ],
+      // },
+      { name: 'General Settings', url: '/configuration/general-settings', icon: 'nav-icon-bullet' },
+      { name: 'Email Accounts', url: '/configuration/email-accounts', icon: 'nav-icon-bullet' },
+      // { name: 'Stores', url: '/configuration/stores', icon: 'nav-icon-bullet' },
+      { name: 'Countries', url: '/configuration/countries', icon: 'nav-icon-bullet' },
+      { name: 'Languages', url: '/configuration/languages', icon: 'nav-icon-bullet' },
+      { name: 'Currencies', url: '/configuration/currencies', icon: 'nav-icon-bullet' },
+      // { name: 'Payment Methods', url: '/configuration/payment-methods', icon: 'nav-icon-bullet' },
+      // { name: 'Payment Restrictions', url: '/configuration/payment-restrictions', icon: 'nav-icon-bullet' },
+      // { name: 'Tax Providers', url: '/configuration/tax-providers', icon: 'nav-icon-bullet' },
+      { name: 'Tax Categories', url: '/configuration/tax-categories', icon: 'nav-icon-bullet' },
+      // { name: 'Shipping', url: '/configuration/shipping', icon: 'nav-icon-bullet' },
+      // { name: 'POS', url: '/configuration/pos', icon: 'nav-icon-bullet' },
+      { name: 'Role Master', url: '/configuration/role-master', icon: 'nav-icon-bullet' },
+      { name: 'Role Wise Access Control', url: '/configuration/roleWiseAccess', icon: 'nav-icon-bullet' },
+      { name: 'User Master', url: '/configuration/userMaster', icon: 'nav-icon-bullet' },
+      { name: 'User Wise Access Control', url: '/configuration/userWiseAccess', icon: 'nav-icon-bullet' },
+      { name: 'Menu Master', url: '/configuration/menumaster', icon: 'nav-icon-bullet' },
+      { name: 'Slider Master', url: '/configuration/sliderMaster', icon: 'nav-icon-bullet' },
+      {
+        name: 'Shipping',
+        url: '/configuration/shipping',
+        icon: 'nav-icon-bullet',
+        children: [
+          { name: 'Warehouses', url: '/configuration/shipping/warehouses', icon: 'nav-icon-circle' },
+
+        ],
+      },
+      // { name: 'Widgets', url: '/configuration/widgets', icon: 'nav-icon-bullet' },
+      // { name: 'Authentication', url: '/configuration/authentication', icon: 'nav-icon-bullet' },
+      // { name: 'Web API', url: '/configuration/web-api', icon: 'nav-icon-bullet' },
+      // { name: 'Local Plugins', url: '/configuration/local-plugins', icon: 'nav-icon-bullet' },
+      // { name: 'All Plugins and Themes', url: '/configuration/plugins-and-themes', icon: 'nav-icon-bullet' },
+    ],
+  },
+];

@@ -1,0 +1,71 @@
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container breakpoint="md">
+    <c-row class="justify-content-center">
+      <c-col lg="10" xl="5">
+        <c-card-group>
+          <c-card class="p-4">
+            <c-card-body>
+              <form [formGroup]="loginForm">
+                <h1>{{getLabelValue('admin.login.card.mainHeader.value')}}</h1>
+                <p class="text-body-secondary">{{getLabelValue('admin.login.card.subHeader.value')}}</p>
+
+                <div class="mb-3">       
+                           <c-input-group >
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input class="form-control" formControlName="email"
+                    [placeholder]="getLabelValue('admin.login.cred.email.value')" />
+                </c-input-group>
+                <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="text-danger">
+                  <div *ngIf="loginForm.get('email')?.errors?.['required']">
+                    {{getLabelValue('admin.login.email.error')}}
+                  </div>
+                  <div *ngIf="loginForm.get('email')?.errors?.['email']">
+                    {{getLabelValue('admin.login.emailInvalid.error')}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">       
+                <c-input-group >
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input class="form-control" formControlName="pwd" type="password"
+                    [placeholder]="getLabelValue('admin.login.cred.password.value')" />
+                </c-input-group>
+                <div *ngIf="loginForm.get('pwd')?.touched && loginForm.get('pwd')?.invalid" class="text-danger">
+                  <div *ngIf="loginForm.get('pwd')?.errors?.['required']">
+                    {{getLabelValue('admin.login.password.error')}}
+                        </div>
+                  <!-- <div *ngIf="loginForm.get('pwd')?.errors?.['minlength']">
+                    Password must be at least 6 characters long.
+                  </div> -->
+                  <!-- <div *ngIf="loginForm.get('pwd')?.errors?.['pattern']">
+                    Password must contain uppercase, lowercase, number, and special character.
+                  </div> -->
+                </div>
+</div>
+
+                <c-row>
+                  <c-col xs="8">
+                    <button  class="btn btn-primary text-white px-4"
+                      (click)="adminUserLogin()">
+                      {{getLabelValue('admin.login.loginButton.value')}}
+                    </button>
+                  </c-col>
+                  <!-- <c-col class="text-right" xs="4">
+                    <button cButton class="px-0" color="link">
+                      {{getLabelValue('admin.login.forgotPasswordButton.value')}}
+                    </button>
+                  </c-col> -->
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
